@@ -14,11 +14,13 @@ Or HTTPS:
 pi install git:https://github.com/hhellbusch/zanshin-pi-extension.git
 ```
 
-**Pin a commit** (recommended for supply chain) after you trust a SHA:
+**Pin a commit** (recommended for supply chain). Example — initial scaffold:
 
 ```bash
-pi install git:https://github.com/hhellbusch/zanshin-pi-extension.git#<full-commit-sha>
+pi install git:https://github.com/hhellbusch/zanshin-pi-extension.git#85ca55ef8e2ab04f4fa7604141e1a668188e16a4
 ```
+
+Replace the SHA when you upgrade after reviewing changes.
 
 ## Canonical kit
 
