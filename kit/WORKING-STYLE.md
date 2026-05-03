@@ -1,9 +1,9 @@
 # Working Style — Zanshin
 
-> Version: 2026-05-02 (snapshot from Field Notes workspace)
+> Version: 2026-05-03 (pi-native)
 >
-> Reference this at the start of an AI session. All artifacts stay in this
-> project — nothing writes to any external workspace.
+> Primary reference for the **pi** extension. For Copilot Chat, Cursor, or other AI tools,
+> see `kit/STANDALONE-KIT.md`.
 
 ---
 
@@ -15,11 +15,15 @@ Three things break AI-assisted work across sessions: **context resets** (decisio
 
 ## How to load this
 
-**Copilot Chat (VS Code):** Include `#file:WORKING-STYLE.md` in your first message.
-**Any conversational AI:** Paste this document as your opening message, then state your task.
-**Cursor:** Reference as `@WORKING-STYLE.md` or add to rules.
+**Pi:** Install the extension once — practices are active in every session automatically.
 
-Once loaded, practices are available for the session — but they activate differently. Some you invoke, some you prompt, one the AI surfaces proactively. See the table at the top of ## Practices.
+```bash
+pi install git:https://github.com/hhellbusch/zanshin-pi-extension.git
+```
+
+The extension injects a minimal L0 block into every agent turn, registers `/spar`, `/shoshin`, `/checkpoint`, `/push`, `/pop`, and `/stack` as slash commands, and hooks into session lifecycle events for auto-behaviors. Full discipline lives in this file and is read on demand — not loaded into every prompt.
+
+**Other tools (Copilot Chat, Cursor, generic AI):** See `kit/STANDALONE-KIT.md`.
 
 ---
 
@@ -33,10 +37,10 @@ Prefer shorter over longer. Cut before adding. When context is incomplete, ask a
 
 | Practice | How it activates |
 |----------|-----------------|
-| **Spar** | You invoke — "spar this" / "challenge this approach" |
-| **Shoshin** | You invoke — OR proactive at session start / scope shifts |
-| **Progressive bookkeeping** | AI proactively surfaces — checkpoints after commits, before risky ops |
-| **Stack tracking** | You name it — push and pop out loud when depth matters |
+| **Spar** | `/spar [target]` command — or natural language "spar this" |
+| **Shoshin** | `/shoshin` command — or auto-notify on session start with existing project |
+| **Progressive bookkeeping** | Extension auto-tracks file writes; notifies after 5; `/checkpoint` resets counter |
+| **Stack tracking** | `/push <topic>` / `/pop` / `/stack` — state persists across sessions |
 | **Verification** | You prompt — "verify that before we proceed" on significant findings |
 | **Review discipline** | Always-on — fires when generating new documents or editing approved content |
 
@@ -46,7 +50,9 @@ Prefer shorter over longer. Cut before adding. When context is incomplete, ask a
 
 Use before committing to an approach, design, plan, or significant decision.
 
-**Trigger:** "Spar this" / "do adversarial review" / "challenge this approach"
+**Trigger:** `/spar [target]` command — or natural language "spar this" / "challenge this approach"
+
+The `/spar` command accepts an optional target argument (`/spar the auth refactor`, `/spar this plan`). Without an argument it targets the current approach or most recent decision.
 
 **How it works:**
 1. Generate 3–5 arguments *against* the target — approach, design, or decision
@@ -92,11 +98,11 @@ What I might be missing: [blind spots in this review itself]
 
 Use when a plan feels settled, when complexity is growing fast, or when you've been on a problem long enough that premises feel obvious.
 
-**Trigger:** "Apply shoshin" / "what are we assuming?" / "shoshin check"
+**Trigger:** `/shoshin` command — or natural language "apply shoshin" / "what are we assuming?"
 
-Also fires proactively at two moments — without being asked:
+Also fires automatically at two moments:
 
-- **Session start with an existing project:** Before trusting a handoff or summary, check the authoritative scope document — the brief, README, or whatever defines what the project is actually for. The handoff reflects one session's framing; the source document reflects actual scope. If the work involves writing, also check `STYLE.md` (if it exists) before proceeding. If they conflict, surface it before proceeding.
+- **Session start with an existing project:** The extension detects `.planning/brief.md`, `.planning/whats-next.md`, or `BRIEF.md` and notifies: *"Zanshin: existing project detected — run /shoshin before proceeding."* This is a notify, not an auto-run — invoke `/shoshin` to actually surface assumptions.
 - **Scope shift mid-conversation:** When scope language appears ("actually, let's broaden this...", "I've been rethinking..."), name the shift explicitly. Surface which documents carry the old framing. If multiple are affected, flag them together — updating one while leaving others stale creates conflicting signals for the next session. If a changelog exists, log the scope change there.
 
 **How it works:**
@@ -118,12 +124,12 @@ Shoshin is not adversarial. It's genuinely curious. The goal is to find the one 
 
 Session-end bookkeeping is not enough. Crashes, context resets, and interruptions happen. The goal: at any point in a session, the current state is recoverable without re-litigating decisions.
 
-**Rules:**
-- When starting a task: note it as in-progress immediately, not at session end
-- When completing a task: note it as done immediately — don't batch
-- Commit at logical units, not accumulated at session end
-- Write a checkpoint before any risky operation — deletions over ~50 lines, file moves or renames, refactors touching multiple files, anything that would be hard to reverse. The signal: "if this goes wrong mid-way, would I know where to resume?" If not, checkpoint first.
-- If 3–5 commits have landed since the last checkpoint, surface it: "It's been N commits since the last checkpoint — want one now?"
+**How it works in pi:**
+- The extension tracks every successful `write` and `edit` tool call.
+- After 5 file changes since the last checkpoint, it notifies: *"Zanshin: N file changes since last checkpoint — run /checkpoint."* The reminder persists until you run `/checkpoint`.
+- `/checkpoint` writes the checkpoint and resets the counter.
+- Write a checkpoint before any risky operation — deletions over ~50 lines, file moves or renames, refactors touching multiple files, anything that would be hard to reverse.
+- If the session ends with uncommitted changes and no `.planning/whats-next.md` exists, the extension warns on shutdown.
 
 ---
 
@@ -175,18 +181,17 @@ Quick captures append to the file rather than replacing it. A future session can
 
 Conversations naturally branch. Subtopics get pushed, explored, and should be explicitly popped. Without tracking, parent topics get lost.
 
-This practice requires explicit naming — it doesn't activate silently. If the conversation is branching and depth matters, name it: push and pop out loud.
+**Commands:**
+- `/push <topic>` — push a named topic onto the stack; notifies with current depth
+- `/pop` — mark the current topic resolved, return to parent; notifies what you're returning to
+- `/stack` — display the full current stack
 
-**How it works:**
-- When pushing a subtopic: "pushing [topic] — will return to [parent] when done"
-- When a subtopic resolves: "that feels resolved — we were on [parent topic], want to return?"
-- Stack depth is a signal: 4–5 levels deep means something needs to be parked before going further
-- Capture open threads in checkpoints:
-  ```
-  **Open threads:**
-  - [bottom] Parent topic — status
-    - [open] Subtopic — what's waiting
-  ```
+Stack state is persisted via the pi session and restored on session start — it survives context resets.
+
+**Rules:**
+- Stack depth ≥ 4 is a signal: park something before going deeper
+- `/checkpoint` captures the open stack in the checkpoint file automatically
+- When a subtopic resolves, `/pop` immediately — don't leave stale entries
 
 ---
 
@@ -239,7 +244,7 @@ Proceed with the edit. The staleness is the author's problem to resolve, not a r
 **Isolation:** All artifacts created during this session stay in this project. This document contains no references to any external workspace — artifacts here don't write back anywhere.
 
 **Where things go:**
-- Checkpoints and handoffs → `.planning/whats-next.md` (create `.planning/` if needed)
+- Checkpoints and handoffs → `.planning/whats-next.md` — run `/checkpoint` to trigger the LLM to write one in the correct format
 - If no `BACKLOG.md` exists: create one with `## In Progress`, `## Up Next`, `## Ideas` sections
 - Commits go to the local repository
 
@@ -251,7 +256,7 @@ Skip spar — there's no approach to challenge. Run shoshin before writing the h
 
 Check the stack for open threads — those belong in the handoff. Then write a checkpoint or quick capture oriented toward continuation, not just summary.
 
-Trigger: "close-out" / "write a handoff" / "I'm closing this session."
+Trigger: `/checkpoint` command — or natural language "close-out" / "write a handoff" / "I'm closing this session."
 
 When the session state file already has content from a previous context, append with a datestamp — don't replace. The most recent entry is the active state.
 
