@@ -1,7 +1,7 @@
 {
   "name": "zanshin-pi-extension",
   "version": "0.1.0",
-  "description": "Zanshin L0 — compact posture for Pi (always-on system prompt injection). Full kit stays in zanshin-kit/WORKING-STYLE.md on disk.",
+  "description": "Zanshin L0 for Pi (always-on system prompt) plus bundled kit markdown under kit/ (WORKING-STYLE, STYLE, template).",
   "keywords": ["pi-package", "pi-extension", "extension", "pi", "zanshin"],
   "license": "MIT",
   "type": "module",
@@ -13,7 +13,7 @@
   "bugs": {
     "url": "https://github.com/hhellbusch/zanshin-pi-extension/issues"
   },
-  "files": ["extensions", "README.md", "LICENSE"],
+  "files": ["extensions", "kit", "README.md", "LICENSE"],
   "publishConfig": {
     "access": "public"
   },

@@ -1,6 +1,6 @@
 # zanshin-pi-extension
 
-**Zanshin L0** for [Pi](https://github.com/badlogic/pi-mono): a tiny always-on block appended to the system prompt via `before_agent_start`. It carries the three failure modes, collaboration style, and how practices activate — not the full `WORKING-STYLE.md` (that stays on disk for deep reads).
+**Zanshin** for [Pi](https://github.com/badlogic/pi-mono): a compact **L0** block appended to the system prompt via `before_agent_start`, plus the **full kit** as markdown files under `kit/`.
 
 ## Install
 
@@ -20,18 +20,28 @@ pi install git:https://github.com/hhellbusch/zanshin-pi-extension.git
 pi install git:https://github.com/hhellbusch/zanshin-pi-extension.git#<40-char-sha>
 ```
 
-## Canonical kit
-
-The full portable document lives in the [gemini-workspace](https://github.com/hhellbusch/my-ai-workspace) repo under `zanshin-kit/WORKING-STYLE.md` (or vendor that file into any project). This extension does not bundle the full kit — it only injects the L0 summary.
-
-## Layout
+## What ships in the package
 
 | Path | Role |
 |------|------|
-| `extensions/zanshin-l0.ts` | `before_agent_start` → append L0 to `systemPrompt` |
-| `package.json` | `pi.extensions` → `./extensions` |
+| `extensions/zanshin-l0.ts` | `before_agent_start` → append L0 + **absolute paths** to `kit/*.md` |
+| `kit/WORKING-STYLE.md` | Full working discipline |
+| `kit/STYLE.md` | Style guide defaults |
+| `kit/STYLE.template.md` | Template for team-owned style guides |
+| `kit/README.md` | Short index of the kit directory |
+| `kit/STANDALONE-KIT.md` | Long-form setup doc (historical standalone kit README) |
 
-Pattern matches [pi-caveman-mode](https://github.com/habitssss/pi-caveman-mode).
+L0 stays short; the model is pointed at `kit/WORKING-STYLE.md` on disk when it needs depth (not loaded into the prompt every turn).
+
+Pattern matches [pi-caveman-mode](https://github.com/habitssss/pi-caveman-mode): `package.json` field `pi.extensions` → `./extensions`.
+
+## Field Notes / gemini-workspace
+
+That repository vendors this repo as a **git submodule** at `zanshin-pi-extension/`. Clone the parent with:
+
+```bash
+git submodule update --init --recursive
+```
 
 ## License
 
