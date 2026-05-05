@@ -28,6 +28,7 @@ pi install git:https://github.com/hhellbusch/zanshin-pi-extension.git#<40-char-s
 | `kit/WORKING-STYLE.md` | Full working discipline (read on demand, not every turn) |
 | `kit/STYLE.md` | Style guide defaults |
 | `kit/STYLE.template.md` | Template for team-owned style guides |
+| `kit/AI-DISCLOSURE.md` | Portable AI disclosure policy — review states, validation types, standard footer |
 | `kit/README.md` | Short index of the kit directory |
 | `kit/STANDALONE-KIT.md` | Setup doc for Copilot Chat, Cursor, and other non-pi tools |
 

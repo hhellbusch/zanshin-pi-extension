@@ -219,9 +219,9 @@ AI output is a draft. These behaviors enforce that contract without requiring th
 - Do not mark new files as reviewed, approved, or finalized — that is the author's decision, not the AI's
 - New substantive documentation files (not READMEs, code, or ephemeral outputs) should carry a disclosure note at the bottom:
 
-  > *This document was created with AI assistance and has not been reviewed by the author.*
+  > *This document was created with AI assistance and has not been fully reviewed by the author.*
 
-  Adjust wording to fit the project's conventions. If the project has an AI disclosure policy, follow it.
+  Adjust wording to fit the project's conventions. If the project has an AI disclosure policy (`AI-DISCLOSURE.md`), follow it. This kit ships a portable template at `kit/AI-DISCLOSURE.md` — copy it to the project root to adopt the convention.
 
 **Biographical and first-person content:**
 When generating content that contains first-person biographical claims — professional titles, experience statements, personal opinions, biographical details — flag it explicitly at the point of generation:
