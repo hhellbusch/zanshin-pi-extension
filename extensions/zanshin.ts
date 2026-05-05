@@ -1,3 +1,17 @@
+/**
+ * Package layout:
+ *   kit/        — Raw markdown depth. Any tool can read these directly.
+ *                 WORKING-STYLE.md is the canonical working discipline doc.
+ *   extensions/ — Pi-only. This file injects the L0 compact prompt +
+ *                 absolute kit paths into the Pi system prompt via
+ *                 session_start. No changes needed for Copilot users.
+ *   skills/     — AgentSkills standard (SKILL.md per command). Discovered
+ *                 natively by Copilot CLI, Claude Code, and Pi. Add with:
+ *                 /skills add <path-to-skills-dir>
+ *
+ * Distilled Zanshin L0 — always injected. Full markdown ships in this package
+ * under ../kit/ (WORKING-STYLE.md, STYLE.md, STYLE.template.md).
+ */
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";

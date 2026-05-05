@@ -51,9 +51,38 @@ pi install git:https://github.com/hhellbusch/zanshin-pi-extension.git#<40-char-s
 
 Pattern matches [pi-caveman-mode](https://github.com/habitssss/pi-caveman-mode): `package.json` field `pi.extensions` → `./extensions`.
 
-## Field Notes / gemini-workspace
+## Copilot CLI
 
-That repository vendors this repo as a **git submodule** at `zanshin-pi-extension/`. Clone the parent with:
+Two steps to wire up the Zanshin working discipline in Copilot CLI:
+
+**Step 1 — Add the skills** (one-time per machine, or per project):
+
+```bash
+# From wherever you cloned or vendored this repo:
+/skills add <path-to-zanshin-pi-extension>/skills/
+```
+
+This makes commands like `/spar`, `/grill-me`, `/checkpoint`, `/whats-next`, and all `/consider-*` and `/research-*` skills available in Copilot CLI sessions.
+
+**Step 2 — Load the working discipline** (one-time per machine):
+
+Add to `~/.copilot/copilot-instructions.md`:
+
+```markdown
+## Working Style
+At the start of every session, read and apply the practices in:
+<path-to-zanshin-pi-extension>/kit/WORKING-STYLE.md
+```
+
+Replace `<path-to-zanshin-pi-extension>` with the absolute path to your clone. This runs once per machine; the working style then loads in every Copilot CLI session regardless of project.
+
+If you vendor this as a git submodule, the path is wherever the submodule is checked out (e.g. `~/my-project/submodules/zanshin-pi-extension`).
+
+---
+
+## Using as a git submodule
+
+To vendor this repo in your workspace, add it as a submodule under `submodules/zanshin-pi-extension/`. Clone the parent with:
 
 ```bash
 git submodule update --init --recursive

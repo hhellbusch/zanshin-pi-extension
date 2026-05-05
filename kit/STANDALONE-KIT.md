@@ -27,11 +27,11 @@ Keep this repo cloned locally. Reference `WORKING-STYLE.md` directly from the cl
 
 | Tool | How to load |
 |------|-------------|
-| Copilot Chat (VS Code) | `#file:~/git/hhellbusch/my-ai-workspace/zanshin-kit/WORKING-STYLE.md` |
+| Copilot Chat (VS Code) | `#file:<install-path>/kit/WORKING-STYLE.md` |
 | Copilot CLI (in this repo) | Auto-loaded via `CLAUDE.md` — no action needed |
 | Copilot CLI (other projects) | See [one-time machine setup](#copilot-cli) below |
 | Any chat AI | Paste the file contents as your opening message |
-| Cursor | `@~/git/hhellbusch/my-ai-workspace/zanshin-kit/WORKING-STYLE.md` |
+| Cursor | `@<install-path>/kit/WORKING-STYLE.md` |
 
 No drift, no re-copy step. Pull the repo when you want updates.
 
@@ -41,11 +41,11 @@ Copy the kit files into your project so they're committed alongside the code and
 
 ```bash
 # Working discipline + style guide defaults:
-cp /path/to/zanshin-kit/WORKING-STYLE.md ./WORKING-STYLE.md
-cp /path/to/zanshin-kit/STYLE.md ./STYLE.md
+cp <install-path>/kit/WORKING-STYLE.md ./WORKING-STYLE.md
+cp <install-path>/kit/STYLE.md ./STYLE.md
 
 # Optional — blank template if your team wants to define its own style conventions:
-cp /path/to/zanshin-kit/STYLE.template.md ./STYLE.template.md
+cp <install-path>/kit/STYLE.template.md ./STYLE.template.md
 ```
 
 Then load from the local path at session start (see Tool table above, adjusted for your path).
@@ -55,7 +55,7 @@ Then load from the local path at session start (see Tool table above, adjusted f
 **Loading prompt:**
 
 ```
-#file:~/git/hhellbusch/my-ai-workspace/zanshin-kit/WORKING-STYLE.md
+#file:<install-path>/kit/WORKING-STYLE.md
 
 [describe your task here — this becomes the session title]
 ```
@@ -84,7 +84,7 @@ For cross-project working style — applying the kit in repos that don't have `C
 # ~/.copilot/copilot-instructions.md — add this block:
 ## Working Style
 At the start of every session, read and apply the practices in:
-/path/to/zanshin-kit/WORKING-STYLE.md
+<install-path>/kit/WORKING-STYLE.md
 ```
 
 Replace `/path/to/` with the absolute path to your local clone of this repo. This runs once per machine; the working style then loads in every Copilot CLI session regardless of project.
@@ -119,8 +119,8 @@ Feed observations back via the same pattern as any other private-to-public hando
 If your project already has a `docs/planning/` or `docs/adr/` convention, put the kit files there rather than the root:
 
 ```bash
-cp /path/to/zanshin-kit/WORKING-STYLE.md ./docs/planning/WORKING-STYLE.md
-cp /path/to/zanshin-kit/STYLE.md ./docs/planning/STYLE.md
+cp <install-path>/kit/WORKING-STYLE.md ./docs/planning/WORKING-STYLE.md
+cp <install-path>/kit/STYLE.md ./docs/planning/STYLE.md
 ```
 
 Update the load reference accordingly:
@@ -165,8 +165,8 @@ All artifacts stay in the project where you're working. The kit contains no refe
 This kit is a snapshot. When the working style in the source workspace evolves, re-copy the kit files to get the updates:
 
 ```bash
-cp /path/to/zanshin-kit/WORKING-STYLE.md ./WORKING-STYLE.md
-cp /path/to/zanshin-kit/STYLE.md ./STYLE.md
+cp <install-path>/kit/WORKING-STYLE.md ./WORKING-STYLE.md
+cp <install-path>/kit/STYLE.md ./STYLE.md
 ```
 
 The version date at the top of `WORKING-STYLE.md` tells you how current your copy is. `STYLE.md` carries a version line too. Don't overwrite a customized `STYLE.md` without diffing first — your project's `[DEFINE]` sections won't be in the source.
