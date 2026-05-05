@@ -13,7 +13,7 @@
   "bugs": {
     "url": "https://github.com/hhellbusch/zanshin-pi-extension/issues"
   },
-  "files": ["extensions", "kit", "README.md", "LICENSE"],
+  "files": ["extensions", "kit", "skills", "plugin.json", "README.md", "LICENSE"],
   "publishConfig": {
     "access": "public"
   },

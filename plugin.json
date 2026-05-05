@@ -1,0 +1,14 @@
+{
+  "name": "zanshin",
+  "description": "Working discipline skills: spar, checkpoint, whats-next, grill-me, debug, research-, consider- and more. Based on the Zanshin working style — lean verification, shoshin, and session continuity practices.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Henry Hellbusch",
+    "url": "https://github.com/hhellbusch"
+  },
+  "homepage": "https://github.com/hhellbusch/zanshin-pi-extension#readme",
+  "repository": "https://github.com/hhellbusch/zanshin-pi-extension.git",
+  "license": "MIT",
+  "keywords": ["zanshin", "working-style", "spar", "checkpoint", "research", "reasoning"],
+  "skills": "skills/"
+}
