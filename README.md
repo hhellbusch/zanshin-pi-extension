@@ -1,6 +1,6 @@
 # zanshin-pi-extension
 
-**Zanshin** for [Pi](https://github.com/badlogic/pi-mono): pi-native working discipline — slash commands, session lifecycle hooks, state persistence, and a minimal L0 system prompt block. Full kit markdown ships under `kit/`.
+**Zanshin** for [Pi](https://github.com/earendil-works/pi): pi-native working discipline — slash commands, session lifecycle hooks, state persistence, and a minimal L0 system prompt block. Full kit markdown ships under `kit/`.
 
 ## Install
 
