@@ -306,6 +306,35 @@ main ──── main ──── main ──── main
 
 **When in doubt:** feature branch off `main`, commit with good messages, PR or squash-merge back. This is enough for almost everything.
 
+**Integration discipline (before starting and before pushing):**
+
+Before you push, and at the start of a new session, integrate others' work into your branch. This prevents the classic "I just pushed and CI blows up because someone else committed on main" and makes conflict resolution a small, manageable problem instead of a large, painful one.
+
+**Before pushing:**
+```bash
+git pull --rebase origin main    # Fetch main and replay your commits on top
+# Resolve any conflicts
+# git add <resolved-files>
+# git rebase --continue
+# Then push
+git push origin feature/my-feature
+```
+
+**At the start of a new session:**
+```bash
+git pull --rebase origin main    # Integrate anyone else's work before starting
+# Resolve conflicts if any, then proceed
+```
+
+Using `--rebase` (not `--merge`) keeps history linear — your commits sit on top of main instead of creating a merge commit. This makes the log readable and avoids unnecessary merge noise.
+
+**When to do this:**
+- Before every push (non-negotiable)
+- At the start of a new session when you have an active feature branch
+- Before creating a PR (so CI has the latest base)
+
+**If you don't do this:** you risk pushing work that conflicts with main, triggering CI against stale code, and creating a messy merge history. The cost of pulling before pushing is seconds; the cost of a conflict after pushing is minutes.
+
 ---
 
 ## Session state conventions
