@@ -43,6 +43,7 @@ Prefer shorter over longer. Cut before adding. When context is incomplete, ask a
 | **Stack tracking** | `/push <topic>` / `/pop` / `/stack` — state persists across sessions |
 | **Verification** | You prompt — "verify that before we proceed" on significant findings |
 | **Review discipline** | Always-on — fires when generating new documents or editing approved content |
+| **Branching discipline** | Default: main + feature branches. Escalate to develop when integration testing demands it. See `kit/WORKING-STYLE.md#branching-discipline` |
 
 ---
 
@@ -236,6 +237,74 @@ When the author has previously marked content as approved or reviewed (via front
 > "This file was previously reviewed/approved. This edit makes that approval stale — re-read the changes before treating it as reviewed again."
 
 Proceed with the edit. The staleness is the author's problem to resolve, not a reason to skip the edit.
+
+---
+
+### Branching discipline
+
+Branching strategy scales with the complexity of testing. Start simple. Escalate only when testing demands it.
+
+**Default mode — main + feature:**
+
+```
+main ──── main ──── main ──── main
+        /          \
+    feat-a        feat-b
+```
+
+- Create `feature/<name>` off `main`
+- Work, commit, push on the feature branch
+- Merge back to `main` via PR or squash when done
+- Delete the branch
+
+Use this for everything — the default, the common case, the rule.
+
+**Escalated mode — main + develop + feature:**
+
+```
+main ──── main ──── main
+         /          \
+    develop ─── develop ─── develop
+       /   \       /
+   feat-a feat-b feat-c
+```
+
+Escalate when:
+- Multiple features need to be tested together before merging to `main`
+- Integration testing is too expensive or risky to validate on `main` directly
+- You need a stable integration point while features are in flight
+
+How it works:
+1. Create `develop` off `main` (once per integration cycle, not permanently)
+2. Feature branches from `develop`, not `main`
+3. Merge features to `develop` as they complete
+4. When all features pass integration testing, merge `develop` to `main`
+5. Delete `develop` — it's ephemeral, not a permanent branch
+
+This is git-flow without the ceremony. No release branches. No hotfix branches. Just main, develop when you need it, and feature branches.
+
+**Hotfixes (always off main):**
+
+```
+main ──── main ──── main ──── main
+              \
+          hotfix-x
+```
+
+- If something on `main` needs an immediate fix, branch off `main`
+- Fix, test on `main`, merge back immediately
+- Name: `hotfix/<name>`
+- Delete after merge
+
+**Commit discipline:**
+- Commit on logical boundaries, not arbitrary intervals. One idea per commit, but a commit can contain multiple file changes if they belong to the same idea.
+- Write messages that describe *why*, not just *what*. The commit log is the primary audit trail — future you will thank you.
+- Format: `type(scope): description` — e.g., `feat(auth): add token refresh handler`, `fix(api): handle missing x-header`, `refactor: consolidate error handling`
+- Types: `feat`, `fix`, `refactor`, `style`, `docs`, `test`, `chore`, `backlog` (for backlog/workspace metadata changes only)
+- Squash merge feature branches to `main` when the branch has multiple small commits that tell a single story. Preserve history on the feature branch but keep `main` clean.
+- Never rebase `main`. Rebasing feature branches is fine when they're small and not shared.
+
+**When in doubt:** feature branch off `main`, commit with good messages, PR or squash-merge back. This is enough for almost everything.
 
 ---
 
