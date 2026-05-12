@@ -306,6 +306,30 @@ main ──── main ──── main ──── main
 
 **When in doubt:** feature branch off `main`, commit with good messages, PR or squash-merge back. This is enough for almost everything.
 
+**Fork workflow — keep your commits off `main`:**
+
+When working with a forked repository, keep `main` clean as an upstream mirror. Your work lives on feature branches and integrates through `develop`. PRs go back to the upstream repo.
+
+```
+upstream/main ──── upstream/main ──── upstream/main
+         \
+my/main   ──────── my/main ──────── my/main   ← tracks upstream, never commits locally
+         \
+    develop ──── develop ──── develop   ← your integration branch
+       /   \
+   feat-a  feat-b
+```
+
+How it works:
+1. **Set up remotes:** Add the upstream repo as a remote: `git remote add upstream <url>`. Your fork is `origin`.
+2. **`main` is passthrough-only:** `git checkout main && git pull upstream main`. Never commit to `main` locally. It's a snapshot of upstream.
+3. **Feature branches:** Create off `main`. Work, commit, push to your fork (`origin`).
+4. **Integration via `develop`:** Merge feature branches into `develop` when testing requires combined work. This is where you verify everything works together.
+5. **PR upstream:** Open a pull request from your feature branch or `develop` to the upstream repository (not from `main`).
+6. **After upstream merge:** Delete your feature branch, update `main` from upstream again.
+
+This keeps `main` as a clean integration point for upstream work and ensures your commits never litter the mainline of the repository you're contributing to.
+
 **Integration discipline (before starting and before pushing):**
 
 Before you push, and at the start of a new session, integrate others' work into your branch. This prevents the classic "I just pushed and CI blows up because someone else committed on main" and makes conflict resolution a small, manageable problem instead of a large, painful one.
