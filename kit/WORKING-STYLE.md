@@ -122,7 +122,7 @@ Use when a plan feels settled, when complexity is growing fast, or when you've b
 `/shoshin` or natural language "apply shoshin" / "what are we assuming?"
 
 **Auto-fire moments:**
-- **Session start with existing project:** The extension detects `.planning/brief.md`, `.planning/whats-next.md`, or `BRIEF.md` and notifies: *"Zanshin: existing project detected — run /shoshin before proceeding."* This is a notify, not an auto-run.
+- **Session start with existing project:** The extension detects `.planning/brief.md`, `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)`, or `BRIEF.md` and notifies: *"Zanshin: existing project detected — run /shoshin before proceeding."* This is a notify, not an auto-run.
 - **Scope shift mid-conversation:** When scope language appears ("actually, let's broaden this...", "I've been rethinking..."), name the shift explicitly and surface which documents carry the old framing.
 
 #### How it works
@@ -166,7 +166,7 @@ Five is a flat counter. Some file changes are heavy (one big refactor) and some 
 
 #### Checkpoint format
 
-Write to `.planning/whats-next.md` — create the directory if it doesn't exist.
+Write to `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)` — create the directory if it doesn't exist.
 
 ```
 # Checkpoint — YYYY-MM-DD
@@ -390,7 +390,7 @@ git push origin feature/my-feature
 
 ### Where things go
 
-- Checkpoints and handoffs → `.planning/whats-next.md`
+- Checkpoints and handoffs → `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)`
 - If no `BACKLOG.md` exists: create one with `## In Progress`, `## Up Next`, `## Ideas`
 - Commits → local repository
 

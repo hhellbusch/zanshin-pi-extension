@@ -64,7 +64,7 @@ Shoshin is genuinely curious, not adversarial. The goal is the one assumption wh
 
 Session-end bookkeeping is not enough. Crashes, resets, and interruptions happen. The goal: at any point, current state is recoverable.
 
-**Checkpoint format** (write to `.planning/whats-next.md`):
+**Checkpoint format** (write to `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)`):
 
 ```
 # Checkpoint — YYYY-MM-DD

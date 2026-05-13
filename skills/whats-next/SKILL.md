@@ -20,7 +20,7 @@ Before creating anything, check whether the session's work is already fully pers
 1. Check `git status` and `git log --oneline -5` — is the working tree clean? Are all changes committed?
 2. Is there any in-flight state — a half-finished task, a pending decision, context that only exists in the conversation?
 
-**If all work is committed and there's no in-flight state:** tell the user the session is fully persisted and no handoff is needed. If a stale `whats-next.md` exists, ask whether to delete it.
+**If all work is committed and there's no in-flight state:** tell the user the session is fully persisted and no handoff is needed. If a stale `whats-next.md (project-scoped)` exists, ask whether to delete it.
 
 **If there is genuine in-flight state:** proceed to Step 1.
 
@@ -65,7 +65,7 @@ Adapt the level of detail to the task type (coding, research, analysis, writing,
    - Any temporary changes, workarounds, or open questions
    - Current position in the workflow or process
 
-Write to `whats-next.md` at the project root.
+Write to `whats-next.md (project-scoped)` at the project root.
 
 ---
 
@@ -106,7 +106,7 @@ If any assumptions are worth surfacing, include an `<assumptions_carried>` secti
 
 ## Output Format
 
-Write `whats-next.md` using this structure:
+Write `whats-next.md (project-scoped)` using this structure:
 
 ```xml
 <original_task>

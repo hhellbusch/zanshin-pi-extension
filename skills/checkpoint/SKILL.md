@@ -8,7 +8,7 @@ allowed-tools: Read Write Shell
 # Checkpoint — Mid-Session State Save
 
 <objective>
-Write a minimal but accurate snapshot to `whats-next.md` that would let a new session recover context within 60 seconds. Faster and lighter than `/whats-next` — no lengthy sections, no full retrospective. The goal is: if the session ended right now, what would the next session need to know?
+Write a minimal but accurate snapshot to `whats-next.md (project-scoped)` that would let a new session recover context within 60 seconds. Faster and lighter than `/whats-next` — no lengthy sections, no full retrospective. The goal is: if the session ended right now, what would the next session need to know?
 
 Run this:
 - Before any risky operation (git mv, large multi-file refactor, anything that could fail mid-way)
@@ -21,7 +21,7 @@ Run this:
 - Last commits: `git log --oneline -5`
 - Git state: `git status --short`
 - Last commit hash: `git rev-parse --short HEAD`
-- Existing handoff (if any): `whats-next.md`
+- Existing handoff (if any): `whats-next.md (project-scoped)`
 </context>
 
 <process>
@@ -38,7 +38,7 @@ If there is no in-progress work and nothing was just completed, the checkpoint i
 
 ### Step 2: Write the checkpoint
 
-Overwrite `whats-next.md` (project root) with the following compact format:
+Overwrite `whats-next.md (project-scoped)` (project root) with the following compact format:
 
 ```markdown
 # Checkpoint — [YYYY-MM-DD HH:MM]
@@ -96,7 +96,7 @@ Do not run the spar automatically. Always ask first — the user may be in a "ge
 
 After writing, report:
 ```
-Checkpoint saved to whats-next.md
+Checkpoint saved to whats-next.md (project-scoped)
 In progress: [brief]
 Next step: [brief]
 Git state: [hash]
@@ -107,7 +107,7 @@ Do NOT commit the checkpoint file automatically. The user can commit it alongsid
 </process>
 
 <success_criteria>
-- `whats-next.md` updated with current timestamp
+- `whats-next.md (project-scoped)` updated with current timestamp
 - In progress, next step, and git state captured accurately
 - Written in under 30 seconds of agent time
 - New session could read the checkpoint and orient in under 60 seconds
