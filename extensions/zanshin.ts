@@ -13,7 +13,7 @@
  * under ../kit/ (WORKING-STYLE.md, STYLE.md, STYLE.template.md).
  */
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -24,6 +24,36 @@ const kitStyle = join(kitDir, "STYLE.md");
 const kitTemplate = join(kitDir, "STYLE.template.md");
 
 const CHECKPOINT_THRESHOLD = 5;
+
+// Find the checkpoint directory: project-scoped, falls back to root.
+// Prefers the most recently modified BRIEF.md to handle multi-project work.
+function resolveCheckpointDir(cwd: string): string {
+	try {
+		const entries = readdirSync(join(cwd, ".planning"));
+		let best: string | null = null;
+		let bestTime = 0;
+		for (const dir of entries) {
+			const briefPath = join(cwd, ".planning", dir, "BRIEF.md");
+			if (existsSync(briefPath)) {
+				try {
+					const time = statSync(briefPath).mtimeMs;
+					if (time > bestTime) {
+						bestTime = time;
+						best = join(cwd, ".planning", dir);
+					}
+				} catch {
+					// skip unreadable
+				}
+			}
+		}
+		if (best) return best;
+	} catch {
+		// .planning doesn't exist yet — fall through
+	}
+
+	// Fallback: root .planning (backward compat)
+	return join(cwd, ".planning");
+}
 
 function kitPathBlock(): string {
 	if (!existsSync(kitWorking)) {
@@ -95,9 +125,10 @@ export default function (pi: ExtensionAPI) {
 		}
 
 		if (event.reason === "startup") {
+			const cpDir = resolveCheckpointDir(ctx.cwd);
 			const hasScope =
-				existsSync(join(ctx.cwd, ".planning", "brief.md")) ||
-				existsSync(join(ctx.cwd, ".planning", "whats-next.md")) ||
+				existsSync(join(ctx.cwd, ".planning", "BRIEF.md")) ||
+				existsSync(join(cpDir, "whats-next.md")) ||
 				existsSync(join(ctx.cwd, "BRIEF.md"));
 
 			if (hasScope) {
@@ -142,9 +173,8 @@ export default function (pi: ExtensionAPI) {
 		if (event.reason !== "quit") return;
 		if (changesSinceCheckpoint === 0) return;
 
-		const hasCheckpoint = existsSync(
-			join(ctx.cwd, ".planning", "whats-next.md"),
-		);
+		const cpDir = resolveCheckpointDir(ctx.cwd);
+		const hasCheckpoint = existsSync(join(cpDir, "whats-next.md"));
 		if (!hasCheckpoint) {
 			ctx.ui.notify(
 				"Zanshin: uncommitted changes with no checkpoint — run /checkpoint next session",
@@ -200,9 +230,15 @@ export default function (pi: ExtensionAPI) {
 	// ── /checkpoint ───────────────────────────────────────────────────────────
 
 	pi.registerCommand("checkpoint", {
-		description: "Write a Zanshin checkpoint to .planning/whats-next.md",
+		description: "Write a Zanshin checkpoint to project-scoped whats-next.md",
 		handler: async (args, ctx) => {
 			await ctx.waitForIdle();
+
+			const cpDir = resolveCheckpointDir(ctx.cwd);
+			const cpFile = join(cpDir, "whats-next.md");
+			const projectName = cpDir === join(ctx.cwd, ".planning")
+				? "root"
+				: cpDir.split("/").pop() || "root";
 
 			// Capture HEAD now — don't ask the agent to re-query git.
 			let gitHead = "unknown";
@@ -233,10 +269,11 @@ export default function (pi: ExtensionAPI) {
 			pi.appendEntry("zanshin-changes", { count: 0 });
 
 			pi.sendUserMessage(
-				`Write a Zanshin checkpoint to .planning/whats-next.md ` +
+				`Write a Zanshin checkpoint to \`${cpFile}\` ` +
 					`(append — don't replace existing content).\n\n` +
 					`Format:\n\n` +
 					`# Checkpoint — <today's date>\n\n` +
+					`**Project:** ${projectName}\n` +
 					`**In progress:** [mid-flight item — or "none"]\n` +
 					`**Just completed:** [1–3 bullets — or "nothing"]\n` +
 					`**Next step:** [or "nothing"]\n` +
