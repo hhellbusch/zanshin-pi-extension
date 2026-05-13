@@ -13,7 +13,7 @@
  * under ../kit/ (WORKING-STYLE.md, STYLE.md, STYLE.template.md).
  */
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -75,6 +75,18 @@ export default function (pi: ExtensionAPI) {
 			if (entry.customType === "zanshin-changes") {
 				changesSinceCheckpoint = (entry.data as { count: number }).count ?? 0;
 			}
+		}
+
+		// Guard status footer — count *-guard.ts files in extensions/ so the
+		// indicator stays accurate as guards are added or removed.
+		try {
+			const guardCount = readdirSync(extensionDir).filter(
+				(f) => f.endsWith("-guard.ts") || f.endsWith("-guard.js"),
+			).length;
+			const label = ctx.ui.theme.fg("dim", `🛡 ${guardCount} guards`);
+			ctx.ui.setStatus("zanshin-guards", label);
+		} catch {
+			// Non-fatal — skip if directory read fails
 		}
 
 		if (event.reason === "startup") {

@@ -125,8 +125,28 @@ function scanForSecrets(diff: string): SecretsHit[] {
 
 // ── Review tracking ───────────────────────────────────────────────────────────
 
-const GIT_COMMIT_RE = /\bgit\s+commit\b/;
 const GIT_DIFF_CACHED_RE = /\bgit\s+diff\s+--cached\b/;
+
+// Matches git commit only as a real shell command, not inside string literals,
+// heredocs, or echo statements. Strategy: split the command on pipeline
+// operators (&&, ||, ;, |) to isolate individual stages, then check whether
+// any stage *starts with* a git-commit invocation.
+//
+// Alternation order in the split regex matters: || must come before | so that
+// logical-or is consumed before single-pipe.
+const GIT_COMMIT_STAGE_RE = /^git(?:\s+-C\s+\S+)?\s+commit\b/;
+const NOT_A_COMMAND_RE = /^(?:echo|printf|cat\s|#|python\d*\s|node\s|bash\s+-c)/;
+
+function containsGitCommit(command: string): boolean {
+	const stages = command
+		.split(/&&|\|\||;|\|/)
+		.map((s) => s.trim())
+		.filter(Boolean);
+	return stages.some(
+		(stage) =>
+			GIT_COMMIT_STAGE_RE.test(stage) && !NOT_A_COMMAND_RE.test(stage),
+	);
+}
 
 // ── Main export ───────────────────────────────────────────────────────────────
 
@@ -152,7 +172,7 @@ export default function (pi: ExtensionAPI) {
 		}
 
 		// Reset after a successful commit — next commit cycle needs its own review
-		if (GIT_COMMIT_RE.test(command)) {
+		if (containsGitCommit(command)) {
 			stagedReviewed = false;
 		}
 	});
@@ -163,7 +183,7 @@ export default function (pi: ExtensionAPI) {
 		if (!isToolCallEventType("bash", event)) return;
 
 		const command = event.input.command ?? "";
-		if (!GIT_COMMIT_RE.test(command)) return;
+		if (!containsGitCommit(command)) return;
 
 		// ── Gate 1: Secrets scan ─────────────────────────────────────────────
 		// Get staged diff for all files (not just markdown — secrets can be anywhere)
