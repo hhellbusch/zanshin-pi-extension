@@ -38,6 +38,7 @@ import {
 	isBashToolResult,
 	isToolCallEventType,
 } from "@earendil-works/pi-coding-agent";
+import { askGuard, blockReason } from "../lib/guard-ui.js";
 
 // ── Secrets detection ──────────────────────────────────────────────────────────
 

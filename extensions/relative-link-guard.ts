@@ -41,6 +41,7 @@ import { dirname, resolve } from "node:path";
 import { existsSync } from "node:fs";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { isToolCallEventType } from "@earendil-works/pi-coding-agent";
+import { askGuard, blockReason } from "../lib/guard-ui.js";
 
 const GIT_COMMIT_RE = /\bgit\s+commit\b/;
 

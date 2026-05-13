@@ -28,7 +28,7 @@
  */
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { isToolCallEventType } from "@earendil-works/pi-coding-agent";
-import { askGuard, blockReason } from "./guard-ui.js";
+import { askGuard, blockReason } from "../lib/guard-ui.js";
 
 /** Matches any bash command that includes `git commit`. */
 const GIT_COMMIT_RE = /\bgit\s+commit\b/;

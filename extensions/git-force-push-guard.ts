@@ -22,7 +22,7 @@
  */
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { isToolCallEventType } from "@earendil-works/pi-coding-agent";
-import { askGuard, blockReason } from "./guard-ui.js";
+import { askGuard, blockReason } from "../lib/guard-ui.js";
 
 /** Patterns that indicate a force-push to main. */
 const FORCE_PUSH_PATTERNS: RegExp[] = [
