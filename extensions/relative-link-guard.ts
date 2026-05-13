@@ -207,7 +207,7 @@ export default function (pi: ExtensionAPI) {
 			if (ok.length > 0) {
 				ctx.ui.notify(
 					`relative-link-guard: ${ok.length} relative link(s) verified ✅`,
-					"success",
+					"info",
 				);
 			}
 			return;

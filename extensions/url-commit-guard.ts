@@ -190,7 +190,7 @@ export default function (pi: ExtensionAPI) {
 		if (broken.length === 0 && unverifiable.length === 0) {
 			ctx.ui.notify(
 				`url-commit-guard: all ${ok.length} URL(s) verified ✅`,
-				"success",
+				"info",
 			);
 			return;
 		}

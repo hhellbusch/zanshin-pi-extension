@@ -2,7 +2,13 @@
   "name": "zanshin-pi-extension",
   "version": "0.1.0",
   "description": "Zanshin L0 for Pi (always-on system prompt) plus bundled kit markdown under kit/ (WORKING-STYLE, STYLE, template).",
-  "keywords": ["pi-package", "pi-extension", "extension", "pi", "zanshin"],
+  "keywords": [
+    "pi-package",
+    "pi-extension",
+    "extension",
+    "pi",
+    "zanshin"
+  ],
   "license": "MIT",
   "type": "module",
   "repository": {
@@ -13,14 +19,34 @@
   "bugs": {
     "url": "https://github.com/hhellbusch/zanshin-pi-extension/issues"
   },
-  "files": ["extensions", "kit", "skills", "plugin.json", "README.md", "LICENSE"],
+  "files": [
+    "extensions",
+    "kit",
+    "skills",
+    "plugin.json",
+    "README.md",
+    "LICENSE"
+  ],
   "publishConfig": {
     "access": "public"
+  },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "validate": "node scripts/validate-extensions.mjs",
+    "test": "npm run check && npm run validate"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
   },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*"
   },
   "pi": {
-    "extensions": ["./extensions"]
+    "extensions": [
+      "./extensions"
+    ]
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
   }
 }
