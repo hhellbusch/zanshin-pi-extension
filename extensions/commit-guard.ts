@@ -213,28 +213,39 @@ export default function (pi: ExtensionAPI) {
 			}
 		}
 
-		// ── Gate 2: Review loop ──────────────────────────────────────────────
-		// Instead of prompting the human, inject a message so the agent runs
-		// the review itself. Once `git diff --cached` appears in a tool_result,
-		// stagedReviewed flips to true and the next commit attempt succeeds.
+		// ── Gate 2: Pre-commit review ───────────────────────────────────────────
+		// The guard already fetched the diff for Gate 1. Embed it directly in
+		// the sendUserMessage so the agent HAS to engage with the content —
+		// not just run a command and immediately retry. Mark stagedReviewed
+		// immediately since the diff is now in the conversation.
 		if (!stagedReviewed) {
+			stagedReviewed = true;
+			pi.appendEntry("commit-guard-reviewed", { reviewed: true });
+
 			const hadAdd = /\bgit\s+add\b/.test(command);
 			const restageNote = hadAdd
-				? "Note: the `git add` in this compound command did not execute — re-stage your files first."
+				? "Note: the `git add` in this compound command did not execute — re-stage your files before retrying."
 				: "Re-run `git add` on any files edited since staging, then retry the commit.";
 
-			// Tell the agent exactly what to do — no human needed in this loop.
+			const diffBlock = diff.trim()
+				? `\`\`\`diff\n${diff.trim()}\n\`\`\``
+				: "(no staged changes — nothing to commit)";
+
+			// Inject the diff into the conversation so the agent must engage
+			// with the actual content, not just run a command mechanically.
 			pi.sendUserMessage(
-				"commit-guard blocked the commit: staged changes have not been reviewed.\n\n" +
-				`Run \`git diff --cached\` to inspect what is staged, review the output, ` +
-				`then retry the commit. ${restageNote}`,
+				"commit-guard: review the staged diff before committing.\n\n" +
+				`${diffBlock}\n\n` +
+				"Before retrying the commit, confirm:\n" +
+				"1. The changes match the intended commit message\n" +
+				"2. No debug code, temp hacks, or accidental file inclusions\n" +
+				"3. No credentials or sensitive values\n\n" +
+				`If everything looks correct, retry the commit. If you find issues, fix them first. ${restageNote}`,
 			);
 
 			return {
 				block: true,
-				reason:
-					"commit-guard: staged changes not reviewed — " +
-					"running `git diff --cached` now to unblock the next commit attempt.",
+				reason: "commit-guard: presenting staged diff for review — retry the commit after confirming.",
 			};
 		}
 
