@@ -205,11 +205,27 @@ export default function (pi: ExtensionAPI) {
 			});
 
 			if (!result.proceed) {
+				// Build a detailed block reason the model can act on directly
+				const brokenList = broken
+					.map(
+						({ url, result: r }) =>
+							`  ❌ ${(r as { httpCode: number }).httpCode}  ${url}`,
+					)
+					.join("\n");
+
+				const has404 = broken.some(
+					({ result: r }) =>
+						(r as { httpCode: number }).httpCode === 404,
+				);
+				const guidance404 = has404
+					? "\nFor 404s: verify the path actually exists — browse the repository or site rather than guessing the URL structure."
+					: "";
+
 				return {
 					block: true,
 					reason: blockReason(
 						"url-commit-guard",
-						"broken URLs in staged markdown",
+						`broken URLs in staged markdown:\n${brokenList}${guidance404}\nAfter fixing: re-run \`git add\` on the affected file before retrying the commit.`,
 						result.feedback,
 					),
 				};

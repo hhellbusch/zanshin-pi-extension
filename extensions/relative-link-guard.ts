@@ -26,6 +26,9 @@
  *   - Only new lines (diff + prefix) are scanned — pre-existing broken
  *     links in unmodified sections are not re-checked
  *   - Only .md files are scanned
+ *   - Files under research\/\*\/sources\/ are skipped — scraped content
+ *     contains web-relative URLs that are relative to the source domain
+ *   - Lines inside fenced code blocks (``` or ~~~) are skipped
  *   - Link targets are resolved relative to the file containing them,
  *     against the repo root on disk (working tree includes staged files)
  *
@@ -48,6 +51,12 @@ const GIT_COMMIT_RE = /\bgit\s+commit\b/;
  */
 const LINK_RE = /!?\[[^\]]*\]\(([^)]+)\)/g;
 
+/** Matches fenced code block delimiters (``` or ~~~, any length >= 3). */
+const FENCE_RE = /^(`{3,}|~{3,})/;
+
+/** Matches research source directories containing scraped web content. */
+const RESEARCH_SOURCES_RE = /^research\/[^/]+\/sources\//;
+
 /**
  * Parse the staged markdown diff into a flat list of relative links,
  * each tagged with the repo-relative file path they came from.
@@ -66,19 +75,40 @@ function extractNewRelativeLinks(
 ): Array<{ file: string; rawLink: string }> {
 	const results: Array<{ file: string; rawLink: string }> = [];
 	let currentFile = "";
+	let inFence = false;
 
 	for (const line of diff.split("\n")) {
 		// Track which file we're in from the +++ header
 		if (line.startsWith("+++ b/")) {
 			currentFile = line.slice(6).trim();
+			inFence = false; // reset fence state at each file boundary
 			continue;
 		}
 
 		// Only process .md files
 		if (!currentFile.endsWith(".md")) continue;
 
+		// Skip research source directories — scraped content has web-relative
+		// URLs (e.g. /en/products, page.html) relative to the source domain.
+		if (RESEARCH_SOURCES_RE.test(currentFile)) continue;
+
+		// Track code fence state across ALL diff lines (context, added, removed)
+		// so we correctly detect blocks that span pre-existing and new lines.
+		// Strip the single-char diff prefix (+/-/space) before testing.
+		const lineContent =
+			line.length > 0 &&
+			(line[0] === "+" || line[0] === "-" || line[0] === " ")
+				? line.slice(1)
+				: line;
+		if (FENCE_RE.test(lineContent)) {
+			inFence = !inFence;
+		}
+
 		// Only process new lines — not context, not deletions, not headers
 		if (!line.startsWith("+") || line.startsWith("+++")) continue;
+
+		// Skip lines inside fenced code blocks
+		if (inFence) continue;
 
 		// Extract all markdown links from this new line
 		let match: RegExpExecArray | null;

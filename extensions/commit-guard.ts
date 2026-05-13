@@ -205,11 +205,19 @@ export default function (pi: ExtensionAPI) {
 			});
 
 			if (!result.proceed) {
+				// Detect compound commands where `git add` was included before
+				// the blocked commit — the add never ran since the whole command
+				// was intercepted before execution.
+				const hadAdd = /\bgit\s+add\b/.test(command);
+				const restageNote = hadAdd
+					? "Note: the `git add` in this compound command did not execute — re-stage your files before retrying."
+					: "After reviewing: re-run `git add` on any files you edited since staging, then retry.";
+
 				return {
 					block: true,
 					reason: blockReason(
 						"commit-guard",
-						"run /review to inspect staged changes, then retry the commit",
+						`run /review to inspect staged changes, then retry.\n${restageNote}`,
 						result.feedback,
 					),
 				};
