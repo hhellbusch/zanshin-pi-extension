@@ -1,49 +1,55 @@
-# Working Style — Zanshin
+# Working Style — Zanshin (Reference)
 
-> Version: 2026-05-03 (pi-native)
+> Version: 2026-05-13
 >
-> Primary reference for the **pi** extension. For Copilot Chat, Cursor, or other AI tools,
-> see `kit/STANDALONE-KIT.md`.
+> Full reference for the **pi** extension. Rationale, examples, edge cases, and
+> extension behavior. For a self-contained prompt version, see `kit/STANDALONE.md`.
+>
+> The separation: docs explain, prompts drive. This file is reference. `STANDALONE.md`
+> is what you paste or load into a session to get behavior.
 
 ---
 
 ## Why these practices exist
 
-Three things break AI-assisted work across sessions: **context resets** (decisions made in conversation don't persist to the next session), **context compaction** (earlier content gets compressed and approximated as the context window fills mid-session), and **fluent-but-wrong output** (confident prose covering unverified claims). These practices defend against those three failure modes specifically — not general productivity habits.
+Three things break AI-assisted work across sessions:
+
+1. **Context resets** — decisions made in conversation don't persist to the next session
+2. **Context compaction** — earlier content compresses and gets approximated as the window fills
+3. **Fluent-but-wrong output** — confident prose covering unverified claims
+
+These practices defend against those three failure modes specifically — not general productivity habits.
 
 ---
 
-## How to load this
+## Extension behavior
 
-**Pi:** Install the extension once — practices are active in every session automatically.
+The zanshin-pi-extension provides the following auto-behaviors:
 
-```bash
-pi install git:https://github.com/hhellbusch/zanshin-pi-extension.git
-```
+| Behavior | Mechanism |
+|----------|-----------|
+| L0 injection | Injects a minimal practice block into every agent turn |
+| Slash commands | `/spar`, `/shoshin`, `/checkpoint`, `/push`, `/pop`, `/stack` |
+| Session notify | Detects existing project files (`BRIEF.md`, `whats-next.md`) at session start |
+| Bookkeeping counter | Auto-tracks `write`/`edit` calls; notifies after 5 changes |
+| Stack persistence | Survives context resets via pi session state |
+| Close-out warning | Warns on shutdown if uncommitted changes exist without a handoff |
 
-The extension injects a minimal L0 block into every agent turn, registers `/spar`, `/shoshin`, `/checkpoint`, `/push`, `/pop`, and `/stack` as slash commands, and hooks into session lifecycle events for auto-behaviors. Full discipline lives in this file and is read on demand — not loaded into every prompt.
-
-**Other tools (Copilot Chat, Cursor, generic AI):** See `kit/STANDALONE-KIT.md`.
-
----
-
-## Collaboration style
-
-Prefer shorter over longer. Cut before adding. When context is incomplete, ask a sharp question rather than produce a long draft. Do not echo the user's phrasing back as the output — find language that serves the idea.
+**Loading the full discipline:** The extension reads on demand — this file is loaded when a practice is invoked, not at session start. This keeps prompt overhead minimal.
 
 ---
 
-## Practices
+## Practices overview
 
 | Practice | How it activates |
 |----------|-----------------|
-| **Spar** | `/spar [target]` command — or natural language "spar this" |
-| **Shoshin** | `/shoshin` command — or auto-notify on session start with existing project |
-| **Progressive bookkeeping** | Extension auto-tracks file writes; notifies after 5; `/checkpoint` resets counter |
-| **Stack tracking** | `/push <topic>` / `/pop` / `/stack` — state persists across sessions |
+| **Spar** | `/spar [target]` — or "spar this" / "challenge this approach" |
+| **Shoshin** | `/shoshin` — or auto-notify on session start with existing project |
+| **Progressive bookkeeping** | Extension auto-tracks writes; notifies after 5; `/checkpoint` resets |
+| **Stack tracking** | `/push` / `/pop` / `/stack` — state persists across sessions |
 | **Verification** | You prompt — "verify that before we proceed" on significant findings |
-| **Review discipline** | Always-on — fires when generating new documents or editing approved content |
-| **Branching discipline** | Default: main + feature branches. Escalate to develop when integration testing demands it. See `kit/WORKING-STYLE.md#branching-discipline` |
+| **Review discipline** | Always-on — fires on new docs or edits to approved content |
+| **Branching discipline** | Default: main + feature. Escalate to develop when testing demands it |
 
 ---
 
@@ -51,47 +57,59 @@ Prefer shorter over longer. Cut before adding. When context is incomplete, ask a
 
 Use before committing to an approach, design, plan, or significant decision.
 
-**Trigger:** `/spar [target]` command — or natural language "spar this" / "challenge this approach"
+#### Trigger
 
-The `/spar` command accepts an optional target argument (`/spar the auth refactor`, `/spar this plan`). Without an argument it targets the current approach or most recent decision.
+`/spar [target]` or natural language "spar this" / "challenge this approach".
 
-**How it works:**
-1. Generate 3–5 arguments *against* the target — approach, design, or decision
-2. **Steel-man each:** present the *strongest* version of the objection. Not a dismissal, not a strawman — the version that would make someone actually change course
-3. **For each argument, produce this structure:**
+The command accepts an optional target (`/spar the auth refactor`, `/spar this plan`).
+Without an argument it targets the current approach or most recent decision.
+
+#### How it works
+
+1. Generate 3–5 arguments *against* the target
+2. **Steel-man each:** present the strongest version of the objection — the version that would actually change course
+3. **Structure each:**
 
 ```
 **N. [Argument title]**
 
 Type: Structural | Presentation | Scope | Evidence | Consistency
-The argument: [Steel-manned critique — the strongest version, not a strawman]
-Why it matters: [What breaks or weakens if this criticism is valid — in concrete terms]
-Strength: Strong | Moderate | Weak — [one sentence: genuine weakness or contrarian reflex?]
+The argument: [Steel-manned critique]
+Why it matters: [What breaks if valid]
+Strength: Strong | Moderate | Weak
 ```
 
-4. **Close with a self-audit in this format:**
+4. **Close with a self-audit:**
 
 ```
 **Self-Audit**
-Strongest: [number] — [why this one actually matters]
-Weakest: [number] — [why this might be contrarian pattern-matching]
-What I might be missing: [blind spots in this review itself]
+Strongest: [number] — [why it matters]
+Weakest: [number] — [why it might be pattern-matching]
+What I might be missing: [blind spots]
 ```
 
 5. **End with:** "Where am I right, and where am I pattern-matching into a devil's advocate role?"
 
-**Argument types:**
+#### Argument types
+
 - **Structural** — the core logic or mechanism fails
 - **Evidence** — confident assertion dressed as a verified finding
 - **Scope** — framed too narrowly, too broadly, or solving the wrong problem
 - **Presentation** — the claim holds but how it's stated undermines it
-- **Consistency** — contradicts something else that's already decided
+- **Consistency** — contradicts something else already decided
 
-**Rules:**
-- Attack the *strongest* claims, not the weakest. Three strong arguments beat seven weak ones.
+#### Rules
+
+- Attack the strongest claims. Three strong arguments beat seven weak ones.
 - The self-audit is not optional — it catches performed adversarial review.
-- No sycophantic softening ("these are minor points" or "overall this is great, but...").
-- If fewer than 3 genuine arguments exist, say so rather than padding.
+- No sycophantic softening.
+- If fewer than 3 genuine arguments exist, say so.
+
+#### Failure modes
+
+- **Padding:** Generating weak arguments just to hit the count. The "say so if fewer than 3" rule handles this.
+- **Pattern-matching:** Inventing opposition where none exists. The self-audit addresses this.
+- **Over-sparring:** Using spar on decisions that don't warrant it. Spar is for significant commitments — approaches, designs, plans, trade-offs. Not for "which color should the logo be?"
 
 ---
 
@@ -99,44 +117,56 @@ What I might be missing: [blind spots in this review itself]
 
 Use when a plan feels settled, when complexity is growing fast, or when you've been on a problem long enough that premises feel obvious.
 
-**Trigger:** `/shoshin` command — or natural language "apply shoshin" / "what are we assuming?"
+#### Trigger
 
-Also fires automatically at two moments:
+`/shoshin` or natural language "apply shoshin" / "what are we assuming?"
 
-- **Session start with an existing project:** The extension detects `.planning/brief.md`, `.planning/whats-next.md`, or `BRIEF.md` and notifies: *"Zanshin: existing project detected — run /shoshin before proceeding."* This is a notify, not an auto-run — invoke `/shoshin` to actually surface assumptions.
-- **Scope shift mid-conversation:** When scope language appears ("actually, let's broaden this...", "I've been rethinking..."), name the shift explicitly. Surface which documents carry the old framing. If multiple are affected, flag them together — updating one while leaving others stale creates conflicting signals for the next session. If a changelog exists, log the scope change there.
+**Auto-fire moments:**
+- **Session start with existing project:** The extension detects `.planning/brief.md`, `.planning/whats-next.md`, or `BRIEF.md` and notifies: *"Zanshin: existing project detected — run /shoshin before proceeding."* This is a notify, not an auto-run.
+- **Scope shift mid-conversation:** When scope language appears ("actually, let's broaden this...", "I've been rethinking..."), name the shift explicitly and surface which documents carry the old framing.
 
-**How it works:**
+#### How it works
+
 Before generating arguments or building anything, pause and name what's being assumed:
+
 - Is the problem stated correctly, or is this solving the wrong thing?
 - Are the constraints real, or inherited from habit or prior context?
 - Is the scope appropriate, or has it drifted?
 - What would a beginner ask that an expert would skip?
 
-Shoshin is not adversarial. It's genuinely curious. The goal is to find the one assumption whose examination dissolves the complexity or reframes the whole problem. State it plainly: "I'm assuming X — is that still true?"
+Shoshin is genuinely curious, not adversarial. The goal is the one assumption whose examination dissolves the complexity. State it plainly: "I'm assuming X — is that still true?"
 
-**Apply shoshin before spar** when the problem itself may be mis-stated. Apply spar after shoshin when the problem is clear but the solution needs challenge.
+**Apply shoshin before spar** when the problem may be mis-stated. Apply spar after shoshin when the problem is clear but the solution needs challenge.
 
-**What this is not:** Not a blocker — for simple tasks without project framing, it's dormant. Not paranoia. Not a replacement for sparring (which challenges a solution) or zero-base evaluation (which challenges priorities) — shoshin challenges the framing that sits underneath both.
+**What this is not:** Not a blocker for simple tasks, not paranoia, not a replacement for sparring. Shoshin challenges the framing that sits underneath both.
+
+#### Failure modes
+
+- **Self-referential circling:** The AI names assumptions it just made in this turn. The fix: ground assumptions in external artifacts (project briefs, requirements, constraints) rather than the conversation itself.
+- **False clarity:** Naming an assumption that sounds insightful but isn't testable. Real assumptions produce "if this is wrong, then Y breaks" statements.
+- **Skipping on simple work:** It's dormant for simple tasks. That's by design, not an oversight.
 
 ---
 
 ### Progressive bookkeeping — keep state current
 
-Session-end bookkeeping is not enough. Crashes, context resets, and interruptions happen. The goal: at any point in a session, the current state is recoverable without re-litigating decisions.
+Session-end bookkeeping is not enough. Crashes, resets, and interruptions happen. The goal: at any point in a session, the current state is recoverable.
 
-**How it works in pi:**
+#### How it works in pi
+
 - The extension tracks every successful `write` and `edit` tool call.
-- After 5 file changes since the last checkpoint, it notifies: *"Zanshin: N file changes since last checkpoint — run /checkpoint."* The reminder persists until you run `/checkpoint`.
+- After 5 file changes since the last checkpoint, it notifies. The reminder persists until you run `/checkpoint`.
 - `/checkpoint` writes the checkpoint and resets the counter.
-- Write a checkpoint before any risky operation — deletions over ~50 lines, file moves or renames, refactors touching multiple files, anything that would be hard to reverse.
-- If the session ends with uncommitted changes and no `.planning/whats-next.md` exists, the extension warns on shutdown.
+- Run a checkpoint before risky operations — deletions over ~50 lines, file moves/renames, multi-file refactors.
+- On shutdown with uncommitted changes and no handoff, the extension warns.
 
----
+#### The limitation of "5"
 
-### Checkpoints and session handoffs
+Five is a flat counter. Some file changes are heavy (one big refactor) and some trivial (one config tweak). The counter doesn't distinguish. This is the simplest implementation of a hard problem — adaptive weighting (state-bearing files vs. trivial files, lines changed, etc.) would be better, but adds complexity to the extension. **Workaround:** run `/checkpoint` proactively after heavy edits, even if the counter hasn't hit 5.
 
-**Checkpoint** (mid-session save, fast): Write to `.planning/whats-next.md` — create the directory if it doesn't exist.
+#### Checkpoint format
+
+Write to `.planning/whats-next.md` — create the directory if it doesn't exist.
 
 ```
 # Checkpoint — YYYY-MM-DD
@@ -144,12 +174,12 @@ Session-end bookkeeping is not enough. Crashes, context resets, and interruption
 **In progress:** [one sentence — what's mid-flight right now]
 **Just completed:** [1-3 bullets]
 **Next step:** [one sentence — what would happen next if the session continued]
-**Key decision:** [one sentence capturing anything that would be re-litigated without knowing it was settled — or "none"]
-**Git state:** [short hash] — [last commit message]
-**Open threads:** [see stack tracking below — or "none"]
+**Key decision:** [one sentence — what would be re-litigated without knowing it was settled]
+**Git state:** [hash] — [last commit]
+**Open threads:** [stack items or "none"]
 ```
 
-**Example:**
+#### Example
 
 ```
 # Checkpoint — 2026-04-20
@@ -159,22 +189,38 @@ Session-end bookkeeping is not enough. Crashes, context resets, and interruption
 - Moved session store to Redis (a3f2c1d)
 - Updated login handler to write refresh token (b9e4d2a)
 **Next step:** Wire refresh endpoint, then update the client to retry on 401
-**Key decision:** Refresh tokens stored in httpOnly cookies, not localStorage — XSS tradeoff settled
+**Key decision:** Refresh tokens in httpOnly cookies, not localStorage — XSS tradeoff settled
 **Git state:** b9e4d2a — auth: update login handler for refresh token support
 **Open threads:** none
 ```
 
-**Quick capture** (time-short, no template): When there's no time for the full format, append two or three lines — no structure required:
+#### Quick capture (fallback)
+
+When there's no time for the full format, append two or three lines, no structure:
 
 ```
 > YYYY-MM-DD HH:MM — [what's happening / what's next]
 ```
 
-Quick captures append to the file rather than replacing it. A future session can read the trail and reconstruct state well enough. **Quick capture is a fallback, not a default** — if the full format is possible, use it.
+Quick captures append rather than replace. A future session reads the trail. **Fallback, not default** — if the full format is possible, use it.
 
-**Session handoff** (end-of-session, fuller): Same file, same location, more detail — add remaining gaps, framing decisions made, and context a fresh session would need to pick up without asking questions already answered.
+#### Session handoff
 
-**Recovery:** If a session ends without a checkpoint, the git log is the fallback. It shows what landed, not what was in flight — but clean working tree + recent commits = recoverable state.
+Same file, same location, more detail — add remaining gaps, framing decisions made, context a fresh session needs. Close-out means the context window is ending, not that the work is finished.
+
+Before writing a handoff, run shoshin:
+
+> "What's in this context window that won't survive the reboot? What have I assumed is captured that isn't? What would a fresh session need to ask for again?"
+
+Check the stack for open threads — those belong in the handoff. Write a checkpoint oriented toward continuation, not just summary.
+
+Trigger: `/checkpoint` — or "close-out" / "write a handoff" / "I'm closing this session."
+
+When the file already has content, append with a datestamp — don't replace.
+
+#### Recovery
+
+If a session ends without a checkpoint, the git log is the fallback. Clean working tree + recent commits = recoverable state.
 
 ---
 
@@ -182,17 +228,19 @@ Quick captures append to the file rather than replacing it. A future session can
 
 Conversations naturally branch. Subtopics get pushed, explored, and should be explicitly popped. Without tracking, parent topics get lost.
 
-**Commands:**
-- `/push <topic>` — push a named topic onto the stack; notifies with current depth
-- `/pop` — mark the current topic resolved, return to parent; notifies what you're returning to
+#### Commands
+
+- `/push <topic>` — push a named topic; notifies with current depth
+- `/pop` — mark resolved, return to parent; notifies what you're returning to
 - `/stack` — display the full current stack
 
-Stack state is persisted via the pi session and restored on session start — it survives context resets.
+Stack state persists via pi session and is restored on session start — survives context resets.
 
-**Rules:**
+#### Rules
+
 - Stack depth ≥ 4 is a signal: park something before going deeper
-- `/checkpoint` captures the open stack in the checkpoint file automatically
-- When a subtopic resolves, `/pop` immediately — don't leave stale entries
+- `/checkpoint` captures the open stack automatically
+- `/pop` immediately when a subtopic resolves
 
 ---
 
@@ -200,51 +248,59 @@ Stack state is persisted via the pi session and restored on session start — it
 
 AI output that sounds confident may still be wrong. Fluent prose covers both assertion and evidence — don't mistake one for the other.
 
-**Before accepting any AI-generated finding:**
+#### Before accepting any AI-generated finding
+
 - Is this an assertion or evidence? What's the source?
 - For technical claims: what's the primary source? Paraphrase chains degrade quickly.
-- For code: test it, don't read and assume it works.
+- For code: test it, don't read and assume.
 - For plans: "If this is wrong, how would I know?" — if there's no answer, it hasn't been verified.
 
-**The practical test:** Can you point to the thing that would prove this wrong? If not, you're trusting fluency.
+#### The practical test
 
-**Limitation:** The AI can't apply verification discipline to its own output in real time — it can state a finding with the same fluency whether it's verified or not. This practice works best when the human prompts it on significant findings: "verify that before we proceed." Don't assume it fires automatically.
+Can you point to the thing that would prove this wrong? If not, you're trusting fluency.
+
+#### Limitation
+
+The AI can't apply verification discipline to its own output in real time — it can state a finding with the same fluency whether it's verified or not. This works best when the human prompts it: "verify that before we proceed." Don't assume it fires automatically.
 
 ---
 
-### Review discipline — AI-generated content is unreviewed until the author says otherwise
+### Review discipline — AI content is unreviewed until the author says otherwise
 
-AI output is a draft. These behaviors enforce that contract without requiring the author to remember to enforce it.
+AI output is a draft. These behaviors enforce that contract.
 
-**New files and documents:**
-- Do not mark new files as reviewed, approved, or finalized — that is the author's decision, not the AI's
-- New substantive documentation files (not READMEs, code, or ephemeral outputs) should carry a disclosure note at the bottom:
+#### New files and documents
+
+- Do not mark new files as reviewed, approved, or finalized — that is the author's decision.
+- New substantive documentation (not READMEs, code, or ephemeral outputs) should carry a disclosure note:
 
   > *This document was created with AI assistance and has not been fully reviewed by the author.*
 
-  Adjust wording to fit the project's conventions. If the project has an AI disclosure policy (`AI-DISCLOSURE.md`), follow it. This kit ships a portable template at `kit/AI-DISCLOSURE.md` — copy it to the project root to adopt the convention.
+- If the project has an AI disclosure policy (`AI-DISCLOSURE.md`), follow it instead.
 
-**Biographical and first-person content:**
-When generating content that contains first-person biographical claims — professional titles, experience statements, personal opinions, biographical details — flag it explicitly at the point of generation:
+#### Biographical and first-person content
 
-> "Lines N–M contain first-person biographical statements that need author review before publishing."
+When generating first-person biographical claims — professional titles, experience statements, personal opinions — flag them:
 
-Proceed with generation; flag it, don't block on it.
+> "Lines N–M contain first-person biographical statements that need author review."
 
-**Editing approved content:**
-When the author has previously marked content as approved or reviewed (via frontmatter, annotation, or explicit statement), and an edit makes that approval stale, surface it before or during the edit:
+Flag it, don't block on it.
 
-> "This file was previously reviewed/approved. This edit makes that approval stale — re-read the changes before treating it as reviewed again."
+#### Editing approved content
 
-Proceed with the edit. The staleness is the author's problem to resolve, not a reason to skip the edit.
+When an edit makes previously approved content stale, surface it:
+
+> "This file was previously reviewed. This edit makes that approval stale — re-read the changes."
+
+Proceed with the edit. The staleness is the author's problem, not a reason to skip.
 
 ---
 
 ### Branching discipline
 
-Branching strategy scales with the complexity of testing. Start simple. Escalate only when testing demands it.
+Branching strategy scales with testing complexity. Start simple. Escalate only when testing demands it.
 
-**Default mode — main + feature:**
+#### Default — main + feature
 
 ```
 main ──── main ──── main ──── main
@@ -252,14 +308,9 @@ main ──── main ──── main ──── main
     feat-a        feat-b
 ```
 
-- Create `feature/<name>` off `main`
-- Work, commit, push on the feature branch
-- Merge back to `main` via PR or squash when done
-- Delete the branch
+Create `feature/<name>` off `main`. Work, commit, push. Merge back via PR or squash when done. Delete the branch. Use this for everything — the default, the common case, the rule.
 
-Use this for everything — the default, the common case, the rule.
-
-**Escalated mode — main + develop + feature:**
+#### Escalated — main + develop + feature
 
 ```
 main ──── main ──── main
@@ -269,21 +320,18 @@ main ──── main ──── main
    feat-a feat-b feat-c
 ```
 
-Escalate when:
-- Multiple features need to be tested together before merging to `main`
-- Integration testing is too expensive or risky to validate on `main` directly
-- You need a stable integration point while features are in flight
+Escalate when: multiple features need integration testing together, testing on main is too expensive/risky, or you need a stable integration point while features are in flight.
 
 How it works:
-1. Create `develop` off `main` (once per integration cycle, not permanently)
-2. Feature branches from `develop`, not `main`
+1. Create `develop` off main (once per integration cycle, not permanently)
+2. Feature branches from `develop`
 3. Merge features to `develop` as they complete
 4. When all features pass integration testing, merge `develop` to `main`
-5. Delete `develop` — it's ephemeral, not a permanent branch
+5. Delete `develop` — ephemeral, not permanent
 
-This is git-flow without the ceremony. No release branches. No hotfix branches. Just main, develop when you need it, and feature branches.
+Git-flow without ceremony. No release branches. No hotfix branches.
 
-**Hotfixes (always off main):**
+#### Hotfixes (always off main)
 
 ```
 main ──── main ──── main ──── main
@@ -291,95 +339,65 @@ main ──── main ──── main ──── main
           hotfix-x
 ```
 
-- If something on `main` needs an immediate fix, branch off `main`
-- Fix, test on `main`, merge back immediately
-- Name: `hotfix/<name>`
-- Delete after merge
+Branch off main, fix, test on main, merge back immediately. Name: `hotfix/<name>`. Delete after merge.
 
-**Commit discipline:**
-- Commit on logical boundaries, not arbitrary intervals. One idea per commit, but a commit can contain multiple file changes if they belong to the same idea.
-- Write messages that describe *why*, not just *what*. The commit log is the primary audit trail — future you will thank you.
-- Format: `type(scope): description` — e.g., `feat(auth): add token refresh handler`, `fix(api): handle missing x-header`, `refactor: consolidate error handling`
-- Types: `feat`, `fix`, `refactor`, `style`, `docs`, `test`, `chore`, `backlog` (for backlog/workspace metadata changes only)
-- Squash merge feature branches to `main` when the branch has multiple small commits that tell a single story. Preserve history on the feature branch but keep `main` clean.
-- Never rebase `main`. Rebasing feature branches is fine when they're small and not shared.
+#### Commit discipline
 
-**When in doubt:** feature branch off `main`, commit with good messages, PR or squash-merge back. This is enough for almost everything.
+- Commit on logical boundaries. One idea per commit, but a commit can contain multiple file changes if they belong to the same idea.
+- Write messages that describe *why*, not just *what*. The commit log is the primary audit trail.
+- Format: `type(scope): description` — e.g., `feat(auth): add token refresh handler`, `fix(api): handle missing x-header`
+- Types: `feat`, `fix`, `refactor`, `style`, `docs`, `test`, `chore`, `backlog`
+- Squash merge feature branches when the branch has multiple small commits telling a single story. Keep `main` clean.
+- Never rebase `main`. Rebasing feature branches is fine when small and not shared.
 
-**Fork workflow — keep your commits off `main`:**
+#### Fork workflow
 
-When working with a forked repository, keep `main` clean as an upstream mirror. Your work lives on feature branches and integrates through `develop`. PRs go back to the upstream repo.
+Keep `main` clean as an upstream mirror. Work lives on feature branches.
 
 ```
-upstream/main ──── upstream/main ──── upstream/main
+upstream/main ──── upstream/main
          \
-my/main   ──────── my/main ──────── my/main   ← tracks upstream, never commits locally
+my/main   ──────── my/main         ← tracks upstream, never commits locally
          \
-    develop ──── develop ──── develop   ← your integration branch
+    develop ──── develop           ← your integration branch
        /   \
    feat-a  feat-b
 ```
 
-How it works:
-1. **Set up remotes:** Add the upstream repo as a remote: `git remote add upstream <url>`. Your fork is `origin`.
-2. **`main` is passthrough-only:** `git checkout main && git pull upstream main`. Never commit to `main` locally. It's a snapshot of upstream.
-3. **Feature branches:** Create off `main`. Work, commit, push to your fork (`origin`).
-4. **Integration via `develop`:** Merge feature branches into `develop` when testing requires combined work. This is where you verify everything works together.
-5. **PR upstream:** Open a pull request from your feature branch or `develop` to the upstream repository (not from `main`).
-6. **After upstream merge:** Delete your feature branch, update `main` from upstream again.
+1. Set up remotes: `git remote add upstream <url>`
+2. `main` is passthrough-only: `git checkout main && git pull upstream main`
+3. Feature branches off `main`. Push to fork (`origin`).
+4. Integration via `develop`. Merge features to `develop`.
+5. PR upstream from feature or develop — not from main.
+6. After upstream merge: delete feature branch, update main from upstream.
 
-This keeps `main` as a clean integration point for upstream work and ensures your commits never litter the mainline of the repository you're contributing to.
+#### Integration discipline
 
-**Integration discipline (before starting and before pushing):**
+Before every push (non-negotiable), at the start of a new session (active feature branch), and before creating a PR:
 
-Before you push, and at the start of a new session, integrate others' work into your branch. This prevents the classic "I just pushed and CI blows up because someone else committed on main" and makes conflict resolution a small, manageable problem instead of a large, painful one.
-
-**Before pushing:**
 ```bash
-git pull --rebase origin main    # Fetch main and replay your commits on top
-# Resolve any conflicts
-# git add <resolved-files>
-# git rebase --continue
-# Then push
+git pull --rebase origin main    # Replay your commits on top
+# Resolve conflicts
+# git add && git rebase --continue
 git push origin feature/my-feature
 ```
 
-**At the start of a new session:**
-```bash
-git pull --rebase origin main    # Integrate anyone else's work before starting
-# Resolve conflicts if any, then proceed
-```
-
-Using `--rebase` (not `--merge`) keeps history linear — your commits sit on top of main instead of creating a merge commit. This makes the log readable and avoids unnecessary merge noise.
-
-**When to do this:**
-- Before every push (non-negotiable)
-- At the start of a new session when you have an active feature branch
-- Before creating a PR (so CI has the latest base)
-
-**If you don't do this:** you risk pushing work that conflicts with main, triggering CI against stale code, and creating a messy merge history. The cost of pulling before pushing is seconds; the cost of a conflict after pushing is minutes.
+`--rebase` (not `--merge`) keeps history linear. Cost of pulling is seconds; cost of conflict after pushing is minutes.
 
 ---
 
 ## Session state conventions
 
-**Isolation:** All artifacts created during this session stay in this project. This document contains no references to any external workspace — artifacts here don't write back anywhere.
+### Where things go
 
-**Where things go:**
-- Checkpoints and handoffs → `.planning/whats-next.md` — run `/checkpoint` to trigger the LLM to write one in the correct format
-- If no `BACKLOG.md` exists: create one with `## In Progress`, `## Up Next`, `## Ideas` sections
-- Commits go to the local repository
+- Checkpoints and handoffs → `.planning/whats-next.md`
+- If no `BACKLOG.md` exists: create one with `## In Progress`, `## Up Next`, `## Ideas`
+- Commits → local repository
 
-**Close-out mode** (window closing, work may or may not be done): Close-out means this context window is ending — not that the work is finished. A fresh session may need to continue from here.
+### Isolation
 
-Skip spar — there's no approach to challenge. Run shoshin before writing the handoff:
+All artifacts created during this session stay in the project. Nothing writes back to the source workspace.
 
-> "What's in this context window that won't survive the reboot? What have I assumed is captured that isn't? What would a fresh session need to ask for again to pick this up without relitigating?"
+### On drift
 
-Check the stack for open threads — those belong in the handoff. Then write a checkpoint or quick capture oriented toward continuation, not just summary.
-
-Trigger: `/checkpoint` command — or natural language "close-out" / "write a handoff" / "I'm closing this session."
-
-When the session state file already has content from a previous context, append with a datestamp — don't replace. The most recent entry is the active state.
-
-**On drift:** This document is a snapshot of a working style that evolves. If something feels off or outdated, re-copy from the source workspace. The version date above indicates how current this snapshot is.
+This document is a snapshot of a working style that evolves. If something feels off or outdated, re-copy from the source workspace. The version date indicates how current this snapshot is.
