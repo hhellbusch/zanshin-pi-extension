@@ -129,6 +129,16 @@ export async function askGuard(
  * Build a block reason string that includes optional user feedback.
  * Keeps block reason formatting consistent across all guards.
  */
+/**
+ * No-op default export — required by Pi's extension loader, which loads
+ * every .ts file in extensions/ as an extension. This file is a shared
+ * utility module; its behavior is provided via named exports consumed by
+ * the individual guard extensions.
+ */
+export default function (_pi: ExtensionAPI) {
+	// utility module — no extension behavior
+}
+
 export function blockReason(
 	guardName: string,
 	reason: string,
