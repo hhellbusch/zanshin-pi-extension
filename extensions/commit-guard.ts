@@ -155,8 +155,8 @@ export default function (pi: ExtensionAPI) {
 	// Resets to false at session start (fresh state each session).
 	// Resets to false after each successful git commit.
 	// Set to true when the model runs `git diff --cached` (which /review does).
-	// Also stores the diff content reviewed — if staged content changes since
-	// presentation, the diff comparison will differ and we re-prompt for review.
+	// reviewedDiffHash stores a hash of the diff at time of presentation so the
+	// guard can detect if staged content changed between presentation and retry.
 	let stagedReviewed = false;
 	let reviewedDiffHash = "";
 
@@ -175,12 +175,11 @@ export default function (pi: ExtensionAPI) {
 		}
 
 		// Reset after a successful commit — next commit cycle needs its own review.
-		// This only fires on successful bash results, so if a commit was blocked
-		// (no tool_result fires), stagedReviewed stays true — hence the diff-hash
-		// check in Gate 2 catches any content changes between presentation and retry.
+		// This only fires on successful bash results; if a commit was blocked,
+		// no tool_result fires, so the diff-hash check in Gate 2 catches changes.
 		if (containsGitCommit(command)) {
 			stagedReviewed = false;
-			stagedReviewedDiffHash = "";
+			reviewedDiffHash = "";
 		}
 	});
 
@@ -225,10 +224,10 @@ export default function (pi: ExtensionAPI) {
 		// the sendUserMessage so the agent HAS to engage with the content —
 		// not just run a command and immediately retry. Mark stagedReviewed
 		// immediately since the diff is now in the conversation.
-		const diffHash = diff.length > 0 ? btoa(diff.slice(0, 500)) : "";
-		if (!stagedReviewed || stagedReviewedDiffHash !== diffHash) {
+		const diffHash = diff.length > 0 ? Buffer.from(diff.slice(0, 500)).toString("base64") : "";
+		if (!stagedReviewed || reviewedDiffHash !== diffHash) {
 			stagedReviewed = true;
-			stagedReviewedDiffHash = diffHash;
+			reviewedDiffHash = diffHash;
 			pi.appendEntry("commit-guard-reviewed", { reviewed: true });
 
 			const hadAdd = /\bgit\s+add\b/.test(command);
