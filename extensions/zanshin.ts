@@ -60,12 +60,14 @@ export default function (pi: ExtensionAPI) {
 
 	let stack: string[] = [];
 	let changesSinceCheckpoint = 0;
+	let checkpointNotified = false; // fires once per threshold crossing
 
 	// ── Session start: restore state + auto-shoshin notify ────────────────────
 
 	pi.on("session_start", async (event, ctx) => {
 		stack = [];
 		changesSinceCheckpoint = 0;
+		checkpointNotified = false;
 
 		for (const entry of ctx.sessionManager.getEntries()) {
 			if (entry.type !== "custom") continue;
@@ -74,6 +76,9 @@ export default function (pi: ExtensionAPI) {
 			}
 			if (entry.customType === "zanshin-changes") {
 				changesSinceCheckpoint = (entry.data as { count: number }).count ?? 0;
+			}
+			if (entry.customType === "zanshin-checkpoint-notified") {
+				checkpointNotified = (entry.data as { notified: boolean }).notified ?? false;
 			}
 		}
 
@@ -120,13 +125,14 @@ export default function (pi: ExtensionAPI) {
 		changesSinceCheckpoint++;
 		pi.appendEntry("zanshin-changes", { count: changesSinceCheckpoint });
 
-		if (changesSinceCheckpoint >= CHECKPOINT_THRESHOLD) {
+		// Fire once per threshold crossing — don't spam on every subsequent write.
+		if (changesSinceCheckpoint >= CHECKPOINT_THRESHOLD && !checkpointNotified) {
+			checkpointNotified = true;
+			pi.appendEntry("zanshin-checkpoint-notified", { notified: true });
 			ctx.ui.notify(
-				`Zanshin: ${changesSinceCheckpoint} file changes since last checkpoint — run /checkpoint`,
+				"Zanshin: uncommitted changes since last checkpoint — run /checkpoint",
 				"warning",
 			);
-			// Don't reset here; let /checkpoint reset it so the reminder persists
-			// until the user explicitly checkpoints.
 		}
 	});
 
@@ -141,7 +147,7 @@ export default function (pi: ExtensionAPI) {
 		);
 		if (!hasCheckpoint) {
 			ctx.ui.notify(
-				`Zanshin: ${changesSinceCheckpoint} uncommitted changes with no checkpoint — run /checkpoint next session`,
+				"Zanshin: uncommitted changes with no checkpoint — run /checkpoint next session",
 				"warning",
 			);
 		}
@@ -198,6 +204,18 @@ export default function (pi: ExtensionAPI) {
 		handler: async (args, ctx) => {
 			await ctx.waitForIdle();
 
+			// Capture HEAD now — don't ask the agent to re-query git.
+			let gitHead = "unknown";
+			try {
+				const { stdout } = await pi.exec("bash", [
+					"-c",
+					"git log -1 --format='%h %s' 2>/dev/null || echo 'no commits yet'",
+				]);
+				gitHead = stdout.trim();
+			} catch {
+				gitHead = "no git repo";
+			}
+
 			const stackState =
 				stack.length > 0
 					? stack
@@ -211,20 +229,20 @@ export default function (pi: ExtensionAPI) {
 
 			// Reset the counter immediately so the reminder stops firing.
 			changesSinceCheckpoint = 0;
+			checkpointNotified = false;
 			pi.appendEntry("zanshin-changes", { count: 0 });
 
 			pi.sendUserMessage(
-				`Write a Zanshin checkpoint. Use the write tool to append to .planning/whats-next.md ` +
-					`(create .planning/ if needed; if the file exists, append — do not replace).\n\n` +
-					`Use this format exactly:\n\n` +
-					`# Checkpoint — YYYY-MM-DD\n\n` +
-					`**In progress:** [one sentence — what is mid-flight right now]\n` +
-					`**Just completed:** [1–3 bullets]\n` +
-					`**Next step:** [one sentence — what happens next if the session continues]\n` +
-					`**Key decision:** [one sentence capturing anything that would be re-litigated without knowing it was settled — or "none"]\n` +
-					`**Git state:** [run \`git log -1 --format="%h %s"\` and paste result]\n` +
-					`**Open threads:** ${stackState}\n\n` +
-					`Use today's date. Run git log -1 to get the git state before writing.`,
+				`Write a Zanshin checkpoint to .planning/whats-next.md ` +
+					`(append — don't replace existing content).\n\n` +
+					`Format:\n\n` +
+					`# Checkpoint — <today's date>\n\n` +
+					`**In progress:** [mid-flight item — or "none"]\n` +
+					`**Just completed:** [1–3 bullets — or "nothing"]\n` +
+					`**Next step:** [or "nothing"]\n` +
+					`**Key decision:** [anything re-litigable — or "none"]\n` +
+					`**Git:** \`${gitHead}\`\n` +
+					`**Stack:** ${stackState}`,
 			);
 		},
 	});
@@ -264,7 +282,7 @@ export default function (pi: ExtensionAPI) {
 		},
 	});
 
-	// ── /stack ────────────────────────────────────────────────────────────────
+	// ── /stack ─────────────────────────────────────────────────────────────────
 
 	pi.registerCommand("stack", {
 		description: "Show the current Zanshin stack",
