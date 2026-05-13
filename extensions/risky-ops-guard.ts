@@ -20,6 +20,7 @@
  */
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { isToolCallEventType } from "@earendil-works/pi-coding-agent";
+import { askGuard, blockReason } from "./guard-ui.js";
 
 interface RiskyPattern {
 	pattern: RegExp;
@@ -88,15 +89,19 @@ export default function (pi: ExtensionAPI) {
 		const preview =
 			command.length > 120 ? `${command.slice(0, 120)}…` : command;
 
-		const ok = await ctx.ui.confirm(
-			"Risky operation detected",
-			`This command may cause irreversible data loss (${match}):\n\n  ${preview}\n\nProceed?`,
-		);
+		const result = await askGuard(pi, ctx, {
+			title: `risky-ops-guard: ${match}`,
+			body: `This command may cause irreversible data loss:\n\n  ${preview}`,
+		});
 
-		if (!ok) {
+		if (!result.proceed) {
 			return {
 				block: true,
-				reason: `Blocked by risky-ops-guard: user declined (${match}).`,
+				reason: blockReason(
+					"risky-ops-guard",
+					`user declined (${match})`,
+					result.feedback,
+				),
 			};
 		}
 	});

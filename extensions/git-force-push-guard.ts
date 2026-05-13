@@ -22,6 +22,7 @@
  */
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { isToolCallEventType } from "@earendil-works/pi-coding-agent";
+import { askGuard, blockReason } from "./guard-ui.js";
 
 /** Patterns that indicate a force-push to main. */
 const FORCE_PUSH_PATTERNS: RegExp[] = [
@@ -63,15 +64,19 @@ export default function (pi: ExtensionAPI) {
 		const preview =
 			command.length > 120 ? `${command.slice(0, 120)}…` : command;
 
-		const ok = await ctx.ui.confirm(
-			"Force-push detected",
-			`This command rewrites shared history (${match}):\n\n  ${preview}\n\nThis can break cross-session state for other users or harvest cycles. Proceed?`,
-		);
+		const result = await askGuard(pi, ctx, {
+			title: `git-force-push-guard: ${match}`,
+			body: `This command rewrites shared history:\n\n  ${preview}\n\nThis can break cross-session state for other users or harvest cycles.`,
+		});
 
-		if (!ok) {
+		if (!result.proceed) {
 			return {
 				block: true,
-				reason: "Blocked by git-force-push-guard: user declined.",
+				reason: blockReason(
+					"git-force-push-guard",
+					"user declined",
+					result.feedback,
+				),
 			};
 		}
 	});

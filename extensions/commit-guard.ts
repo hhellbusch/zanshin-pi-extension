@@ -194,38 +194,28 @@ export default function (pi: ExtensionAPI) {
 
 		// ── Gate 2: Review loop ──────────────────────────────────────────────
 		if (!stagedReviewed) {
-			if (!ctx.hasUI) {
-				// Non-interactive: block by default — unreviewed commits are unsafe
+			const result = await askGuard(pi, ctx, {
+				title: "commit-guard: staged changes not yet reviewed",
+				body:
+					"Run /review to inspect staged changes before committing. " +
+					"/review runs `git diff --cached` and surfaces issues. " +
+					"After /review completes, the commit will proceed automatically.",
+				nonInteractiveDefault: "block",
+				enableYesAnd: false,
+			});
+
+			if (!result.proceed) {
 				return {
 					block: true,
-					reason:
-						"commit-guard: staged content has not been reviewed this commit cycle. " +
-						"Run /review (which runs `git diff --cached`) before committing.",
+					reason: blockReason(
+						"commit-guard",
+						"run /review to inspect staged changes, then retry the commit",
+						result.feedback,
+					),
 				};
 			}
 
-			const proceed = await ctx.ui.select(
-				"commit-guard: staged changes not yet reviewed",
-				[
-					"Run /review first (recommended)",
-					"Proceed without review",
-				],
-			);
-
-			if (proceed === "Run /review first (recommended)") {
-				// Mark that review was triggered — the model will run /review,
-				// which runs `git diff --cached`, which sets stagedReviewed = true.
-				// On the next commit attempt the flag will be set and this gate passes.
-				return {
-					block: true,
-					reason:
-						"commit-guard: run /review to inspect staged changes, then retry the commit. " +
-						"/review will run `git diff --cached` and surface any issues. " +
-						"After /review completes, the commit will proceed automatically.",
-				};
-			}
-
-			// User explicitly chose to proceed — allow but notify
+			// User explicitly chose to proceed without review — allow but notify
 			ctx.ui.notify(
 				"commit-guard: proceeding without review (user override)",
 				"warning",

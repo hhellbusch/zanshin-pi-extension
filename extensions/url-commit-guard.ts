@@ -28,6 +28,7 @@
  */
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { isToolCallEventType } from "@earendil-works/pi-coding-agent";
+import { askGuard, blockReason } from "./guard-ui.js";
 
 /** Matches any bash command that includes `git commit`. */
 const GIT_COMMIT_RE = /\bgit\s+commit\b/;
@@ -196,24 +197,21 @@ export default function (pi: ExtensionAPI) {
 
 		// ── Broken URLs — require explicit confirmation ─────────────────────────
 		if (broken.length > 0) {
-			if (!ctx.hasUI) {
-				// Non-interactive: block by default — broken URLs are likely hallucinations
+			const result = await askGuard(pi, ctx, {
+				title: `url-commit-guard: ${broken.length} broken URL(s)`,
+				body: `${summary}\n\nBroken URLs are likely hallucinated or stale. Proceed only if you are certain they are correct.`,
+				nonInteractiveDefault: "block",
+				enableYesAnd: false,
+			});
+
+			if (!result.proceed) {
 				return {
 					block: true,
-					reason: `url-commit-guard: ${broken.length} broken URL(s) in staged markdown. Fix links before committing.`,
-				};
-			}
-
-			const proceed = await ctx.ui.confirm(
-				`url-commit-guard: ${broken.length} broken URL(s) detected`,
-				`${summary}\n\nBroken URLs are likely hallucinated or stale.\nFix them before committing, or proceed if you're certain they are correct.`,
-			);
-
-			if (!proceed) {
-				return {
-					block: true,
-					reason:
-						"url-commit-guard: user declined commit with broken URLs in staged markdown.",
+					reason: blockReason(
+						"url-commit-guard",
+						"broken URLs in staged markdown",
+						result.feedback,
+					),
 				};
 			}
 

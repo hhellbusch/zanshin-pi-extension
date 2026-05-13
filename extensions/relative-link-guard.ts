@@ -205,27 +205,23 @@ export default function (pi: ExtensionAPI) {
 		].join("\n");
 
 		// ── Block or confirm ───────────────────────────────────────────────────
-		if (!ctx.hasUI) {
-			return {
-				block: true,
-				reason:
-					`relative-link-guard: ${broken.length} broken relative link(s) in staged markdown.\n\n` +
-					`${summary}\n\n` +
-					`Fix the paths before committing.`,
-			};
-		}
-
-		const proceed = await ctx.ui.confirm(
-			`relative-link-guard: ${broken.length} broken relative link(s)`,
-			`${summary}\n\nBroken links will not resolve for readers. ` +
+		const result = await askGuard(pi, ctx, {
+			title: `relative-link-guard: ${broken.length} broken relative link(s)`,
+			body:
+				`${summary}\n\nBroken links will not resolve for readers. ` +
 				`Proceed only if the target file will be created in a separate commit.`,
-		);
+			nonInteractiveDefault: "block",
+			enableYesAnd: false,
+		});
 
-		if (!proceed) {
+		if (!result.proceed) {
 			return {
 				block: true,
-				reason:
-					"relative-link-guard: user declined commit with broken relative links.",
+				reason: blockReason(
+					"relative-link-guard",
+					"broken relative link(s) in staged markdown",
+					result.feedback,
+				),
 			};
 		}
 	});

@@ -14,6 +14,7 @@
  */
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { isToolCallEventType } from "@earendil-works/pi-coding-agent";
+import { askGuard, blockReason } from "./guard-ui.js";
 
 /** Patterns that indicate a process-termination command. */
 const KILL_PATTERNS: RegExp[] = [
@@ -49,13 +50,16 @@ export default function (pi: ExtensionAPI) {
 		const preview =
 			command.length > 120 ? `${command.slice(0, 120)}…` : command;
 
-		const ok = await ctx.ui.confirm(
-			"Process kill detected",
-			`This command will terminate processes:\n\n  ${preview}\n\nProceed?`,
-		);
+		const result = await askGuard(pi, ctx, {
+			title: `process-guard: ${match}`,
+			body: `This command will terminate processes:\n\n  ${preview}`,
+		});
 
-		if (!ok) {
-			return { block: true, reason: "Blocked by process-guard: user declined." };
+		if (!result.proceed) {
+			return {
+				block: true,
+				reason: blockReason("process-guard", "user declined", result.feedback),
+			};
 		}
 	});
 }
