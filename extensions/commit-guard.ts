@@ -38,7 +38,7 @@ import {
 	isBashToolResult,
 	isToolCallEventType,
 } from "@earendil-works/pi-coding-agent";
-import { askGuard, blockReason } from "../lib/guard-ui.js";
+// guard-ui not needed: Gate 2 now uses pi.sendUserMessage() instead of a dialog
 
 // ── Secrets detection ──────────────────────────────────────────────────────────
 
@@ -214,41 +214,29 @@ export default function (pi: ExtensionAPI) {
 		}
 
 		// ── Gate 2: Review loop ──────────────────────────────────────────────
+		// Instead of prompting the human, inject a message so the agent runs
+		// the review itself. Once `git diff --cached` appears in a tool_result,
+		// stagedReviewed flips to true and the next commit attempt succeeds.
 		if (!stagedReviewed) {
-			const result = await askGuard(pi, ctx, {
-				title: "commit-guard: staged changes not yet reviewed",
-				body:
-					"Run /review to inspect staged changes before committing. " +
-					"/review runs `git diff --cached` and surfaces issues. " +
-					"After /review completes, the commit will proceed automatically.",
-				nonInteractiveDefault: "block",
-				enableYesAnd: false,
-			});
+			const hadAdd = /\bgit\s+add\b/.test(command);
+			const restageNote = hadAdd
+				? "Note: the `git add` in this compound command did not execute — re-stage your files first."
+				: "Re-run `git add` on any files edited since staging, then retry the commit.";
 
-			if (!result.proceed) {
-				// Detect compound commands where `git add` was included before
-				// the blocked commit — the add never ran since the whole command
-				// was intercepted before execution.
-				const hadAdd = /\bgit\s+add\b/.test(command);
-				const restageNote = hadAdd
-					? "Note: the `git add` in this compound command did not execute — re-stage your files before retrying."
-					: "After reviewing: re-run `git add` on any files you edited since staging, then retry.";
-
-				return {
-					block: true,
-					reason: blockReason(
-						"commit-guard",
-						`run /review to inspect staged changes, then retry.\n${restageNote}`,
-						result.feedback,
-					),
-				};
-			}
-
-			// User explicitly chose to proceed without review — allow but notify
-			ctx.ui.notify(
-				"commit-guard: proceeding without review (user override)",
-				"warning",
+			// Tell the agent exactly what to do — no human needed in this loop.
+			pi.sendUserMessage(
+				"commit-guard blocked the commit: staged changes have not been reviewed.\n\n" +
+				`Run \`git diff --cached\` to inspect what is staged, review the output, ` +
+				`then retry the commit. ${restageNote}`,
 			);
+
+			return {
+				block: true,
+				reason:
+					"commit-guard: staged changes not reviewed — " +
+					"running `git diff --cached` now to unblock the next commit attempt.",
+			};
 		}
+
 	});
 }
