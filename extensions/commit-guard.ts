@@ -249,6 +249,7 @@ export default function (pi: ExtensionAPI) {
 				"2. No debug code, temp hacks, or accidental file inclusions\n" +
 				"3. No credentials or sensitive values\n\n" +
 				`If everything looks correct, retry the commit. If you find issues, fix them first. ${restageNote}`,
+				{ deliverAs: "followUp" },
 			);
 
 			return {
