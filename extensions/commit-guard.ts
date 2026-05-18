@@ -184,6 +184,22 @@ export default function (pi: ExtensionAPI) {
 		const command = event.input.command ?? "";
 		if (!containsGitCommit(command)) return;
 
+		// ── Gate 0: Compound command check ────────────────────────────────────────
+		// The guard fires before the command executes. If git add and git commit
+		// are in the same call, the diff will be empty when the guard checks it.
+		// Block immediately and tell the agent to split them.
+		const GIT_ADD_RE = /\bgit\s+add\b/;
+		if (GIT_ADD_RE.test(command)) {
+			return {
+				block: true,
+				reason:
+					"commit-guard: split git add and git commit into separate calls.\n\n" +
+					"The guard runs before your command executes, so when git add and " +
+					"git commit are combined, the staged diff is empty at check time.\n\n" +
+					"Run git add first, then git commit as a separate call.",
+			};
+		}
+
 		// ── Gate 1: Secrets scan ─────────────────────────────────────────────
 		// Get staged diff for all files (not just markdown — secrets can be anywhere)
 		const { stdout: diff } = await pi.exec("bash", [
