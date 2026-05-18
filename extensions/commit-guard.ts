@@ -207,6 +207,9 @@ export default function (pi: ExtensionAPI) {
 			"git diff --cached --unified=0 || true",
 		]);
 
+		// Nothing staged — let git report "nothing to commit" naturally.
+		if (!diff.trim()) return;
+
 		if (diff) {
 			const hits = scanForSecrets(diff);
 			if (hits.length > 0) {
