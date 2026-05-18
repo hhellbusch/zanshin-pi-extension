@@ -16,29 +16,22 @@
  *
  * ── Gate 2: Review loop enforcement ──────────────────────────────────────────
  *
- * Tracks whether staged content has been reviewed in the current commit cycle.
- * "Reviewed" means: a bash command containing `git diff --cached` completed
- * successfully. This is the command /review runs, so running /review counts.
+ * Blocks the commit and embeds the full staged diff + a three-point checklist
+ * directly in the block reason. The agent reads the diff in the tool result,
+ * confirms the checklist, and retries. On retry the flag is set → commit lands.
  *
- * If staged content hasn't been reviewed before a commit:
- *   → Block the commit with a clear reason ("run /review first")
- *   → The model reads the reason, runs /review, and retries the commit
- *   → On retry, the flag is set → commit proceeds
+ * Critically: no sendUserMessage is used. The review happens entirely in the
+ * agent's tool-result space — no human-visible turn is created, so there is no
+ * stale-replay noise for the operator to deal with.
  *
  * The flag resets after each successful commit so every commit cycle requires
- * its own review pass. This makes the review loop automatic — the user doesn't
- * have to remember to run /review; the model handles it when blocked.
- *
- * Non-interactive mode (no UI): both gates still run. The secrets gate always
- * hard-blocks. The review gate also hard-blocks in non-interactive mode (no
- * confirm available — treat unreviewed commits as unsafe).
+ * its own review pass.
  */
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import {
 	isBashToolResult,
 	isToolCallEventType,
 } from "@earendil-works/pi-coding-agent";
-// guard-ui not needed: Gate 2 now uses pi.sendUserMessage() instead of a dialog
 
 // ── Secrets detection ──────────────────────────────────────────────────────────
 
@@ -228,33 +221,21 @@ export default function (pi: ExtensionAPI) {
 		if (!stagedReviewed || reviewedDiffHash !== diffHash) {
 			stagedReviewed = true;
 			reviewedDiffHash = diffHash;
-			pi.appendEntry("commit-guard-reviewed", { reviewed: true });
-
-			const hadAdd = /\bgit\s+add\b/.test(command);
-			const restageNote = hadAdd
-				? "Note: the `git add` in this compound command did not execute — re-stage your files before retrying."
-				: "Re-run `git add` on any files edited since staging, then retry the commit.";
 
 			const diffBlock = diff.trim()
 				? `\`\`\`diff\n${diff.trim()}\n\`\`\``
 				: "(no staged changes — nothing to commit)";
 
-			// Inject the diff into the conversation so the agent must engage
-			// with the actual content, not just run a command mechanically.
-			pi.sendUserMessage(
-				"commit-guard: review the staged diff before committing.\n\n" +
-				`${diffBlock}\n\n` +
-				"Before retrying the commit, confirm:\n" +
-				"1. The changes match the intended commit message\n" +
-				"2. No debug code, temp hacks, or accidental file inclusions\n" +
-				"3. No credentials or sensitive values\n\n" +
-				`If everything looks correct, retry the commit. If you find issues, fix them first. ${restageNote}`,
-				{ deliverAs: "followUp" },
-			);
-
 			return {
 				block: true,
-				reason: "commit-guard: presenting staged diff for review — retry the commit after confirming.",
+				reason:
+					"commit-guard: review the staged diff before committing.\n\n" +
+					`${diffBlock}\n\n` +
+					"Before retrying the commit, confirm:\n" +
+					"1. The changes match the intended commit message\n" +
+					"2. No debug code, temp hacks, or accidental file inclusions\n" +
+					"3. No credentials or sensitive values\n\n" +
+					"If everything looks correct, retry the commit.",
 			};
 		}
 
