@@ -127,11 +127,11 @@ function analyzeDiff(diff: string): DiffStats {
 	const lines = diff.split("\n");
 
 	for (let i = 0; i < lines.length; i++) {
-		if (lines[i].match(/^\+\+\+ (?:a\/)?dev\/null$/)) {
-			// This is a deleted file — look for +++ header a/ path
+		if (lines[i].match(/^\+\+\+ \/dev\/null$/)) {
+			// Deleted file: look for --- a/<name> in previous lines
 			for (let j = i - 1; j >= Math.max(0, i - 5); j--) {
-				const m = lines[j].match(/^\+\+\+ (?:a\/)?(.+)$/);
-				if (m && m[1] !== "dev/null") {
+				const m = lines[j].match(/^--- a\/(.+)$/);
+				if (m) {
 					deletedFiles.push(m[1]);
 					break;
 				}
