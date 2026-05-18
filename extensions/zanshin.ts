@@ -164,6 +164,17 @@ export default function (pi: ExtensionAPI) {
 				"Zanshin: uncommitted changes since last checkpoint — run /checkpoint",
 				"warning",
 			);
+
+			// Also check whether a project BRIEF exists for active work.
+			// If not, surface a nudge alongside the checkpoint reminder.
+			const cpDir = resolveCheckpointDir(ctx.cwd);
+			const hasBrief = existsSync(join(cpDir, "BRIEF.md"));
+			if (!hasBrief) {
+				ctx.ui.notify(
+					"Zanshin: no project brief found — run /brief to create one",
+					"info",
+				);
+			}
 		}
 	});
 
