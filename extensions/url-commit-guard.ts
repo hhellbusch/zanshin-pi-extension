@@ -10,18 +10,18 @@
  * before they enter the commit history is cheaper than finding them later.
  *
  * URL categorization:
- *   ✅  HTTP 200–399   — verified, commit proceeds silently
- *   ❌  HTTP 404 / 410 — broken link; user must confirm before commit proceeds
- *   ⚠️  curl error /
- *       HTTP 000       — unverifiable (proxy block, timeout, no egress route);
- *                        warns but does not block — limited egress is expected
+ *   \u2705  HTTP 200--399   -- verified, commit proceeds silently
+ *   \u274c  HTTP 404 / 410 -- broken link; user must confirm before commit proceeds
+ *   \u26a0\ufe0f  curl error /
+ *       HTTP 000       -- unverifiable (proxy block, timeout, no egress route);
+ *                        warns but does not block -- limited egress is expected
  *                        in paude containers
- *   ⚠️  HTTP 403/5xx  — ambiguous (real 403 vs proxy block); treated as
+ *   \u26a0\ufe0f  HTTP 403/5xx  -- ambiguous (real 403 vs proxy block); treated as
  *                        unverifiable, not broken
  *
  * Scope:
  *   - Only staged content is checked (git diff --cached)
- *   - Only new lines (diff + prefix) are scanned — unchanged URLs in
+ *   - Only new lines (diff + prefix) are scanned -- unchanged URLs in
  *     modified files are not re-checked
  *   - Only .md files are scanned
  *   - URLs found in diff file headers (+++ lines) are skipped
@@ -33,7 +33,7 @@ import { askGuard, blockReason } from "../lib/guard-ui.js";
 /** Matches any bash command that includes `git commit`. */
 const GIT_COMMIT_RE = /\bgit\s+commit\b/;
 
-/** Loose URL pattern — we trim trailing punctuation after matching. */
+/** Loose URL pattern -- we trim trailing punctuation after matching. */
 const URL_RE = /https?:\/\/[^\s\)\>\"\'\`\]\[]+/g;
 
 /**
@@ -132,7 +132,7 @@ async function checkUrl(pi: ExtensionAPI, url: string): Promise<UrlResult> {
 		return { status: "broken", httpCode };
 	}
 
-	// 403 (real or proxy), 5xx, other — ambiguous, don't block
+	// 403 (real or proxy), 5xx, other -- ambiguous, don't block
 	return { status: "unverifiable", reason: `HTTP ${httpCode}` };
 }
 
@@ -143,7 +143,7 @@ export default function (pi: ExtensionAPI) {
 		const command = event.input.command ?? "";
 		if (!GIT_COMMIT_RE.test(command)) return;
 
-		// ── Gather staged markdown diff ───────────────────────────────────────
+		// - Gather staged markdown diff -
 		const diff = await getStagedMarkdownDiff(pi);
 		if (!diff) return;
 
@@ -151,11 +151,11 @@ export default function (pi: ExtensionAPI) {
 		if (urls.length === 0) return;
 
 		ctx.ui.notify(
-			`url-commit-guard: checking ${urls.length} URL(s) in staged markdown…`,
+			`url-commit-guard: checking ${urls.length} URL(s) in staged markdown...`,
 			"info",
 		);
 
-		// ── Check all URLs in parallel ─────────────────────────────────────────
+		// - Check all URLs in parallel -
 		const checks = await Promise.all(
 			urls.map(async (url) => ({ url, result: await checkUrl(pi, url) })),
 		);
@@ -166,36 +166,36 @@ export default function (pi: ExtensionAPI) {
 			(c) => c.result.status === "unverifiable",
 		);
 
-		// ── Build report ───────────────────────────────────────────────────────
+		// - Build report -
 		const lines: string[] = [];
 		for (const { url, result } of ok) {
 			lines.push(
-				`  ✅  ${url}  (${(result as { status: "ok"; httpCode: number }).httpCode})`,
+				`  \u2705  ${url}  (${(result as { status: "ok"; httpCode: number }).httpCode})`,
 			);
 		}
 		for (const { url, result } of unverifiable) {
 			lines.push(
-				`  ⚠️   ${url}  — ${(result as { status: "unverifiable"; reason: string }).reason}`,
+				`  \u26a0\ufe0f   ${url}  -- ${(result as { status: "unverifiable"; reason: string }).reason}`,
 			);
 		}
 		for (const { url, result } of broken) {
 			lines.push(
-				`  ❌  ${url}  (${(result as { status: "broken"; httpCode: number }).httpCode})`,
+				`  \u274c  ${url}  (${(result as { status: "broken"; httpCode: number }).httpCode})`,
 			);
 		}
 
 		const summary = `${ok.length} verified  /  ${broken.length} broken  /  ${unverifiable.length} unverifiable\n\n${lines.join("\n")}`;
 
-		// ── All clear ──────────────────────────────────────────────────────────
+		// - All clear -
 		if (broken.length === 0 && unverifiable.length === 0) {
 			ctx.ui.notify(
-				`url-commit-guard: all ${ok.length} URL(s) verified ✅`,
+				`url-commit-guard: all ${ok.length} URL(s) verified \u2705`,
 				"info",
 			);
 			return;
 		}
 
-		// ── Broken URLs — require explicit confirmation ─────────────────────────
+		// - Broken URLs -- require explicit confirmation -
 		if (broken.length > 0) {
 			const result = await askGuard(pi, ctx, {
 				title: `url-commit-guard: ${broken.length} broken URL(s)`,
@@ -209,7 +209,7 @@ export default function (pi: ExtensionAPI) {
 				const brokenList = broken
 					.map(
 						({ url, result: r }) =>
-							`  ❌ ${(r as { httpCode: number }).httpCode}  ${url}`,
+							`  \u274c ${(r as { httpCode: number }).httpCode}  ${url}`,
 					)
 					.join("\n");
 
@@ -218,7 +218,7 @@ export default function (pi: ExtensionAPI) {
 						(r as { httpCode: number }).httpCode === 404,
 				);
 				const guidance404 = has404
-					? "\nFor 404s: verify the path actually exists — browse the repository or site rather than guessing the URL structure."
+					? "\nFor 404s: verify the path actually exists -- browse the repository or site rather than guessing the URL structure."
 					: "";
 
 				return {
@@ -231,13 +231,13 @@ export default function (pi: ExtensionAPI) {
 				};
 			}
 
-			return; // user confirmed — allow commit
+			return; // user confirmed -- allow commit
 		}
 
-		// ── Only unverifiable — warn but allow ─────────────────────────────────
+		// - Only unverifiable -- warn but allow -
 		// These are typically proxy blocks or timeouts, not hallucinations.
 		ctx.ui.notify(
-			`url-commit-guard: ${unverifiable.length} URL(s) could not be verified — review manually\n\n${summary}`,
+			`url-commit-guard: ${unverifiable.length} URL(s) could not be verified -- review manually\n\n${summary}`,
 			"warning",
 		);
 	});

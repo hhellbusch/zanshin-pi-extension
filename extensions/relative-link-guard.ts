@@ -6,34 +6,34 @@
  *
  * Motivation: LLMs generate relative links based on assumed repository
  * structure that may not match reality. The link looks correct in prose
- * but resolves to nothing — discovered only when someone follows it.
+ * but resolves to nothing -- discovered only when someone follows it.
  * This is distinct from the hallucinated-URL problem (url-commit-guard
  * handles external https:// links); this catches broken internal links.
  *
  * What counts as a relative link:
- *   [text](path/to/file.md)          ← implicit relative (no scheme)
- *   [text](./path/to/file.md)        ← explicit relative
- *   [text](../path/to/file.md)       ← parent traversal
- *   [text](path/to/file.md#section)  ← fragment stripped, file checked
+ *   [text](path/to/file.md)          <- implicit relative (no scheme)
+ *   [text](./path/to/file.md)        <- explicit relative
+ *   [text](../path/to/file.md)       <- parent traversal
+ *   [text](path/to/file.md#section)  <- fragment stripped, file checked
  *
  * Not checked (handled elsewhere or out of scope):
- *   [text](https://example.com)      ← external (url-commit-guard)
- *   [text](#section)                 ← fragment-only, no file target
- *   [text](mailto:foo@example.com)   ← email
+ *   [text](https://example.com)      <- external (url-commit-guard)
+ *   [text](#section)                 <- fragment-only, no file target
+ *   [text](mailto:foo@example.com)   <- email
  *
  * Scope:
  *   - Only staged content is checked (git diff --cached)
- *   - Only new lines (diff + prefix) are scanned — pre-existing broken
+ *   - Only new lines (diff + prefix) are scanned -- pre-existing broken
  *     links in unmodified sections are not re-checked
  *   - Only .md files are scanned
- *   - Files under research\/\*\/sources\/ are skipped — scraped content
+ *   - Files under research\/\*\/sources\/ are skipped -- scraped content
  *     contains web-relative URLs that are relative to the source domain
  *   - Lines inside fenced code blocks (``` or ~~~) are skipped
  *   - Link targets are resolved relative to the file containing them,
  *     against the repo root on disk (working tree includes staged files)
  *
  * Blocking behavior:
- *   - Broken links → confirm dialog (not a hard block)
+ *   - Broken links -> confirm dialog (not a hard block)
  *   - User can proceed if the target will be created in a separate step
  *   - Non-interactive mode: hard block (unresolvable links are unsafe)
  */
@@ -48,7 +48,7 @@ const GIT_COMMIT_RE = /\bgit\s+commit\b/;
 /**
  * Matches markdown links: [text](target) or [text](target#fragment).
  * Capture group 1 = target (the part inside parens, before any #).
- * Image links ![alt](src) are also captured — broken image paths matter too.
+ * Image links ![alt](src) are also captured -- broken image paths matter too.
  */
 const LINK_RE = /!?\[[^\]]*\]\(([^)]+)\)/g;
 
@@ -65,11 +65,11 @@ const RESEARCH_SOURCES_RE = /^research\/[^/]+\/sources\//;
  * Diff format:
  *   diff --git a/path b/path
  *   --- a/path
- *   +++ b/path         ← current file
+ *   +++ b/path         <- current file
  *   @@ ... @@
- *   +new line content  ← new line (check links here)
- *    context line      ← skip
- *   -removed line      ← skip
+ *   +new line content  <- new line (check links here)
+ *    context line      <- skip
+ *   -removed line      <- skip
  */
 function extractNewRelativeLinks(
 	diff: string,
@@ -89,7 +89,7 @@ function extractNewRelativeLinks(
 		// Only process .md files
 		if (!currentFile.endsWith(".md")) continue;
 
-		// Skip research source directories — scraped content has web-relative
+		// Skip research source directories -- scraped content has web-relative
 		// URLs (e.g. /en/products, page.html) relative to the source domain.
 		if (RESEARCH_SOURCES_RE.test(currentFile)) continue;
 
@@ -105,7 +105,7 @@ function extractNewRelativeLinks(
 			inFence = !inFence;
 		}
 
-		// Only process new lines — not context, not deletions, not headers
+		// Only process new lines -- not context, not deletions, not headers
 		if (!line.startsWith("+") || line.startsWith("+++")) continue;
 
 		// Skip lines inside fenced code blocks
@@ -117,7 +117,7 @@ function extractNewRelativeLinks(
 		while ((match = LINK_RE.exec(line)) !== null) {
 			const raw = match[1].trim();
 
-			// Strip fragment (#section) — we only check the file target
+			// Strip fragment (#section) -- we only check the file target
 			const withoutFragment = raw.split("#")[0].trim();
 
 			// Skip if nothing remains after stripping fragment (fragment-only link)
@@ -170,7 +170,7 @@ export default function (pi: ExtensionAPI) {
 		const command = event.input.command ?? "";
 		if (!GIT_COMMIT_RE.test(command)) return;
 
-		// ── Get repo root ──────────────────────────────────────────────────────
+		// - Get repo root -
 		const { stdout: rootRaw, code: rootCode } = await pi.exec("git", [
 			"rev-parse",
 			"--show-toplevel",
@@ -178,14 +178,14 @@ export default function (pi: ExtensionAPI) {
 		if (rootCode !== 0 || !rootRaw.trim()) return;
 		const repoRoot = rootRaw.trim();
 
-		// ── Get staged markdown diff ───────────────────────────────────────────
+		// - Get staged markdown diff -
 		const { stdout: diff } = await pi.exec("bash", [
 			"-c",
 			"git diff --cached --unified=0 -- '*.md' || true",
 		]);
 		if (!diff) return;
 
-		// ── Extract and check relative links ───────────────────────────────────
+		// - Extract and check relative links -
 		const links = extractNewRelativeLinks(diff);
 		if (links.length === 0) return;
 
@@ -202,21 +202,21 @@ export default function (pi: ExtensionAPI) {
 		const broken = results.filter((r) => !r.exists);
 		const ok = results.filter((r) => r.exists);
 
-		// ── All clear ──────────────────────────────────────────────────────────
+		// - All clear -
 		if (broken.length === 0) {
 			if (ok.length > 0) {
 				ctx.ui.notify(
-					`relative-link-guard: ${ok.length} relative link(s) verified ✅`,
+					`relative-link-guard: ${ok.length} relative link(s) verified \u2705`,
 					"info",
 				);
 			}
 			return;
 		}
 
-		// ── Build report ───────────────────────────────────────────────────────
+		// - Build report -
 		const lines: string[] = [];
 		for (const r of ok) {
-			lines.push(`  ✅  [${r.file}] → ${r.rawLink}`);
+			lines.push(`  \u2705  [${r.file}] -> ${r.rawLink}`);
 		}
 		for (const r of broken) {
 			// Show both the raw link (as written) and the resolved path (what was checked)
@@ -225,7 +225,7 @@ export default function (pi: ExtensionAPI) {
 				? r.resolvedPath.slice(repoRoot.length + 1)
 				: r.resolvedPath;
 			lines.push(
-				`  ❌  [${r.file}] → ${r.rawLink}\n       resolved: ${relResolved}`,
+				`  \u274c  [${r.file}] -> ${r.rawLink}\n       resolved: ${relResolved}`,
 			);
 		}
 
@@ -235,7 +235,7 @@ export default function (pi: ExtensionAPI) {
 			lines.join("\n"),
 		].join("\n");
 
-		// ── Block or confirm ───────────────────────────────────────────────────
+		// - Block or confirm -
 		const result = await askGuard(pi, ctx, {
 			title: `relative-link-guard: ${broken.length} broken relative link(s)`,
 			body:

@@ -2,20 +2,20 @@
  * write-quality-guard.ts
  *
  * Notifies at write-time when quality conventions are missing from new files.
- * Catches issues at the moment of creation — before they accumulate and get
+ * Catches issues at the moment of creation -- before they accumulate and get
  * caught in batch at commit time.
  *
  * Checks:
  *
- *   1. AI disclosure footer — every new file under docs/ (excluding READMEs)
+ *   1. AI disclosure footer -- every new file under docs/ (excluding READMEs)
  *      must include the standard footer linking to AI-DISCLOSURE.md.
  *      Catches the "wrote three sections, forgot the footer" pattern.
  *
- *   2. Shell strict mode — every new .sh / .bash file must include
+ *   2. Shell strict mode -- every new .sh / .bash file must include
  *      `set -euo pipefail`. Silent failures from missing strict mode are
  *      hard to debug after the fact.
  *
- * Both checks fire as notifications — they don't block the write. The model
+ * Both checks fire as notifications -- they don't block the write. The model
  * sees the notification and can fix the issue in the next turn before moving
  * on, or acknowledge and move on deliberately.
  *
@@ -65,7 +65,7 @@ export default function (pi: ExtensionAPI) {
 		const { path: filePath, content } = event.input;
 		if (!filePath || !content) return;
 
-		// ── AI disclosure footer ───────────────────────────────────────────────
+		// - AI disclosure footer -
 		if (isDocsMarkdown(filePath) && !hasDisclosureFooter(content)) {
 			ctx.ui.notify(
 				`write-quality: missing AI disclosure footer\n\n` +
@@ -79,7 +79,7 @@ export default function (pi: ExtensionAPI) {
 			);
 		}
 
-		// ── Shell strict mode ──────────────────────────────────────────────────
+		// - Shell strict mode -
 		if (isShellScript(filePath) && !hasStrictMode(content)) {
 			ctx.ui.notify(
 				`write-quality: missing shell strict mode\n\n` +

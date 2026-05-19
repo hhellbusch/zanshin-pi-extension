@@ -3,7 +3,7 @@
  *
  * Prevents session changes (new session, resume, fork, clone) when there
  * are uncommitted git changes. Ensures work is committed before switching
- * context — avoids losing code state to a fresh session that can't see
+ * context -- avoids losing code state to a fresh session that can't see
  * the working tree.
  *
  * Covers:
@@ -67,11 +67,11 @@ async function checkDirtyRepo(
 			ctx.ui.notify(`Stashed ${changedFiles} file(s). Proceeding with ${action}.`, "info");
 			return { cancel: false };
 		}
-		ctx.ui.notify("Stash failed — commit manually.", "error");
+		ctx.ui.notify("Stash failed -- commit manually.", "error");
 		return { cancel: true };
 	}
 
-	// "Yes, proceed anyway" — allow the action
+	//// "Yes, proceed anyway" -- allow the action
 	return;
 }
 

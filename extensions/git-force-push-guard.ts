@@ -5,7 +5,7 @@
  * and requires explicit user confirmation before proceeding.
  *
  * Force-pushes rewrite history that other sessions (and paude harvest cycles)
- * depend on. They break the repo as truth anchor — a fresh session fetching
+ * depend on. They break the repo as truth anchor -- a fresh session fetching
  * from origin will silently discard commits it hasn't seen.
  *
  * Covered:
@@ -62,7 +62,7 @@ export default function (pi: ExtensionAPI) {
 		if (!match) return;
 
 		const preview =
-			command.length > 120 ? `${command.slice(0, 120)}…` : command;
+			command.length > 120 ? `${command.slice(0, 120)}...` : command;
 
 		const result = await askGuard(pi, ctx, {
 			title: `git-force-push-guard: ${match}`,

@@ -6,7 +6,7 @@
  *
  * Covered:
  *   - rm -rf / rm -fr / rm -r -f / rm --recursive --force (any target)
- *   - rm -r (recursive without force — still destructive)
+ *   - rm -r (recursive without force -- still destructive)
  *   - chmod -R (recursive permission change)
  *   - chmod 777 / chmod 666 (world-writable grants)
  *   - shred (secure file erasure)
@@ -15,8 +15,8 @@
  *   - truncate -s 0 (zero out a file)
  *
  * Not covered (intentionally left to the operator):
- *   - Plain `rm <file>` — single-file removal, low blast radius.
- *   - `> file` shell redirects — too noisy to intercept at this layer.
+ *   - Plain `rm <file>` -- single-file removal, low blast radius.
+ *   - `> file` shell redirects -- too noisy to intercept at this layer.
  */
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { isToolCallEventType } from "@earendil-works/pi-coding-agent";
@@ -87,7 +87,7 @@ export default function (pi: ExtensionAPI) {
 		if (!match) return;
 
 		const preview =
-			command.length > 120 ? `${command.slice(0, 120)}…` : command;
+			command.length > 120 ? `${command.slice(0, 120)}...` : command;
 
 		const result = await askGuard(pi, ctx, {
 			title: `risky-ops-guard: ${match}`,

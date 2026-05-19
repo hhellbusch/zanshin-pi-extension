@@ -8,7 +8,7 @@
  * external PIDs, fuser -k, and kill-pipelines built on lsof.
  *
  * Exception: commands that kill a PID or process the agent explicitly started
- * in the same turn are allowed through without confirmation — but detecting
+ * in the same turn are allowed through without confirmation -- but detecting
  * that reliably is hard, so the guard asks unless the command is clearly
  * scoped (e.g. `kill $!` after a backgrounded subshell).
  */
@@ -48,7 +48,7 @@ export default function (pi: ExtensionAPI) {
 		if (!match) return;
 
 		const preview =
-			command.length > 120 ? `${command.slice(0, 120)}…` : command;
+			command.length > 120 ? `${command.slice(0, 120)}...` : command;
 
 		const result = await askGuard(pi, ctx, {
 			title: `process-guard: ${match}`,

@@ -4,7 +4,7 @@
  * HARD-BLOCKS `pi uninstall` commands. No confirm dialog, no exceptions.
  *
  * Uninstalling a Pi extension silently breaks guards, commands, and system
- * prompt content. The agent depends on these extensions to function — removing
+ * prompt content. The agent depends on these extensions to function -- removing
  * one can break the agent's own ability to prevent the break.
  *
  * Why this is a hard block (not confirm):
@@ -42,7 +42,7 @@ export default function (pi: ExtensionAPI) {
 			block: true,
 			reason: "pi uninstall is hard-blocked. The operator must uninstall manually. " +
 				"If a guard extension is broken in the runtime, the fix is: " +
-				"push to remote → pull into cache → operator /reload. " +
+				"push to remote -> pull into cache -> operator /reload. " +
 				"Do not attempt to fix a stale runtime by uninstalling/reinstalling.",
 		};
 	});
