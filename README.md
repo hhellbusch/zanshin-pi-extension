@@ -297,3 +297,7 @@ git submodule update --init --recursive
 ## License
 
 MIT
+
+### ASCII-safe source files
+
+All  files in  and  are ASCII-only. The edit tool matches bytes exactly — multi-byte UTF-8 in comments causes match failures. See .
