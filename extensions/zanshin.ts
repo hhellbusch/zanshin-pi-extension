@@ -19,9 +19,11 @@ import { fileURLToPath } from "node:url";
 
 const extensionDir = dirname(fileURLToPath(import.meta.url));
 const kitDir = join(extensionDir, "..", "kit");
+const docsDir = join(extensionDir, "..", "docs");
 const kitWorking = join(kitDir, "WORKING-STYLE.md");
 const kitStyle = join(kitDir, "STYLE.md");
 const kitTemplate = join(kitDir, "STYLE.template.md");
+const codingConventions = join(docsDir, "CODING-CONVENTIONS.md");
 
 const CHECKPOINT_THRESHOLD = 5;
 
@@ -64,9 +66,10 @@ function kitPathBlock(): string {
 	}
 	return (
 		"**Kit (read when task needs full detail — not every turn):**\n" +
-		`- \`${kitWorking}\` — full working discipline\n` +
-		`- \`${kitStyle}\` — style defaults\n` +
-		`- \`${kitTemplate}\` — blank style template`
+		`- \`${kitWorking}\` -- full working discipline\n` +
+		`- \`${kitStyle}\` -- style defaults\n` +
+		`- \`${kitTemplate}\` -- blank style template\n` +
+		`- \`${codingConventions}\` -- extension source file conventions (ASCII-safe, TypeScript style)`
 	);
 }
 

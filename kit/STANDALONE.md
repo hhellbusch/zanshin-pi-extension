@@ -142,6 +142,18 @@ AI output is a draft. These behaviors enforce that contract.
 
 ---
 
+## Extension source conventions
+
+When authoring or editing files under `extensions/` or `lib/`:
+
+- **Comments and structure: ASCII only.** No box-drawing characters, em dashes, arrows, or ellipsis as raw Unicode. Use `--` for em dashes, `->` for arrows, `...` for ellipsis, plain `-` repeated for section dividers.
+- **UI-facing strings:** Unicode is acceptable but use `\uXXXX` escape sequences so source stays byte-matchable (`\u2014` not `--`, `\u274c` not the raw emoji).
+- **Why this matters:** The built-in edit tool matches source bytes exactly. Raw multi-byte Unicode in comments causes match failures and forces whole-file rewrites for minor edits.
+
+Full rules and checklist: `docs/CODING-CONVENTIONS.md` (relative to the extension repo root).
+
+---
+
 ## Self-evaluation
 
 After a session, ask for structured self-evaluation:

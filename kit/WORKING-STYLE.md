@@ -386,6 +386,36 @@ git push origin feature/my-feature
 
 ---
 
+## Extension source conventions
+
+Applies when authoring or editing `.ts` files in `extensions/` or `lib/`.
+
+### ASCII-safe source files
+
+The Pi agent's built-in edit tool uses exact byte-string matching. Multi-byte UTF-8 in comments causes match failures -- every edit becomes a whole-file rewrite. Keep source structure ASCII-only.
+
+| Avoid | Use instead |
+|-------|-------------|
+| Box-drawing `--` (`\u2500`) in comments | `--` repeated |
+| Raw em dash `--` (`\u2014`) | ` -- ` in comments; `\u2014` in UI strings |
+| Raw arrow `->` (`\u2192`) | `->` in comments; `\u2192` in UI strings |
+| Raw ellipsis `...` (`\u2026`) | `...` in logic; `\u2026` in UI strings |
+| Raw emoji (`\u274c`, `\u2705`) | `\u274c`, `\u2705` escape sequences |
+
+Pre-commit check: run `python3 -c "open('file.ts').read().encode('ascii')"` -- any non-ASCII raises immediately.
+
+### Other conventions
+
+- Strict TypeScript (`tsconfig.json`). No `any` without a comment.
+- Guard extensions return `{ block: true, reason: string }` to cancel, nothing to allow. Never throw.
+- Use `pi.exec()` for shell commands inside guards -- not `child_process` directly.
+- No top-level `await` -- the jiti loader is synchronous.
+- File naming: `extensions/<name>-guard.ts` for intercepting guards, `extensions/<name>.ts` for passive extensions, `lib/<name>.ts` for shared utilities.
+
+Full rules and checklist: `docs/CODING-CONVENTIONS.md`.
+
+---
+
 ## Session state conventions
 
 ### Where things go
