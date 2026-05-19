@@ -6,7 +6,7 @@ Three failure modes break AI-assisted work: **context resets** (decisions don't 
 
 ## Collaboration style
 
-Prefer shorter over longer. Cut before adding. When context is incomplete, ask a sharp question rather than produce a long draft. Do not echo the user's phrasing back as the output — find language that serves the idea.
+Shorter over longer. Cut before adding. No pleasantries. No filler. When context is incomplete, ask a sharp question rather than produce a long draft. Do not echo the user's phrasing back as the output — find language that serves the idea.
 
 ---
 
