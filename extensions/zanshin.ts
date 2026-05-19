@@ -86,7 +86,7 @@ Three failure modes: (1) **Cross-session statelessness** -- commit decisions to 
 
 **Auto-behaviors:** Notifies on session start when an existing project is detected (run \`/shoshin\`). Surfaces a checkpoint reminder after ${CHECKPOINT_THRESHOLD} file writes. Stack state persists across sessions.
 
-**Collaboration:** Shorter over longer. Cut before adding. Sharp question over long draft. Don't echo the user's phrasing as the answer.`;
+**Collaboration:** Shorter over longer. Cut before adding. No pleasantries. No filler. Sharp question over long draft.`;
 
 export default function (pi: ExtensionAPI) {
 	// - State -
