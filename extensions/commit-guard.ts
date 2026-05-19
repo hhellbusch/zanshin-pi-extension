@@ -3,18 +3,18 @@
  *
  * Four pre-commit gates that fire automatically on every `git commit` bash call.
  * Together they close the loop between "model writes files" and "model commits
- * without review" — without requiring the user to remember any commands.
+ * without review" -- without requiring the user to remember any commands.
  *
- * ── Gate 0: Compound command check ────────────────────────────────────────────
+ * -- Gate 0: Compound command check
  * Blocks `git add && git commit` to prevent empty diff check.
  *
- * ── Gate 1: Secrets scan ──────────────────────────────────────────────────────
+ * -- Gate 1: Secrets scan
  * Hard-blocks credentials in staged content. No confirm dialog.
  *
- * ── Gate 2: Scope & convention warnings ───────────────────────────────────────
+ * -- Gate 2: Scope & convention warnings
  * Flags multi-task commits, type mismatches, and large changes. Non-blocking.
  *
- * ── Gate 3: Review loop enforcement ───────────────────────────────────────────
+ * -- Gate 3: Review loop enforcement
  * First commit attempt: shows the diff and pauses for review.
  * Subsequent attempts with the same diff: auto-pass (loop-break heuristic).
  */
@@ -24,7 +24,7 @@ import {
 	isToolCallEventType,
 } from "@earendil-works/pi-coding-agent";
 
-// ── Secrets detection ──────────────────────────────────────────────────────────
+// -- Secrets detection ---------------------------------------------------------
 
 interface SecretsPattern {
 	pattern: RegExp;
@@ -95,7 +95,7 @@ function scanForSecrets(diff: string): SecretsHit[] {
 
 		for (const { pattern, label } of SECRETS_PATTERNS) {
 			if (pattern.test(line)) {
-				const preview = line.length > 60 ? `${line.slice(0, 60)}…` : line;
+				const preview = line.length > 60 ? `${line.slice(0, 60)}...` : line;
 				hits.push({ label, line: preview });
 				break;
 			}
@@ -105,7 +105,7 @@ function scanForSecrets(diff: string): SecretsHit[] {
 	return hits;
 }
 
-// ── Diff analysis ──────────────────────────────────────────────────────────────
+// -- Diff analysis -------------------------------------------------------------
 
 interface DiffStats {
 	fileCount: number;
@@ -144,7 +144,7 @@ function analyzeDiff(diff: string): DiffStats {
 			const oldName = renameMatch[1];
 			const newName = renameMatch[2];
 			if (oldName !== newName) {
-				renamedFiles.push(`${oldName} → ${newName}`);
+				renamedFiles.push(`${oldName} -> ${newName}`);
 			}
 		}
 	}
@@ -152,7 +152,7 @@ function analyzeDiff(diff: string): DiffStats {
 	return { fileCount, linesAdded, linesDeleted, deletedFiles, renamedFiles };
 }
 
-// ── Commit message analysis ────────────────────────────────────────────────────
+// -- Commit message analysis ---------------------------------------------------
 
 /**
  * Extract commit message type from the bash command.
@@ -171,7 +171,7 @@ function extractCommitType(command: string): string | null {
 	return null;
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// -- Helpers -------------------------------------------------------------------
 
 const GIT_COMMIT_STAGE_RE = /^git(?:\s+-C\s+\S+)?\s+commit\b/;
 const NOT_A_COMMAND_RE = /^(?:echo|printf|cat\s|#|python\d*\s|node\s|bash\s+-c)/;
@@ -187,7 +187,7 @@ function containsGitCommit(command: string): boolean {
 	);
 }
 
-// ── Main export ───────────────────────────────────────────────────────────────
+// -- Main export ---------------------------------------------------------------
 
 export default function (pi: ExtensionAPI) {
 	// Tracks how many times each diff hash has been blocked this session.
@@ -196,7 +196,7 @@ export default function (pi: ExtensionAPI) {
 	// Cleared when a commit lands successfully so the next commit gets a fresh review.
 	const blockedDiffHashes = new Map<string, number>();
 
-	// ── Clear state on successful commit ─────────────────────────────────────
+	// -- Clear state on successful commit -------------------------------------
 
 	pi.on("tool_result", async (event) => {
 		if (!isBashToolResult(event)) return;
@@ -210,7 +210,7 @@ export default function (pi: ExtensionAPI) {
 		}
 	});
 
-	// ── Pre-commit gates ──────────────────────────────────────────────────────
+	// -- Pre-commit gates -----------------------------------------------------
 
 	pi.on("tool_call", async (event, ctx) => {
 		if (!isToolCallEventType("bash", event)) return;
@@ -218,7 +218,7 @@ export default function (pi: ExtensionAPI) {
 		const command = event.input.command ?? "";
 		if (!containsGitCommit(command)) return;
 
-		// ── Gate 0: Compound command check ────────────────────────────────────
+		// -- Gate 0: Compound command check --------------------------------------
 		const GIT_ADD_RE = /\bgit\s+add\b/;
 		if (GIT_ADD_RE.test(command)) {
 			return {
@@ -231,7 +231,7 @@ export default function (pi: ExtensionAPI) {
 			};
 		}
 
-		// ── Gate 1: Secrets scan ──────────────────────────────────────────────
+		// -- Gate 1: Secrets scan ------------------------------------------------
 		const { stdout: diff } = await pi.exec("bash", [
 			"-c",
 			"git diff --cached --unified=0 || true",
@@ -242,7 +242,7 @@ export default function (pi: ExtensionAPI) {
 		const hits = scanForSecrets(diff);
 		if (hits.length > 0) {
 			const hitLines = hits
-				.map((h) => `  ❌  [${h.label}]  ${h.line}`)
+				.map((h) => `  \u274c  [${h.label}]  ${h.line}`)
 				.join("\n");
 
 			return {
@@ -257,7 +257,7 @@ export default function (pi: ExtensionAPI) {
 			};
 		}
 
-		// ── Gate 2: Scope & convention warnings (non-blocking) ────────────────
+		// -- Gate 2: Scope & convention warnings (non-blocking) ------------------
 		const stats = analyzeDiff(diff);
 		const commitType = extractCommitType(command);
 		const warnings: string[] = [];
@@ -271,7 +271,7 @@ export default function (pi: ExtensionAPI) {
 
 		// Convention: type mismatch with scope
 		if (commitType === "fix" && (stats.linesAdded > 50 || stats.fileCount > 2)) {
-			warnings.push(`fix: commit covers ${stats.fileCount} file(s) and ${stats.linesAdded} additions — fix commits should be narrow. Consider refactor: or feat: instead.`);
+			warnings.push(`fix: commit covers ${stats.fileCount} file(s) and ${stats.linesAdded} additions -- fix commits should be narrow. Consider refactor: or feat: instead.`);
 		}
 		if (commitType === "refactor" && stats.deletedFiles.length > 0) {
 			warnings.push(`refactor: commit deletes ${stats.deletedFiles.length} file(s). Consider documenting what breaks before committing.`);
@@ -293,17 +293,17 @@ export default function (pi: ExtensionAPI) {
 			warnings.push("Commit message has no conventional type prefix (e.g. `feat:`, `fix:`, `refactor:`). Consider using conventional commits for clarity.");
 		}
 
-		// ── Gate 3: Review loop enforcement ───────────────────────────────────
+		// -- Gate 3: Review loop enforcement -------------------------------------
 		const diffHash = diff.length > 0 ? Buffer.from(diff.slice(0, 500)).toString("base64") : "";
 		const blockCount = blockedDiffHashes.get(diffHash) ?? 0;
 
 		if (blockCount === 0) {
-			// First time seeing this diff — show it and pause for review.
+			// First time seeing this diff -- show it and pause for review.
 			blockedDiffHashes.set(diffHash, 1);
 
 			const diffBlock = diff.trim()
 				? `\`\`\`diff\n${diff.trim()}\n\`\`\``
-				: "(no staged changes — nothing to commit)";
+				: "(no staged changes -- nothing to commit)";
 
 			return {
 				block: true,
@@ -314,24 +314,24 @@ export default function (pi: ExtensionAPI) {
 					"1. The changes match the intended commit message\n" +
 					"2. No debug code, temp hacks, or accidental file inclusions\n" +
 					"3. No credentials or sensitive values\n" +
-					(stats.deletedFiles.length > 0 ? `4. ${stats.deletedFiles.length} file(s) deleted — verify nothing else references them\n` : "") +
-					(stats.linesAdded + stats.linesDeleted > 200 ? `5. ${stats.linesAdded} additions across ${stats.fileCount} file(s) — verify this is a single logical change\n` : "") +
-					"\nIf the diff looks correct, immediately retry `git commit` — do not re-read files or re-plan.",
+					(stats.deletedFiles.length > 0 ? `4. ${stats.deletedFiles.length} file(s) deleted -- verify nothing else references them\n` : "") +
+					(stats.linesAdded + stats.linesDeleted > 200 ? `5. ${stats.linesAdded} additions across ${stats.fileCount} file(s) -- verify this is a single logical change\n` : "") +
+					"\nIf the diff looks correct, immediately retry `git commit` -- do not re-read files or re-plan.",
 			};
 		}
 
-		// Second+ attempt with the same diff — auto-pass (loop-break).
+		// Second+ attempt with the same diff -- auto-pass (loop-break).
 		// The diff was already presented; blocking again would only cause a loop.
 		blockedDiffHashes.set(diffHash, blockCount + 1);
 
-		// ── Surface any warnings before the commit lands ──────────────────────
+		// -- Surface any warnings before the commit lands ------------------------
 		if (warnings.length > 0) {
 			return {
 				block: false,
 				reason:
-					"commit-guard: diff already reviewed ✅ — warnings for awareness:\n\n" +
+					"commit-guard: diff already reviewed \u2705 -- warnings for awareness:\n\n" +
 					warnings.map((w, i) => `${i + 1}. ${w}`).join("\n") +
-					(suggestReview ? "\n\nLarge change — consider running `/review` for thorough checking." : ""),
+					(suggestReview ? "\n\nLarge change -- consider running `/review` for thorough checking." : ""),
 			};
 		}
 
