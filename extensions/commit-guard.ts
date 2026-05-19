@@ -15,7 +15,8 @@
  * Flags multi-task commits, type mismatches, and large changes. Non-blocking.
  *
  * ── Gate 3: Review loop enforcement ───────────────────────────────────────────
- * Blocks without review + embeds diff + checklist. Suggests /review for large changes.
+ * First commit attempt: shows the diff and pauses for review.
+ * Subsequent attempts with the same diff: auto-pass (loop-break heuristic).
  */
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import {
@@ -153,9 +154,6 @@ function analyzeDiff(diff: string): DiffStats {
 
 // ── Commit message analysis ────────────────────────────────────────────────────
 
-const COMMIT_MSG_RE = /^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert|wip|draft|temp|hack)(?::\s*|\s+).*/;
-const CONVENTIONAL_TYPES = new Set(["feat", "fix", "docs", "style", "refactor", "perf", "test", "build", "ci", "chore", "revert"]);
-
 /**
  * Extract commit message type from the bash command.
  * Handles: git commit -m "fix: foo", git commit -m "fix: foo" --amend, etc.
@@ -173,9 +171,7 @@ function extractCommitType(command: string): string | null {
 	return null;
 }
 
-// ── Review tracking ───────────────────────────────────────────────────────────
-
-const GIT_DIFF_CACHED_RE = /\bgit\s+diff\s+--cached\b/;
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
 const GIT_COMMIT_STAGE_RE = /^git(?:\s+-C\s+\S+)?\s+commit\b/;
 const NOT_A_COMMAND_RE = /^(?:echo|printf|cat\s|#|python\d*\s|node\s|bash\s+-c)/;
@@ -194,10 +190,13 @@ function containsGitCommit(command: string): boolean {
 // ── Main export ───────────────────────────────────────────────────────────────
 
 export default function (pi: ExtensionAPI) {
-	let stagedReviewed = false;
-	let reviewedDiffHash = "";
+	// Tracks how many times each diff hash has been blocked this session.
+	// First block: show the diff and instruct an immediate retry.
+	// Subsequent blocks of the same hash: auto-pass (loop-break heuristic).
+	// Cleared when a commit lands successfully so the next commit gets a fresh review.
+	const blockedDiffHashes = new Map<string, number>();
 
-	// ── Track review state via tool_result ───────────────────────────────────
+	// ── Clear state on successful commit ─────────────────────────────────────
 
 	pi.on("tool_result", async (event) => {
 		if (!isBashToolResult(event)) return;
@@ -206,13 +205,8 @@ export default function (pi: ExtensionAPI) {
 		const command =
 			(event.input as { command?: string }).command ?? "";
 
-		if (GIT_DIFF_CACHED_RE.test(command)) {
-			stagedReviewed = true;
-		}
-
 		if (containsGitCommit(command)) {
-			stagedReviewed = false;
-			reviewedDiffHash = "";
+			blockedDiffHashes.clear();
 		}
 	});
 
@@ -224,7 +218,7 @@ export default function (pi: ExtensionAPI) {
 		const command = event.input.command ?? "";
 		if (!containsGitCommit(command)) return;
 
-		// ── Gate 0: Compound command check ────────────────────────────────────────
+		// ── Gate 0: Compound command check ────────────────────────────────────
 		const GIT_ADD_RE = /\bgit\s+add\b/;
 		if (GIT_ADD_RE.test(command)) {
 			return {
@@ -237,7 +231,7 @@ export default function (pi: ExtensionAPI) {
 			};
 		}
 
-		// ── Gate 1: Secrets scan ─────────────────────────────────────────────
+		// ── Gate 1: Secrets scan ──────────────────────────────────────────────
 		const { stdout: diff } = await pi.exec("bash", [
 			"-c",
 			"git diff --cached --unified=0 || true",
@@ -301,40 +295,43 @@ export default function (pi: ExtensionAPI) {
 
 		// ── Gate 3: Review loop enforcement ───────────────────────────────────
 		const diffHash = diff.length > 0 ? Buffer.from(diff.slice(0, 500)).toString("base64") : "";
-		if (!stagedReviewed || reviewedDiffHash !== diffHash) {
-			stagedReviewed = true;
-			reviewedDiffHash = diffHash;
+		const blockCount = blockedDiffHashes.get(diffHash) ?? 0;
+
+		if (blockCount === 0) {
+			// First time seeing this diff — show it and pause for review.
+			blockedDiffHashes.set(diffHash, 1);
 
 			const diffBlock = diff.trim()
 				? `\`\`\`diff\n${diff.trim()}\n\`\`\``
 				: "(no staged changes — nothing to commit)";
-
-			const reviewSuggestion = suggestReview
-				? "\n💡 Large change — consider running `/review` for thorough checking."
-				: "";
 
 			return {
 				block: true,
 				reason:
 					"commit-guard: review the staged diff before committing.\n\n" +
 					`${diffBlock}\n\n` +
-					"Before retrying the commit, confirm:\n" +
+					"Confirm:\n" +
 					"1. The changes match the intended commit message\n" +
 					"2. No debug code, temp hacks, or accidental file inclusions\n" +
 					"3. No credentials or sensitive values\n" +
 					(stats.deletedFiles.length > 0 ? `4. ${stats.deletedFiles.length} file(s) deleted — verify nothing else references them\n` : "") +
-					(stats.linesAdded + stats.linesDeleted > 200 ? `5. ${stats.linesAdded} additions across ${stats.fileCount} file(s) — verify this is a single logical change\n` : ""),
+					(stats.linesAdded + stats.linesDeleted > 200 ? `5. ${stats.linesAdded} additions across ${stats.fileCount} file(s) — verify this is a single logical change\n` : "") +
+					"\nIf the diff looks correct, immediately retry `git commit` — do not re-read files or re-plan.",
 			};
 		}
 
-		// ── If already reviewed, surface warnings ─────────────────────────────
+		// Second+ attempt with the same diff — auto-pass (loop-break).
+		// The diff was already presented; blocking again would only cause a loop.
+		blockedDiffHashes.set(diffHash, blockCount + 1);
+
+		// ── Surface any warnings before the commit lands ──────────────────────
 		if (warnings.length > 0) {
 			return {
 				block: false,
 				reason:
-					"commit-guard: review complete ✅ — these warnings don't block the commit:\n\n" +
+					"commit-guard: diff already reviewed ✅ — warnings for awareness:\n\n" +
 					warnings.map((w, i) => `${i + 1}. ${w}`).join("\n") +
-					(suggestReview ? "\n\n💡 Large change — consider running `/review` for thorough checking." : ""),
+					(suggestReview ? "\n\nLarge change — consider running `/review` for thorough checking." : ""),
 			};
 		}
 
