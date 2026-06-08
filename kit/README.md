@@ -9,6 +9,7 @@ These markdown files ship with **zanshin-pi-extension** for Pi and for git check
 | [`STYLE.md`](STYLE.md) | Writing defaults — voice, structure, docs, ADRs, cross-linking |
 | [`STYLE.template.md`](STYLE.template.md) | Blank template with `[DEFINE]` placeholders for project-owned style guides |
 | [`AI-DISCLOSURE.md`](AI-DISCLOSURE.md) | Review status conventions — how to interpret AI-assisted content |
+| [`ENGINEERING-PRINCIPLES.md`](ENGINEERING-PRINCIPLES.md) | Engineering judgment aids — DRY, KISS, SRP, broken windows |
 
 **Separation of concerns:** `WORKING-STYLE.md` is reference documentation. `STANDALONE.md` is the prompt version — concise, self-contained, designed to be loaded at session start. The former explains; the latter drives behavior.
 
