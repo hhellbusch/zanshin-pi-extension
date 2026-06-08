@@ -69,8 +69,7 @@ Eight guard extensions run automatically — no command needed. They intercept t
 | `risky-ops-guard` | `bash` tool call | Confirm | `rm -rf`, `chmod -R`, `shred`, `dd of=/dev/`, `mkfs`, `truncate -s 0` |
 | `process-guard` | `bash` tool call | Confirm | `pkill`, `killall`, `kill -9`, `kill -SIGKILL`, `fuser -k` |
 | `git-force-push-guard` | `bash` tool call | Confirm | `git push --force` / `-f` to main, master, develop, release |
-| `commit-guard` (secrets) | `bash` tool call — `git commit` | **Hard block** | Passwords, API keys, private keys, PATs, AWS key IDs, OpenAI keys, Slack tokens in staged content |
-| `commit-guard` (review) | `bash` tool call — `git commit` | Confirm / block | Committing without reviewing staged content (`git diff --cached`) |
+| `secrets-guard` | `bash` tool call — `git commit` | **Hard block** | Passwords, API keys, private keys, PATs, AWS key IDs, OpenAI keys, Slack tokens in staged content |
 | `url-commit-guard` | `bash` tool call — `git commit` | Confirm | Broken external URLs (`https://`) in new markdown lines |
 | `relative-link-guard` | `bash` tool call — `git commit` | Confirm | Broken relative links in new markdown lines |
 
@@ -136,13 +135,9 @@ If the push targets a protected branch (main, master, develop, release), the gua
 
 ---
 
-### `commit-guard`
+### `secrets-guard`
 
-Two gates in one extension. Both fire on every `git commit` bash command, before the commit executes.
-
-**Gate 1 — Secrets scan (hard block)**
-
-Scans the full staged diff (`git diff --cached`) for credential patterns. Hard blocks — no confirm dialog — if any are found. Credentials in git history are permanent problems.
+Fires on every `git commit`. Scans the full staged diff (`git diff --cached`) for credential patterns. Hard blocks — no confirm dialog — if any are found. Credentials in git history are permanent problems.
 
 Patterns checked (all on new `+` diff lines only):
 
@@ -159,19 +154,6 @@ Patterns checked (all on new `+` diff lines only):
 | `AKIA[20 chars]` | AWS access key ID |
 
 False positives (example values, placeholder strings) can be cleared with an obviously fake value (`your-password-here`) or an inline comment.
-
-**Gate 2 — Review loop (confirm)**
-
-Tracks whether the model has run `git diff --cached` since the last commit. This is the command `/review` always runs — so running `/review` sets the flag automatically.
-
-If staged content hasn't been reviewed:
-
-- **Interactive:** select dialog — "Run /review first (recommended)" (blocks) or "Proceed without review" (allows)
-- **Non-interactive:** hard block
-
-When blocked with "Run /review first," the block reason tells the model exactly what to do. The model runs `/review`, which runs `git diff --cached`, which sets the flag. The next commit attempt passes the gate automatically — no second interrupt.
-
-The flag resets after each successful commit so every commit cycle requires its own review pass.
 
 ---
 
@@ -218,8 +200,7 @@ When the model runs `git commit`, five guards fire in extension load order:
 ```
 git commit
   │
-  ├── commit-guard: secrets scan      → hard block if credentials found
-  ├── commit-guard: review gate       → confirm/block if git diff --cached not run
+  ├── secrets-guard                   → hard block if credentials found
   ├── url-commit-guard                → confirm if external URLs are broken (404)
   ├── relative-link-guard             → confirm if relative paths don't resolve
   └── [commit proceeds if all pass]

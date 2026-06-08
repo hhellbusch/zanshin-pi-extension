@@ -8,7 +8,8 @@
  * structure that may not match reality. The link looks correct in prose
  * but resolves to nothing -- discovered only when someone follows it.
  * This is distinct from the hallucinated-URL problem (url-commit-guard
- * handles external https:// links); this catches broken internal links.
+ * handles external https:// links) and from credential leaks (secrets-guard
+ * blocks credentials in staged content); this catches broken internal links.
  *
  * What counts as a relative link:
  *   [text](path/to/file.md)          <- implicit relative (no scheme)

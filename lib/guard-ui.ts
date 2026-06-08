@@ -6,7 +6,7 @@
  * Provides askGuard() — a consistent dialog pattern that replaces bare
  * ctx.ui.confirm() calls across risky-ops-guard, process-guard,
  * git-force-push-guard, url-commit-guard, relative-link-guard, and
- * commit-guard.
+ * secrets-guard.
  *
  * Two key additions over a plain confirm:
  *
