@@ -276,6 +276,9 @@ AI output is a draft. These behaviors enforce that contract.
 
   > *This document was created with AI assistance and has not been fully reviewed by the author.*
 
+- Include harness and model identifiers when identifiable from session context (system prompt, environment).
+  Format: `AI assistance (harness / model)` — e.g., `(pi / claude-sonnet-4-6)`.
+- **Never hardcode a harness name** in the footer. If the session context doesn't identify a harness, omit the identifier and use the base form.
 - If the project has an AI disclosure policy (`AI-DISCLOSURE.md`), follow it instead.
 
 #### Biographical and first-person content
