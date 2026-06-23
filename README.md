@@ -23,7 +23,7 @@ pi install git:https://github.com/hhellbusch/zanshin-pi-extension.git#<40-char-s
 ```
 extensions/   ← Pi extension entry points (auto-loaded by Pi)
 kit/          ← Portable markdown: working discipline, style guide, AI disclosure
-skills/       ← AgentSkills standard: /spar, /checkpoint, /grill-me, /debug, research, consider-*
+skills/       ← AgentSkills standard: /spar, /shoshin, /craft, /checkpoint, /grill-me, /debug, research, consider-*
 ```
 
 ---
@@ -35,7 +35,8 @@ Registered by `extensions/zanshin.ts`. Available in Pi after install.
 | Command | What it does |
 |---------|-------------|
 | `/spar [target]` | Steel-man adversarial review — 3–5 arguments against the current approach or named target, each with type, strength, and why it matters |
-| `/shoshin` | Surface assumptions before proceeding — find the one assumption whose examination changes the problem framing |
+| `/shoshin [target]` | Surface assumptions collaboratively — read `skills/shoshin/SKILL.md`, ask sharp questions before building |
+| `/craft [target]` | Apply engineering principles to code or design — read `skills/craft/SKILL.md` |
 | `/checkpoint` | Write a structured handoff to `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)` — what's in flight, what was just completed, next step, key decision, git state |
 | `/push <topic>` | Push a topic onto the session stack |
 | `/pop` | Resolve current topic, return to parent |

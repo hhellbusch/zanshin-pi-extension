@@ -78,5 +78,7 @@ These are not a checklist. They are lenses — look through the one that illumin
 
 ## Related
 
-- `STANDALONE.md` — self-contained session prompt (includes engineering principles summary)
-- `WORKING-STYLE.md` — how these principles guide practice in the field
+- `STANDALONE.md` — self-contained session prompt (includes craft and artifact ambient summaries)
+- `WORKING-STYLE.md` — dual-layer shoshin, craft, and artifact discipline
+- `skills/craft/SKILL.md` — invoked engineering-principles review (includes JBGE lens)
+- `kit/AGILE-ARTIFACT-DISCIPLINE.md` — full JBGE/TAGRI reference (Ambler)

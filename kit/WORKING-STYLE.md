@@ -29,7 +29,7 @@ The zanshin-pi-extension provides the following auto-behaviors:
 | Behavior | Mechanism |
 |----------|-----------|
 | L0 injection | Injects a minimal practice block into every agent turn |
-| Slash commands | `/spar`, `/shoshin`, `/checkpoint`, `/push`, `/pop`, `/stack` |
+| Slash commands | `/spar`, `/shoshin`, `/craft`, `/checkpoint`, `/push`, `/pop`, `/stack` |
 | Session notify | Detects existing project files (`BRIEF.md`, `whats-next.md`) at session start |
 | Bookkeeping counter | Auto-tracks `write`/`edit` calls; notifies after 5 changes |
 | Stack persistence | Survives context resets via pi session state |
@@ -45,6 +45,7 @@ The zanshin-pi-extension provides the following auto-behaviors:
 |----------|-----------------|
 | **Spar** | `/spar [target]` — or "spar this" / "challenge this approach" |
 | **Shoshin** | `/shoshin` — or auto-notify on session start with existing project |
+| **Craft** | `/craft [target]` — or "apply craft principles" on code or design |
 | **Progressive bookkeeping** | Extension auto-tracks writes; notifies after 5; `/checkpoint` resets |
 | **Stack tracking** | `/push` / `/pop` / `/stack` — state persists across sessions |
 | **Verification** | You prompt — "verify that before we proceed" on significant findings |
@@ -113,38 +114,64 @@ What I might be missing: [blind spots]
 
 ---
 
-### Shoshin — surface assumptions before proceeding
+### Shoshin — beginner's mind
 
-Use when a plan feels settled, when complexity is growing fast, or when you've been on a problem long enough that premises feel obvious.
+Two layers — don't merge them:
 
-#### Trigger
+| Layer | Where | Job |
+|---|---|---|
+| **Ambient posture** | Consumer's always-on context (`AGENTS.md`, `STANDALONE.md`) | Verify framing against sources; ask when context is incomplete; flag scope shifts |
+| **Invoked depth** | `skills/shoshin/SKILL.md` | Deliberate assumption-surfacing through collaborative questions |
 
-`/shoshin` or natural language "apply shoshin" / "what are we assuming?"
+#### Ambient (L0)
 
-**Auto-fire moments:**
-- **Session start with existing project:** The extension detects `.planning/brief.md`, `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)`, or `BRIEF.md` and notifies: *"Zanshin: existing project detected — run /shoshin before proceeding."* This is a notify, not an auto-run.
-- **Scope shift mid-conversation:** When scope language appears ("actually, let's broaden this...", "I've been rethinking..."), name the shift explicitly and surface which documents carry the old framing.
+Verify framing against source documents before inheriting prior context. Ask a sharp question when context is incomplete — don't infer silently. Dormant on simple tasks.
 
-#### How it works
+#### Invoked
 
-Before generating arguments or building anything, pause and name what's being assumed:
+`/shoshin [target]` or "apply shoshin" / "what are we assuming?" → read and follow `skills/shoshin/SKILL.md`.
 
-- Is the problem stated correctly, or is this solving the wrong thing?
-- Are the constraints real, or inherited from habit or prior context?
-- Is the scope appropriate, or has it drifted?
-- What would a beginner ask that an expert would skip?
+**Auto-notify (Pi):** Session start with existing project → notify to run `/shoshin` (notify only, not auto-run).
 
-Shoshin is genuinely curious, not adversarial. The goal is the one assumption whose examination dissolves the complexity. State it plainly: "I'm assuming X — is that still true?"
+**Ordering:** Apply shoshin before spar when the problem may be mis-stated. Apply spar after shoshin when framing holds but the solution needs challenge.
 
-**Apply shoshin before spar** when the problem may be mis-stated. Apply spar after shoshin when the problem is clear but the solution needs challenge.
+Full process, output structure, and failure modes: **`skills/shoshin/SKILL.md`**.
 
-**What this is not:** Not a blocker for simple tasks, not paranoia, not a replacement for sparring. Shoshin challenges the framing that sits underneath both.
+---
 
-#### Failure modes
+### Craft — engineering principles on code and design
 
-- **Self-referential circling:** The AI names assumptions it just made in this turn. The fix: ground assumptions in external artifacts (project briefs, requirements, constraints) rather than the conversation itself.
-- **False clarity:** Naming an assumption that sounds insightful but isn't testable. Real assumptions produce "if this is wrong, then Y breaks" statements.
-- **Skipping on simple work:** It's dormant for simple tasks. That's by design, not an oversight.
+Two layers — same pattern as shoshin:
+
+| Layer | Where | Job |
+|---|---|---|
+| **Ambient posture** | Consumer's always-on context | KISS, SRP, DRY-on-divergence, YAGNI, phased delivery — lenses not checklist |
+| **Invoked depth** | `skills/craft/SKILL.md` | Deliberate review of a file, diff, or design |
+
+#### Ambient (L0)
+
+Prefer simple over clever. One reason to change per unit. Extract duplication when parts will diverge — not on first coincidence. Don't build for imagined requirements. Respect work → right → fast phases.
+
+#### Invoked
+
+`/craft [target]` or "apply craft principles" → read and follow `skills/craft/SKILL.md`. Full rationale: **`kit/ENGINEERING-PRINCIPLES.md`**.
+
+**Ordering:** Shoshin when scope may be wrong. Craft when implementation quality matters. Spar when the design direction needs challenge.
+
+---
+
+### Artifact discipline — JBGE, TAGRI, document late
+
+Derived from Scott Ambler's Agile Modeling / Agile Data. AI makes artifact production cheap — counterweight required.
+
+| Layer | Where | Job |
+|---|---|---|
+| **Ambient posture** | Consumer's always-on context | JBGE default; TAGRI before expanding docs; travel light; document late |
+| **Invoked depth** | JBGE lens in `skills/craft/SKILL.md`; audience/purpose in `skills/shoshin/SKILL.md` | Deliberate review of drafts and plans |
+
+Full reference: **`kit/AGILE-ARTIFACT-DISCIPLINE.md`**.
+
+**AMDD bracket (sketch):** Envision (minutes) → explore JIT → implement → stabilize (JBGE docs) → release. See kit doc for anti-patterns.
 
 ---
 

@@ -60,6 +60,24 @@ Shoshin is genuinely curious, not adversarial. The goal is the one assumption wh
 
 ---
 
+### Craft — engineering principles on code and design
+
+**Ambient:** KISS over clever; one reason to change; DRY when duplication will diverge; YAGNI for imagined requirements; work → right → fast phases.
+
+**Invoked:** `/craft [target]` or "apply craft principles" — read `skills/craft/SKILL.md`. Full reference: `kit/ENGINEERING-PRINCIPLES.md`.
+
+Principles are lenses. When they conflict (DRY vs YAGNI), name the tension — don't checklist every principle on every change.
+
+---
+
+### Artifact discipline
+
+**Ambient:** JBGE (sufficient, no more); TAGRI (name reader + decision before expanding docs); travel light; document late.
+
+**Invoked:** audience/purpose in `/shoshin`; JBGE lens in `/craft`. Full reference: `kit/AGILE-ARTIFACT-DISCIPLINE.md`.
+
+---
+
 ### Progressive bookkeeping
 
 Session-end bookkeeping is not enough. Crashes, resets, and interruptions happen. The goal: at any point, current state is recoverable.

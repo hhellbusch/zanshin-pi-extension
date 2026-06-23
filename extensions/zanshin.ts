@@ -21,6 +21,8 @@ const extensionDir = dirname(fileURLToPath(import.meta.url));
 const kitDir = join(extensionDir, "..", "kit");
 const docsDir = join(extensionDir, "..", "docs");
 const kitWorking = join(kitDir, "WORKING-STYLE.md");
+const kitEngineering = join(kitDir, "ENGINEERING-PRINCIPLES.md");
+const kitArtifacts = join(kitDir, "AGILE-ARTIFACT-DISCIPLINE.md");
 const kitStyle = join(kitDir, "STYLE.md");
 const kitTemplate = join(kitDir, "STYLE.template.md");
 const codingConventions = join(docsDir, "CODING-CONVENTIONS.md");
@@ -67,6 +69,8 @@ function kitPathBlock(): string {
 	return (
 		"**Kit (read when task needs full detail -- not every turn):**\n" +
 		`- \`${kitWorking}\` -- full working discipline\n` +
+		`- \`${kitEngineering}\` -- engineering principles (DRY, KISS, SRP, YAGNI)\n` +
+		`- \`${kitArtifacts}\` -- artifact discipline (JBGE, TAGRI, document late)\n` +
 		`- \`${kitStyle}\` -- style defaults\n` +
 		`- \`${kitTemplate}\` -- blank style template\n` +
 		`- \`${codingConventions}\` -- extension source file conventions (ASCII-safe, TypeScript style)`
@@ -82,11 +86,11 @@ const ZANSHIN_L0 = `\
 
 Three failure modes: (1) **Cross-session statelessness** -- commit decisions to files; use the repo as truth. (2) **Context compaction** -- re-read files before depending on their contents. (3) **Fluent-but-wrong** -- challenge significant outputs; do not fabricate.
 
-**Commands:** \`/spar [target]\` .. \`/shoshin\` .. \`/checkpoint\` .. \`/push <topic>\` .. \`/pop\` .. \`/stack\`
+**Commands:** \`/spar [target]\` .. \`/shoshin\` .. \`/craft [target]\` .. \`/checkpoint\` .. \`/push <topic>\` .. \`/pop\` .. \`/stack\`
 
 **Auto-behaviors:** Notifies on session start when an existing project is detected (run \`/shoshin\`). Surfaces a checkpoint reminder after ${CHECKPOINT_THRESHOLD} file writes. Stack state persists across sessions.
 
-**Collaboration:** Shorter over longer. Cut before adding. No pleasantries. No filler. Sharp question over long draft.`;
+**Collaboration:** Shorter over longer. Cut before adding. Ask a sharp question when context is incomplete — don't infer silently. No pleasantries. No filler. **Shoshin posture:** verify framing against source documents; run \`/shoshin\` for deliberate assumption-checking. **Craft posture:** KISS over clever; SRP; DRY on real divergence; run \`/craft\` for deliberate principle review. **Artifact discipline:** JBGE default; TAGRI before expanding docs; document what proved true.`;
 
 export default function (pi: ExtensionAPI) {
 	// - State -
@@ -226,17 +230,33 @@ export default function (pi: ExtensionAPI) {
 	// - /shoshin -
 
 	pi.registerCommand("shoshin", {
-		description: "Surface assumptions before proceeding",
+		description: "Surface assumptions collaboratively before proceeding",
 		handler: async (args, ctx) => {
+			const shoshinSkill = join(extensionDir, "..", "skills", "shoshin", "SKILL.md");
+			const target = args?.trim();
 			await ctx.waitForIdle();
 			pi.sendUserMessage(
-				`Apply Zanshin shoshin. Before proceeding, pause and name what's being assumed:\n\n` +
-					`- Is the problem stated correctly, or are we solving the wrong thing?\n` +
-					`- Are the constraints real, or inherited from habit or prior context?\n` +
-					`- Is the scope appropriate, or has it drifted?\n` +
-					`- What would a beginner ask that an expert would skip?\n\n` +
-					`Find the one assumption whose examination dissolves the complexity or reframes the problem. ` +
-					`State it plainly: "I'm assuming X -- is that still true?"`,
+				`Apply shoshin. Read and follow \`${shoshinSkill}\` in full.\n\n` +
+					(target
+						? `Target: ${target}`
+						: "Target: the current approach, inherited framing, or most recent decision."),
+			);
+		},
+	});
+
+	// - /craft -
+
+	pi.registerCommand("craft", {
+		description: "Apply engineering principles to code or design",
+		handler: async (args, ctx) => {
+			const craftSkill = join(extensionDir, "..", "skills", "craft", "SKILL.md");
+			const target = args?.trim();
+			await ctx.waitForIdle();
+			pi.sendUserMessage(
+				`Apply craft (engineering principles). Read and follow \`${craftSkill}\` in full.\n\n` +
+					(target
+						? `Target: ${target}`
+						: "Target: pending git diff, or the code/design under discussion."),
 			);
 		},
 	});
