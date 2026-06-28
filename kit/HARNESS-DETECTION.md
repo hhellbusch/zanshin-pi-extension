@@ -14,14 +14,37 @@ session metadata in checkpoints.
 Inspect the system prompt and available tool set. Match against the signals
 below in order — stop at the first match.
 
-| Priority | Signal | Harness ID | Notes |
+| Priority | Signal | Harness ID | Confidence |
 |---|---|---|---|
-| 1 | `<version_information>` tag present AND `fetch_copilot_cli_documentation` tool available | `copilot-cli` | Extract version from the tag (e.g., `1.0.65`) |
-| 2 | `github-mcp-server-*` tools present, no `<version_information>` | `copilot-cloud-agent` | Copilot Coding Agent (cloud) |
-| 3 | `pi.exec()` available OR system prompt references "zanshin-pi" or "pi extension" | `pi` | Zanshin Pi extension |
-| 4 | `<cursor>` system blocks OR Cursor-specific tool names | `cursor` | Cursor AI |
-| 5 | `<windsurf>` markers OR Windsurf tool names | `windsurf` | Windsurf / Codeium |
-| 6 | No harness-specific signals | unknown | Ask the user, or omit from footer |
+| 1 | `<version_information>` tag + `fetch_copilot_cli_documentation` tool | `copilot-cli` | ✅ Verified |
+| 2 | `github-mcp-server-*` tools present, no `<version_information>` | `copilot-cloud-agent` | ✅ Verified |
+| 3 | `pi.exec()` available OR system prompt references "zanshin-pi" or "pi extension" | `pi` | ✅ Verified |
+| 4 | System prompt contains `<cursor>` blocks OR "You are operating inside Cursor" | `cursor` | 🔶 Inferred — update when confirmed |
+| 5 | System prompt contains `<windsurf>` markers | `windsurf` | 🔶 Inferred — update when confirmed |
+| 6 | System prompt contains `<opencode>` tags OR opencode-specific tool names (e.g., `opencode_bash`) | `opencode` | 🔶 Inferred — update when confirmed |
+| 7 | System prompt references "claude.ai" or "Claude.ai" explicitly | `claude.ai` | 🔶 Inferred |
+| 8 | Anthropic tool names, `claude_code` tools, or "Claude Code" in system prompt | `claude-code` | 🔶 Inferred — update when confirmed |
+| 9 | No harness-specific signals | unknown | — Ask the user or omit |
+
+> **Contributing verified signals:** When you discover an exact signal for a
+> harness marked 🔶, update this table and mark it ✅. Prefer system prompt
+> tags and tool names over prose descriptions — prose varies across versions.
+
+---
+
+## Harness quick-reference
+
+| Harness ID | Description |
+|---|---|
+| `copilot-cli` | GitHub Copilot CLI (terminal, v1.0.x) |
+| `copilot-cloud-agent` | GitHub Copilot Coding Agent (cloud / PR agent) |
+| `pi` | Zanshin Pi extension (VS Code) |
+| `cursor` | Cursor IDE AI |
+| `windsurf` | Windsurf / Codeium IDE |
+| `opencode` | opencode CLI (sst/opencode) |
+| `claude.ai` | Claude.ai web interface (direct) |
+| `claude-code` | Claude Code CLI (Anthropic) |
+| `unknown` | Unidentified — ask user or omit |
 
 ---
 
