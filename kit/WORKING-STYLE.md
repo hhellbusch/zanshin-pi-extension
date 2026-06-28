@@ -1,6 +1,6 @@
 # Working Style — Zanshin (Reference)
 
-> Version: 2026-05-13
+> Version: 2026-06-24
 >
 > Full reference for the **pi** extension. Rationale, examples, edge cases, and
 > extension behavior. For a self-contained prompt version, see `kit/STANDALONE.md`.
@@ -304,7 +304,7 @@ AI output is a draft. These behaviors enforce that contract.
   > *This document was created with AI assistance and has not been fully reviewed by the author.*
 
 - Include harness and model identifiers when identifiable from session context (system prompt, environment). If the model isn't determinable from the session, ask the user what's currently selected.
-  Format: `AI assistance (harness / model)` — e.g., `(pi / claude-sonnet-4-6)`.
+  Format: `AI assistance (harness / model)` — e.g., `(copilot-cli / claude-sonnet-4-6)` or `(pi / claude-sonnet-4-6)` depending on the active harness.
 - **Never hardcode a harness name** in the footer. If the session context doesn't identify a harness, omit the identifier and use the base form.
 - If the project has an AI disclosure policy (`AI-DISCLOSURE.md`), follow it instead.
 
@@ -359,6 +359,8 @@ How it works:
 4. When all features pass integration testing, merge `develop` to `main`
 5. Delete `develop` — ephemeral, not permanent
 
+**Integration branch invariant:** Integration branches receive merges only — never direct commits. All work lands on a feature branch first, then flows into the integration branch via merge. If you find yourself committing directly to an integration branch, stop: move the work to a feature branch first.
+
 Git-flow without ceremony. No release branches. No hotfix branches.
 
 #### Hotfixes (always off main)
@@ -377,7 +379,8 @@ Branch off main, fix, test on main, merge back immediately. Name: `hotfix/<name>
 - Write messages that describe *why*, not just *what*. The commit log is the primary audit trail.
 - Format: `type(scope): description` — e.g., `feat(auth): add token refresh handler`, `fix(api): handle missing x-header`
 - Types: `feat`, `fix`, `refactor`, `style`, `docs`, `test`, `chore`, `backlog`
-- Squash merge feature branches when the branch has multiple small commits telling a single story. Keep `main` clean.
+- Default to **`--no-ff` merge commits** when merging feature branches. This preserves the context that commits belonged to a feature, keeps SHAs stable across branches, and avoids ghost-commit confusion when an integration branch has already merged from the feature.
+- **Squash only when:** the feature branch has noisy WIP commits that tell no coherent story as individual entries, AND no other branch has merged from it. Squashing after cross-branch merges creates SHA mismatches — reviewers see commits that appear unmerged but are already in main under a different SHA.
 - Never rebase `main`. Rebasing feature branches is fine when small and not shared.
 
 #### Fork workflow
