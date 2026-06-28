@@ -13,7 +13,15 @@ review:
   status: direction-reviewed    # or reviewed, or unreviewed
   date: YYYY-MM-DD
   type: [read, tested, voice-approved]
+  ai:                           # optional — harness + model that produced this content
+    harness: copilot-cli        # see kit/HARNESS-DETECTION.md for valid values
+    harness_version: "1.0.65"  # omit if not determinable
+    model: claude-sonnet-4-6
 ```
+
+The `ai:` block is optional but recommended for any content you want to compare
+across model versions or harnesses over time. See `kit/HARNESS-DETECTION.md`
+for the procedure AI instances use to self-identify.
 
 **Three states:**
 

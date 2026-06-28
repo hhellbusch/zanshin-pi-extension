@@ -22,6 +22,7 @@ Run this:
 - Git state: `git status --short`
 - Last commit hash: `git rev-parse --short HEAD`
 - Existing handoff (if any): `whats-next.md (project-scoped)`
+- Session identity: consult `kit/HARNESS-DETECTION.md` to self-identify harness and version; note the active model from session context (e.g., `<model_information>` tag in Copilot CLI)
 </context>
 
 <process>
@@ -42,6 +43,8 @@ Overwrite `whats-next.md (project-scoped)` (project root) with the following com
 
 ```markdown
 # Checkpoint — [YYYY-MM-DD HH:MM]
+
+**Session:** [harness / model — from kit/HARNESS-DETECTION.md; omit if undetectable]
 
 **In progress:** [One sentence: what we're working on right now — or "Nothing in flight, clean state"]
 
