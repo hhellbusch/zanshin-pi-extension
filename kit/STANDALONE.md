@@ -148,11 +148,15 @@ AI output is a draft. These behaviors enforce that contract.
 
 ### Branching (defaults)
 
-**Default:** main + feature branches. Create `feature/<name>` off `main`, work, squash-merge back. Simple.
+**Default:** main + feature branches. Create `feature/<name>` off `main`, work, merge back with `--no-ff`. Simple.
 
 **Escalate to develop** only when: multiple features need integration testing together, or testing on main is too expensive/risky. Ephemeral develop — merge to main when done, delete it.
 
+**Integration branch invariant:** Integration branches receive merges only — never direct commits. All work lands on a feature branch first.
+
 **Hotfixes:** Always off main. Fix, test, merge back immediately.
+
+**Merge strategy:** Default to `--no-ff` merge commits. Squash only when a branch has noisy WIP commits telling no coherent story AND no other branch has merged from it — squashing after cross-branch merges creates SHA mismatches and ghost commits at review time.
 
 **Always:** `git pull --rebase origin main` before pushing. Cost of pulling is seconds; cost of conflict after pushing is minutes.
 
