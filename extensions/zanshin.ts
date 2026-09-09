@@ -86,7 +86,7 @@ const ZANSHIN_L0 = `\
 
 Three failure modes: (1) **Cross-session statelessness** -- commit decisions to files; use the repo as truth. (2) **Context compaction** -- re-read files before depending on their contents. (3) **Fluent-but-wrong** -- challenge significant outputs; do not fabricate.
 
-**Commands:** \`/spar [target]\` .. \`/shoshin\` .. \`/craft [target]\` .. \`/checkpoint\` .. \`/push <topic>\` .. \`/pop\` .. \`/stack\`
+**Commands:** \`/spar [target]\` .. \`/shoshin\` .. \`/craft [target]\` .. \`/unslop [target]\` .. \`/checkpoint\` .. \`/push <topic>\` .. \`/pop\` .. \`/stack\`
 
 **Auto-behaviors:** Notifies on session start when an existing project is detected (run \`/shoshin\`). Surfaces a checkpoint reminder after ${CHECKPOINT_THRESHOLD} file writes. Stack state persists across sessions.
 
@@ -257,6 +257,23 @@ export default function (pi: ExtensionAPI) {
 					(target
 						? `Target: ${target}`
 						: "Target: pending git diff, or the code/design under discussion."),
+			);
+		},
+	});
+
+	// - /unslop -
+
+	pi.registerCommand("unslop", {
+		description: "Cut AI tells from a draft",
+		handler: async (args, ctx) => {
+			const unslopSkill = join(extensionDir, "..", "skills", "unslop", "SKILL.md");
+			const target = args?.trim();
+			await ctx.waitForIdle();
+			pi.sendUserMessage(
+				`Apply unslop. Read and follow \`${unslopSkill}\` in full.\n\n` +
+					(target
+						? `Target: ${target}`
+						: "Target: the most recent draft in conversation, or ask which file."),
 			);
 		},
 	});
