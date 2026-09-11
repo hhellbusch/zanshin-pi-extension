@@ -1,0 +1,20 @@
+{
+  "name": "zanshin-kit",
+  "interface": {
+    "displayName": "Zanshin"
+  },
+  "plugins": [
+    {
+      "name": "zanshin",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
