@@ -21,9 +21,11 @@ pi install git:https://github.com/hhellbusch/zanshin-pi-extension.git#<40-char-s
 ## What's in the package
 
 ```
-extensions/   ← Pi extension entry points (auto-loaded by Pi)
-kit/          ← Portable markdown: working discipline, style guide, AI disclosure
-skills/       ← AgentSkills standard: /spar, /shoshin, /craft, /unslop, /checkpoint, /grill-me, /debug, research, consider-*
+extensions/                      ← Pi extension entry points (auto-loaded by Pi)
+kit/                             ← Portable markdown: working discipline, style guide, AI disclosure
+skills/                          ← AgentSkills standard: /spar, /shoshin, /craft, /unslop, /checkpoint, /grill-me, /debug, research, consider-*
+.codex-plugin/plugin.json        ← Codex skills-only plugin manifest
+.agents/plugins/marketplace.json ← Codex marketplace catalog (this repo is the plugin root)
 ```
 
 ---
@@ -259,6 +261,30 @@ The guards are Pi-only (TypeScript extensions). The skills and kit markdown work
 ### Cursor / Claude Code
 
 Load `kit/STANDALONE.md` as a project rule or system prompt. The guards don't apply — Cursor and Claude Code don't have the same extension API. The kit and skills cover the discipline layer.
+
+### Codex
+
+This repo is a skills-only Codex plugin. `skills/` is the canonical skill source — not a copy. Pi session hooks and TypeScript guards are not part of the Codex plugin; Codex currently rejects a `hooks` field in the plugin manifest.
+
+Installing the plugin gives invoked skills. Ambient practices (bookkeeping, stack, verification, review, branching) still need `kit/STANDALONE.md` or equivalent summaries in the consuming repo's `AGENTS.md`.
+
+Repo-root marketplace path `./` needs Codex 0.142 or newer ([openai/codex#17066](https://github.com/openai/codex/issues/17066), fixed in [PR 28771](https://github.com/openai/codex/pull/28771)). Older clients cannot resolve a plugin that lives at the marketplace root.
+
+Git marketplace:
+
+```bash
+codex plugin marketplace add https://github.com/hhellbusch/zanshin-pi-extension.git
+codex plugin list
+codex plugin add zanshin@zanshin-kit
+```
+
+Local checkout (this tree is the marketplace root):
+
+```bash
+codex plugin marketplace add /path/to/zanshin-pi-extension
+codex plugin list
+codex plugin add zanshin@zanshin-kit
+```
 
 ---
 

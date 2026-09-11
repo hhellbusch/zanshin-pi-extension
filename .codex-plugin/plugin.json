@@ -1,0 +1,28 @@
+{
+  "name": "zanshin",
+  "version": "0.1.0",
+  "description": "Working discipline skills for AI-assisted sessions: spar, shoshin, craft, checkpoint, and related portable practices.",
+  "author": {
+    "name": "Henry Hellbusch",
+    "url": "https://github.com/hhellbusch"
+  },
+  "homepage": "https://github.com/hhellbusch/zanshin-pi-extension#readme",
+  "repository": "https://github.com/hhellbusch/zanshin-pi-extension.git",
+  "license": "MIT",
+  "keywords": ["zanshin", "working-style", "spar", "checkpoint", "research", "reasoning"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Zanshin",
+    "shortDescription": "Portable working-discipline skills for AI-assisted sessions",
+    "longDescription": "Skills-only packaging of the Zanshin kit: adversarial review, beginner's mind, craft, checkpoints, and related portable skills. Ambient practices still need kit/STANDALONE.md or the consuming repo's AGENTS.md. Pi runtime guards are not included.",
+    "developerName": "Henry Hellbusch",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Write"],
+    "websiteURL": "https://github.com/hhellbusch/zanshin-pi-extension",
+    "defaultPrompt": [
+      "Spar this approach before we commit",
+      "Write a checkpoint for this session",
+      "Apply shoshin to this plan"
+    ]
+  }
+}
