@@ -70,10 +70,10 @@ This is the single most important rule. Every time.
 
 ```bash
 # 1. Pull into cache
-git -C ~/.pi/agent/git/github.com/hellbusch/<name> pull origin main
+git -C ~/.pi/agent/git/github.com/hhellbusch/<name> pull origin main
 
 # 2. Verify cache is current (not just a no-op pull)
-git -C ~/.pi/agent/git/github.com/hellbusch/<name> log --oneline -3
+git -C ~/.pi/agent/git/github.com/hhellbusch/<name> log --oneline -3
 
 # 3. /reload — ALWAYS
 /reload
@@ -92,7 +92,7 @@ The Pi runtime caches compiled extension modules. Uninstalling removes the exten
 **The only correct fix for a broken guard in the runtime:**
 
 1. Push the fix to remote (`git push origin main`)
-2. Pull into cache (`git -C ~/.pi/agent/git/github.com/hellbusch/<name> pull origin main`)
+2. Pull into cache (`git -C ~/.pi/agent/git/github.com/hhellbusch/<name> pull origin main`)
 3. **Operator runs `/reload`**
 
 The agent must NEVER attempt to fix a stale runtime by uninstalling/reinstalling. If the runtime is broken and the operator says they can't reload right now, commit the fix to disk and wait for them to reload.
@@ -111,11 +111,11 @@ This has caused "does not export a valid factory function" errors twice. When in
 cd submodules/<name> && npm test
 ```
 
-This runs `tsc --noEmit` (type checking) followed by `scripts/validate-extensions.mjs` (simulates Pi's exact jiti loader). Both must pass before pushing.
+This runs `tsc --noEmit`, `scripts/check-kit-surface.mjs` (L0 / `registerCommand` / skills / README stay in sync), then `scripts/validate-extensions.mjs` (Pi jiti loader). Surface does not need Pi installed (`npm run test:offline`). All must pass before pushing.
 
 ### Cache is separate from submodule
 
-The submodule (`submodules/<name>/`) and the installed Pi cache (`~/.pi/agent/git/github.com/hellbusch/<name>/`) are independent clones. Pulling into the cache can succeed but be a no-op if the cache was already ahead of a previous push.
+The submodule (`submodules/<name>/`) and the installed Pi cache (`~/.pi/agent/git/github.com/hhellbusch/<name>/`) are independent clones. Pulling into the cache can succeed but be a no-op if the cache was already ahead of a previous push.
 
 ## Commands
 
@@ -131,9 +131,10 @@ cd submodules/<name> && npm test
 
 Reports:
 - Type errors from `tsc --noEmit`
+- Command/skill/index drift from `check-kit-surface.mjs`
 - Missing exports or invalid factory functions from `validate-extensions.mjs`
 
-If either fails, **do not push**. Fix the errors and re-run.
+If any of these fail, **do not push**. Fix the errors and re-run.
 
 ---
 
@@ -143,7 +144,7 @@ The most common post-pull flow: fetch updates into the Pi cache and reload.
 
 ```bash
 # Quick pull — defaults to zanshin-pi-extension
-git -C ~/.pi/agent/git/github.com/hellbusch/<name> pull origin main
+git -C ~/.pi/agent/git/github.com/hhellbusch/<name> pull origin main
 
 # Verify it's current
 log --oneline -1
@@ -196,10 +197,10 @@ git add -A && git diff --cached --stat && git commit -m "chore: <message>"
 git push origin main
 
 # 4. Update the Pi cache
-git -C ~/.pi/agent/git/github.com/hellbusch/<name> pull origin main
+git -C ~/.pi/agent/git/github.com/hhellbusch/<name> pull origin main
 
 # 5. Verify cache caught up
-git -C ~/.pi/agent/git/github.com/hellbusch/<name> log --oneline -1
+git -C ~/.pi/agent/git/github.com/hhellbusch/<name> log --oneline -1
 ```
 
 After this, the user can `/reload` to activate changes.
@@ -257,7 +258,7 @@ If `cache-check` shows both repos at the same commit but the Pi runtime still sh
 
 ```bash
 # 1. Make sure the fix is pushed and pulled
-git -C ~/.pi/agent/git/github.com/hellbusch/<name> pull origin main
+git -C ~/.pi/agent/git/github.com/hhellbusch/<name> pull origin main
 
 # 2. Operator reloads — this is the ONLY way to get a fresh compile
 /reload

@@ -70,7 +70,7 @@ const ZANSHIN_L0 = `\
 
 Three failure modes: (1) **Cross-session statelessness** -- commit decisions to files; use the repo as truth. (2) **Context compaction** -- re-read files before depending on their contents. (3) **Fluent-but-wrong** -- challenge significant outputs; do not fabricate.
 
-**Commands:** \`/spar [target]\` .. \`/shoshin\` .. \`/kaeshi [goal]\` .. \`/yomi [action]\` .. \`/craft [target]\` .. \`/kihon <domain>\` .. \`/unslop [target]\` .. \`/checkpoint\` .. \`/push <topic>\` .. \`/pop\` .. \`/stack\`
+**Commands:** \`/spar [target]\` .. \`/shoshin\` .. \`/kaeshi [goal]\` .. \`/yomi [action]\` .. \`/craft [target]\` .. \`/domain-language [term]\` .. \`/kihon <domain>\` .. \`/unslop [target]\` .. \`/checkpoint\` .. \`/push <topic>\` .. \`/pop\` .. \`/stack\`
 
 **Auto-behaviors:** Notifies on session start when an existing project is detected (run \`/shoshin\`). Surfaces a checkpoint reminder after ${CHECKPOINT_THRESHOLD} file writes. Stack state persists across sessions.
 
@@ -284,6 +284,23 @@ export default function (pi: ExtensionAPI) {
 					(target
 						? `Target: ${target}`
 						: "Target: pending git diff, or the code/design under discussion."),
+			);
+		},
+	});
+
+	// - /domain-language -
+
+	pi.registerCommand("domain-language", {
+		description: "Audit domain terms -- evidence only, do not redefine",
+		handler: async (args, ctx) => {
+			const skill = join(extensionDir, "..", "skills", "domain-language", "SKILL.md");
+			const target = args?.trim();
+			await ctx.waitForIdle();
+			pi.sendUserMessage(
+				`Apply domain-language audit. Read and follow \`${skill}\` in full.\n\n` +
+					(target
+						? `Term or path: ${target}`
+						: "Ask which established term to audit."),
 			);
 		},
 	});

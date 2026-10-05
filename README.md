@@ -41,6 +41,7 @@ Registered by `extensions/zanshin.ts`. Available in Pi after install.
 | `/kaeshi [goal]` | Inversion — what guarantees failure? Read `skills/kaeshi/SKILL.md` |
 | `/yomi [action]` | Second-order — and then what? Read `skills/yomi/SKILL.md` |
 | `/craft [target]` | Apply engineering principles to code or design — read `skills/craft/SKILL.md` |
+| `/domain-language [term]` | Audit an established term across surfaces — evidence only; read `skills/domain-language/SKILL.md` |
 | `/kihon <domain>` | Basics / fixed forms — read `skills/kihon/SKILL.md` + `kit/kihon/` |
 | `/unslop [target]` | Cut AI tells from a draft — read `skills/unslop/SKILL.md` |
 | `/checkpoint [project]` | Append a handoff to `.planning/<project>/whats-next.md` (named project, else the only BRIEF; ask when several exist) — in flight, just completed, next step, key decision, `branch @ hash · recorded <ISO time>` |
@@ -228,11 +229,12 @@ Portable markdown files that ship under `kit/`. Any AI tool can read these direc
 | [`STYLE.template.md`](kit/STYLE.template.md) | Blank template with `[DEFINE]` placeholders for project-owned style guides |
 | [`AI-DISCLOSURE.md`](kit/AI-DISCLOSURE.md) | Review status conventions: how to interpret AI-assisted content, validation types, standard footer text |
 | [`ENGINEERING-PRINCIPLES.md`](kit/ENGINEERING-PRINCIPLES.md) | Craft lenses (DRY, KISS, SRP, YAGNI, CoC, orchestration vs program) |
+| [`LAB-JOURNAL.md`](kit/LAB-JOURNAL.md) | Lab journal form — not a checkpoint, ADR, or troubleshooting guide |
 | [`DESIGN-PHILOSOPHY.md`](kit/DESIGN-PHILOSOPHY.md) | Stance map — CoC, omakase, Unix/CI2/Laravel borrowings |
 | [`AGILE-ARTIFACT-DISCIPLINE.md`](kit/AGILE-ARTIFACT-DISCIPLINE.md) | JBGE, TAGRI, travel light |
 | [`MARTIAL-VOCABULARY.md`](kit/MARTIAL-VOCABULARY.md) | Dojo vocabulary map (active + seeds); spar ≈ kumite gloss only — no rename |
 | [`kihon/`](kit/kihon/) | Basics — pitfall/signal domains (`/kihon`; see `kit/kihon/README.md`) |
-| [`evals/`](kit/evals/) | Manual use-test cards (resume revalidation, shared-change craft, …) |
+| [`evals/`](kit/evals/) | Surface checks vs LLM evals; manual use-test cards |
 
 **How behavior loads:** Plugin / skills install for invoked depth. Ambient posture in the consumer's `AGENTS.md` (or Pi L0). No separate paste-prompt file — that model is retired in favor of plugins + skills.
 
@@ -240,7 +242,7 @@ Portable markdown files that ship under `kit/`. Any AI tool can read these direc
 
 ## Skills
 
-9 skills under `skills/` following the [AgentSkills standard](https://agentskills.io/specification). Discovered natively by Pi, Copilot CLI, Claude Code, and Codex.
+10 skills under `skills/` following the [AgentSkills standard](https://agentskills.io/specification). Discovered natively by Pi, Copilot CLI, Claude Code, and Codex.
 
 | Skill | Job |
 |-------|-----|
@@ -249,6 +251,7 @@ Portable markdown files that ship under `kit/`. Any AI tool can read these direc
 | `yomi` | Second-order (読み) — and then what? |
 | `spar` | Steel-man adversarial review |
 | `craft` | Engineering principles on code or design (KISS, SRP, DRY, YAGNI, CoC, orchestration vs program, JBGE) |
+| `domain-language` | Term audit — cite surfaces; do not redefine |
 | `kihon` | Basics / fixed forms — shell, secrets, git, k8s, testing, lint, thin verticals |
 | `unslop` | Cut AI tells from a draft |
 | `checkpoint` | Mid-session crash-recovery snapshot |

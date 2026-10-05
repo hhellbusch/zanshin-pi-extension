@@ -111,4 +111,4 @@ Philosophy and judgment stay here / in craft. Kihon is only **easy pitfalls + qu
 4. Prefer consumer essay for product philosophy  
 5. Don’t duplicate martial vocab or kihon  
 
-**Next use-test:** run `/craft` on a Codex-grown Ansible defaults forest; refine the toggle/ukemi table from evidence.
+**Next use-test:** S1 in `kit/evals/scenarios.md` (`/craft` on a Codex-grown Ansible defaults forest); refine the toggle/ukemi table from evidence.

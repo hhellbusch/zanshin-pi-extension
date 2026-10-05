@@ -33,10 +33,11 @@
   },
   "scripts": {
     "check": "tsc --noEmit",
+    "surface": "node scripts/check-kit-surface.mjs",
     "planning": "node --experimental-strip-types --test scripts/resume-contract.test.ts",
     "validate": "node scripts/validate-extensions.mjs",
-    "test": "npm run check && npm run planning && npm run validate",
-    "test:offline": "npm run check && npm run planning"
+    "test": "npm run check && npm run surface && npm run planning && npm run validate",
+    "test:offline": "npm run check && npm run surface && npm run planning"
   },
   "devDependencies": {
     "typescript": "^6.0.3"
