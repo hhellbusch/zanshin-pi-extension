@@ -1,0 +1,14 @@
+{
+  "name": "zanshin",
+  "displayName": "Zanshin",
+  "version": "0.2.0",
+  "description": "Working-discipline skills. Lab journal trigger is skills/lab-journal; the procedure is kit/LAB-JOURNAL.md. Pi hooks are not part of this plugin.",
+  "author": {
+    "name": "Henry Hellbusch"
+  },
+  "homepage": "https://github.com/hhellbusch/zanshin-pi-extension#readme",
+  "repository": "https://github.com/hhellbusch/zanshin-pi-extension",
+  "license": "MIT",
+  "keywords": ["zanshin", "working-style", "shoshin", "craft", "checkpoint"],
+  "skills": "./skills/"
+}

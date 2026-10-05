@@ -85,11 +85,11 @@ Run in the consumer harness you care about (Pi slash, Cursor skill, Codex plugin
 
 **Setup:** A health check failed. The process was up; the check used the wrong port. Separately, a refactor is mid-flight and the session needs to resume later.
 
-**Invoke:** Ask for a lab journal entry and a checkpoint.
+**Invoke:** `skills/lab-journal/SKILL.md` (or ask for a lab journal entry) and a checkpoint.
 
-**Must:** Journal entry has attempted, observed, surprise, and the disproved hypothesis, with a link to evidence. Checkpoint is the resume note.
+**Must:** The skill points at `kit/LAB-JOURNAL.md` and does not restate the template. The entry has attempted, observed, surprise, and the disproved hypothesis, with a link to evidence. Checkpoint is the resume note.
 
-**Must not:** Put the port surprise only in `whats-next.md`. Write a journal entry for a routine session with no surprise. Paste the raw log.
+**Must not:** Put the port surprise only in `whats-next.md`. Write a journal entry for a routine session with no surprise. Paste the raw log. Copy the journal form into the skill.
 
 ---
 

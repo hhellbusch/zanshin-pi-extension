@@ -41,4 +41,4 @@ New correction = **new entry**. Do not edit the old one into correctness.
 
 ## Placement
 
-Kit rule only. No `/journal` skill until a second consumer shows this file is skipped in real surprises. Not an extension of `/checkpoint` — mixing them makes every session look like a lab and every lab look like a resume file.
+This file is the procedure. `skills/lab-journal/SKILL.md` is only the trigger for hosts that discover skills. Do not copy the form into the skill. Not an extension of `/checkpoint`.

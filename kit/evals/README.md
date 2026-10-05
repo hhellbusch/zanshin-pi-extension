@@ -31,8 +31,8 @@ Promotion bar for a hosted eval stack: the scenarios have been run *manually* at
 ## House path
 
 ```bash
-cd submodules/zanshin-pi-extension && npm run surface   # no Pi required
-cd submodules/zanshin-pi-extension && npm test          # tsc + surface + planning + Pi jiti validate
+cd submodules/zanshin-pi-extension && npm run test:offline   # surface + planning; no Pi
+cd submodules/zanshin-pi-extension && npm test               # test:offline + tsc + Pi jiti validate
 ```
 
 Use-tests: pick a card in `scenarios.md`, run it, note pass/fail in the log table there. Don’t add a hosted eval runner until a card fails twice and surface checks cannot catch it.

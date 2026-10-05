@@ -212,7 +212,7 @@ Prefer simple over clever. One reason to change per unit. Extract duplication wh
 
 ### Lab journal — surprise, not status
 
-After a meaningful surprise (a hypothesis the evidence knocked down), append one entry using **`kit/LAB-JOURNAL.md`** in the repo’s existing journal. Skip on routine sessions. Not a checkpoint, ADR, or troubleshooting guide. No slash skill until this file is skipped in a real surprise.
+After a meaningful surprise, `skills/lab-journal/SKILL.md` is the trigger. The procedure is only **`kit/LAB-JOURNAL.md`**: append one entry in the repo’s existing journal, or skip. Not a checkpoint, ADR, or troubleshooting guide. No Pi command.
 
 ---
 

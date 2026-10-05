@@ -16,7 +16,7 @@ Safe iteration on Pi extensions without hitting cache staleness, loader errors, 
 - Extension repos are checked out as workspace submodules in `submodules/`
 - The **installed Pi cache** is a separate clone at `~/.pi/agent/git/github.com/hhellbusch/<name>/`
 - The cache is NOT automatically synced with the submodule — it drifts. This is the single most common failure mode in Pi extension development.
-- `submodules/paude-pi-extension/extensions/pi-extension-guard.ts` blocks `git push` to Pi extension repos unless `npm test` passes (tsc + jiti loader simulation)
+- `submodules/paude-pi-extension/extensions/pi-extension-guard.ts` blocks `git push` to Pi extension repos unless `npm test` passes (`test:core` plus `test:pi`: surface, planning, tsc, jiti)
 
 ## Repository layout (shared by zanshin-pi-extension and paude-pi-extension)
 
@@ -111,7 +111,10 @@ This has caused "does not export a valid factory function" errors twice. When in
 cd submodules/<name> && npm test
 ```
 
-This runs `tsc --noEmit`, `scripts/check-kit-surface.mjs` (L0 / `registerCommand` / skills / README stay in sync), then `scripts/validate-extensions.mjs` (Pi jiti loader). Surface does not need Pi installed (`npm run test:offline`). All must pass before pushing.
+`npm test` is what the push guard runs. It is `test:core` then `test:pi`.
+
+- `npm run test:offline` (alias `test:core`) — surface audit and planning tests. No Pi install and no `tsc`. Use this for skill and kit edits in a Codex or Cursor checkout.
+- `npm run test:pi` — `tsc --noEmit` plus `scripts/validate-extensions.mjs`. Required when `extensions/` or `lib/` change, and included in `npm test` so the push guard still checks the Pi adapter.
 
 ### Cache is separate from submodule
 
@@ -130,11 +133,11 @@ cd submodules/<name> && npm test
 ```
 
 Reports:
-- Type errors from `tsc --noEmit`
-- Command/skill/index drift from `check-kit-surface.mjs`
-- Missing exports or invalid factory functions from `validate-extensions.mjs`
+- Skill, manifest, and doc drift from `check-kit-surface.mjs` (`test:core`)
+- Type errors from `tsc --noEmit` (`test:pi`)
+- Missing exports or invalid factory functions from `validate-extensions.mjs` (`test:pi`)
 
-If any of these fail, **do not push**. Fix the errors and re-run.
+If any of these fail, **do not push**. Fix the errors and re-run. The push guard calls `npm test`, so that alias stays the full gate.
 
 ---
 
@@ -298,6 +301,6 @@ This specific error happened twice. The file was initially created in `extension
 
 ## Push gate (enforced by pi-extension-guard)
 
-The `pi-extension-guard.ts` in `submodules/paude-pi-extension/extensions/pi-extension-guard.ts` runs automatically when `git push` targets a Pi extension repo. It detects the repo by checking for `package.json` with `"pi.extensions"` and `"scripts.test"`. It runs `npm test` and blocks the push if either phase fails.
+The `pi-extension-guard.ts` in `submodules/paude-pi-extension/extensions/pi-extension-guard.ts` runs automatically when `git push` targets a Pi extension repo. It detects the repo by checking for `package.json` with `"pi.extensions"` and `"scripts.test"`. It runs `npm test` (`test:core` and `test:pi`) and blocks the push if that fails. Do not point the guard at `test:offline` — that alias skips the Pi adapter on purpose.
 
 **This means:** `git push` to a Pi extension repo without running `npm test` locally first is redundant — the guard will do it. But running locally first is faster (no network roundtrip) and gives you the compiler error output without the push transaction overhead.
