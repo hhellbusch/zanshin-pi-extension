@@ -1,7 +1,6 @@
 # Kit quality: checks vs evals
 
-> Reader: kit maintainer. Decision: which gate to run, and whether to buy an eval product.  
-> Date: 2026-10-05
+> Reader: kit maintainer. Decision: which gate to run, and whether to buy an eval product. Date: 2026-10-05
 
 Two different jobs. Don’t collapse them.
 

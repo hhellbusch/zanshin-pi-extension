@@ -1,7 +1,6 @@
 # Lab journal
 
-> Reader: whoever just had a procedure surprise them.  
-> Decision: append one short entry, or skip. Not a session handoff.
+> Reader: whoever just had a procedure surprise them. Decision: append one short entry, or skip. Not a session handoff.
 
 A lab journal records an **attempt that taught something**: what you tried, what you saw, what surprised you, and which hypothesis the evidence knocked down.
 
