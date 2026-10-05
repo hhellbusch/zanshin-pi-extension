@@ -38,6 +38,7 @@ Registered by `extensions/zanshin.ts`. Available in Pi after install.
 |---------|-------------|
 | `/spar [target]` | Steel-man adversarial review — 3–5 arguments against the current approach or named target, each with type, strength, and why it matters |
 | `/shoshin [target]` | Surface assumptions collaboratively — read `skills/shoshin/SKILL.md`, ask sharp questions before building |
+| `/consider inversion\|second-order [target]` | Failure-mode rails or consequence chains — read `skills/consider/SKILL.md` (complements spar; not a counterargument list) |
 | `/craft [target]` | Apply engineering principles to code or design — read `skills/craft/SKILL.md` |
 | `/unslop [target]` | Cut AI tells from a draft — read `skills/unslop/SKILL.md` |
 | `/checkpoint` | Write a structured handoff to `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)` — what's in flight, what was just completed, next step, key decision, git state |
