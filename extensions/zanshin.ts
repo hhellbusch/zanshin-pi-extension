@@ -22,7 +22,9 @@ import {
 	formatResumeGitState,
 	hasPlanningScope,
 	listPlanningProjects,
-	resolvePlanningProject,
+	parseGitResume,
+	resolveCheckpointArg,
+	resolveShoshinArg,
 } from "../lib/planning-project.js";
 
 const extensionDir = dirname(fileURLToPath(import.meta.url));
@@ -210,11 +212,9 @@ export default function (pi: ExtensionAPI) {
 			const shoshinSkill = join(extensionDir, "..", "skills", "shoshin", "SKILL.md");
 			const target = args?.trim();
 			await ctx.waitForIdle();
-			const projects = listPlanningProjects(ctx.cwd);
-			const named = target && (target === "root" || projects.includes(target)) ? target : undefined;
-			const resolved = resolvePlanningProject(ctx.cwd, named);
+			const resolved = resolveShoshinArg(ctx.cwd, target);
 			let projectNote: string;
-			if (target && !named) {
+			if (resolved.status === "framing") {
 				projectNote =
 					`Target: ${target}\n\n` +
 					"If this is a pure framing ask, skip resume revalidation. " +
@@ -346,8 +346,13 @@ export default function (pi: ExtensionAPI) {
 		handler: async (args, ctx) => {
 			await ctx.waitForIdle();
 
-			const explicit = args?.trim();
-			const resolved = resolvePlanningProject(ctx.cwd, explicit || undefined);
+			const resolved = resolveCheckpointArg(ctx.cwd, args?.trim());
+			if (resolved.status === "framing") {
+				pi.sendUserMessage(
+					"Name a project: `/checkpoint <project>`. Do not write a handoff from a prose target.",
+				);
+				return;
+			}
 			if (resolved.status === "ambiguous") {
 				pi.sendUserMessage(
 					`More than one project has a BRIEF.md (${resolved.projects.join(", ")}). ` +
@@ -363,18 +368,19 @@ export default function (pi: ExtensionAPI) {
 			}
 
 			const cpFile = join(resolved.dir, "whats-next.md");
+			const checkpointSkill = join(extensionDir, "..", "skills", "checkpoint", "SKILL.md");
 			let branch = "unknown";
 			let hash = "unknown";
 			let subject = "no git repo";
 			try {
 				const { stdout } = await pi.exec("bash", [
 					"-c",
-					"git branch --show-current && git rev-parse --short HEAD && git log -1 --format=%s",
+					"printf '%s\\0%s\\0%s' \"$(git branch --show-current)\" \"$(git rev-parse --short HEAD)\" \"$(git log -1 --format=%s)\"",
 				]);
-				const lines = stdout.trim().split("\n");
-				branch = lines[0] || branch;
-				hash = lines[1] || hash;
-				subject = lines.slice(2).join(" ") || subject;
+				const parsed = parseGitResume(stdout);
+				branch = parsed.branch;
+				hash = parsed.hash;
+				subject = parsed.subject;
 			} catch {
 				subject = "no git repo";
 			}
@@ -402,6 +408,7 @@ export default function (pi: ExtensionAPI) {
 					gitState,
 					commitSubject: subject,
 					stackState,
+					skillPath: checkpointSkill,
 				}),
 			);
 		},

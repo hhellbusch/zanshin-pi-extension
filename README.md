@@ -1,6 +1,6 @@
 # Zanshin
 
-Portable working-discipline skills for Codex and Cursor. One `skills/` tree is the behavior. `kit/` is shared reference material, linked from skills, not copied. [Pi](https://github.com/earendil-works/pi) is an optional adapter: slash commands, session hooks, and guards.
+Portable working-discipline skills for Codex and Cursor. One `skills/` tree is the behavior. `kit/` is shared reference material, linked from skills, not copied. [Pi](https://github.com/earendil-works/pi) is an optional adapter: slash commands, session hooks, and guards. Changes are recorded in [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
@@ -56,6 +56,7 @@ Pin a commit when you can. The sections **Pi adapter — commands**, **Auto-beha
 ```
 skills/                          ← canonical behavior (Codex, Cursor, Claude, Copilot, Pi)
 kit/                             ← shared references (working style, lab journal, kihon, style)
+CHANGELOG.md                     ← version history (Keep a Changelog)
 .codex-plugin/plugin.json        ← Codex manifest; skills path ./skills/
 .cursor-plugin/plugin.json       ← Cursor manifest; same skills path
 .agents/plugins/marketplace.json ← Codex marketplace catalog (this repo is the plugin root)

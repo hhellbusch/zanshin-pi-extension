@@ -19,8 +19,8 @@ Related: `WORKING-STYLE.md`, `AGILE-ARTIFACT-DISCIPLINE.md`, `DESIGN-PHILOSOPHY.
 | **kaeshi** (返し) | Reversal — what guarantees failure? | Active (`/kaeshi`) |
 | **yomi** (読み) | Reading ahead — and then what? | Active (`/yomi`) |
 | **shu-ha-ri** (守破離) | Follow → break → leave the form | Light (WORKING-STYLE section) |
-| **heijōshin** (平常心) | Everyday mind under pressure | Light (Field Notes AGENTS ambient) |
-| **ukemi** (受身) | Breakfall — cheap landing if the attempt is wrong | Light (Field Notes AGENTS ambient) |
+| **heijōshin** (平常心) | Everyday mind under pressure | Light (consumer AGENTS ambient) |
+| **ukemi** (受身) | Breakfall — cheap landing if the attempt is wrong | Light (consumer AGENTS ambient) |
 | **kihon** (基本) | Fundamentals — drillable basics that catch easy pitfalls | Active (`/kihon`, `kit/kihon/`) |
 | **omakase** (お任せ) | Chef’s choice — house defaults, not a 40-option menu | Light (with CoC craft lens) |
 | **fudōshin** (不動心) | Immovable mind — judgment unmoved by pressure/fluency | Seed |
@@ -136,7 +136,7 @@ Calm ordinary mind in extraordinary conditions — clarity without panic, ego, o
 | Tools | One change at a time; say it before you do it |
 | After | Short note while memory is fresh |
 
-**Where:** Field Notes `AGENTS.md` (ops / incident posture). Try on a real bridge call before any `/heijoshin` skill.  
+**Where:** The consumer's `AGENTS.md` (ops / incident posture). Try on a real bridge call before any `/heijoshin` skill.
 **Vs mushin:** Heijōshin is steady ordinary mind; mushin is unattached execution. On a customer call, heijōshin first — mushin without verification is recklessness.  
 **Vs fudōshin:** Heijōshin is calm *tempo* and presence; fudōshin is unmoved *judgment* (see seeds).
 
@@ -152,7 +152,7 @@ Land so you can stand up. Not “never fail the attempt” — “fail this atte
 | heijōshin | Stay ordinary-minded while landing |
 
 **Pre-flight (keep it short):** name the fall, the mat (rollback/flag/backup), the signal you’re down, the get-up; refuse unpadded throws in prod.  
-**Where:** Field Notes `AGENTS.md` (with heijōshin). Lab journals: undo path next to the procedure.  
+**Where:** The consumer's `AGENTS.md` (with heijōshin). Lab journals: undo path next to the procedure.
 **Tension:** Delay theater (“perfect DR first”) isn’t ukemi — one or two concrete lines, or split the throw.
 
 ### Omakase (お任せ) — chef’s choice

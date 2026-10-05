@@ -3,8 +3,11 @@
  * An explicit name wins. One BRIEF.md is unambiguous. Several briefs are not
  * resolved by mtime — the newest brief is not the active project.
  */
-import { existsSync, readdirSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, readdirSync, realpathSync, statSync } from "node:fs";
+import { join, relative, resolve, sep } from "node:path";
+
+/** Direct child of `.planning/`. No slashes, no `..`, no dotfiles. */
+const PROJECT_NAME = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 
 export type PlanningChosen = {
 	status: "chosen";
@@ -24,6 +27,32 @@ export type PlanningMissing = {
 
 export type PlanningResolution = PlanningChosen | PlanningAmbiguous | PlanningMissing;
 
+export type PlanningFraming = { status: "framing" };
+
+export type PlanningArgResult = PlanningResolution | PlanningFraming;
+
+export function isSafeProjectName(name: string): boolean {
+	return PROJECT_NAME.test(name);
+}
+
+/** Real directory that stays a single child of `.planning/`. Files and `..` are rejected. */
+export function planningChildDir(cwd: string, name: string): string | null {
+	if (!isSafeProjectName(name)) return null;
+	const root = resolve(cwd, ".planning");
+	const dir = resolve(root, name);
+	if (relative(root, dir) !== name) return null;
+	try {
+		if (!statSync(dir).isDirectory()) return null;
+		const realRoot = realpathSync(root);
+		const realDir = realpathSync(dir);
+		const rel = relative(realRoot, realDir);
+		if (rel === "" || rel.startsWith("..") || rel.split(sep).length !== 1) return null;
+	} catch {
+		return null;
+	}
+	return dir;
+}
+
 export function listPlanningProjects(cwd: string): string[] {
 	const root = join(cwd, ".planning");
 	if (!existsSync(root)) return [];
@@ -35,7 +64,8 @@ export function listPlanningProjects(cwd: string): string[] {
 	}
 	const names: string[] = [];
 	for (const dir of entries) {
-		if (existsSync(join(root, dir, "BRIEF.md"))) names.push(dir);
+		const child = planningChildDir(cwd, dir);
+		if (child && existsSync(join(child, "BRIEF.md"))) names.push(dir);
 	}
 	names.sort();
 	return names;
@@ -49,10 +79,18 @@ export function hasPlanningScope(cwd: string): boolean {
 }
 
 export function anyProjectWhatsNext(cwd: string): boolean {
-	if (existsSync(join(cwd, ".planning", "whats-next.md"))) return true;
-	return listPlanningProjects(cwd).some((name) =>
-		existsSync(join(cwd, ".planning", name, "whats-next.md")),
-	);
+	const root = join(cwd, ".planning");
+	if (existsSync(join(root, "whats-next.md"))) return true;
+	let entries: string[] = [];
+	try {
+		entries = readdirSync(root);
+	} catch {
+		return false;
+	}
+	return entries.some((name) => {
+		const child = planningChildDir(cwd, name);
+		return child !== null && existsSync(join(child, "whats-next.md"));
+	});
 }
 
 /** explicit project name, or the sole BRIEF. Never the newest mtime. */
@@ -61,10 +99,10 @@ export function resolvePlanningProject(cwd: string, explicit?: string): Planning
 	const projects = listPlanningProjects(cwd);
 	if (name) {
 		if (name === "root") {
-			return { status: "chosen", dir: join(cwd, ".planning"), name: "root" };
+			return { status: "chosen", dir: resolve(cwd, ".planning"), name: "root" };
 		}
-		const dir = join(cwd, ".planning", name);
-		if (!existsSync(dir)) return { status: "missing", name };
+		const dir = planningChildDir(cwd, name);
+		if (!dir) return { status: "missing", name };
 		return { status: "chosen", dir, name };
 	}
 	if (projects.length === 1) {
@@ -73,6 +111,63 @@ export function resolvePlanningProject(cwd: string, explicit?: string): Planning
 	}
 	if (projects.length > 1) return { status: "ambiguous", projects };
 	return { status: "chosen", dir: join(cwd, ".planning"), name: "root" };
+}
+
+function namedProject(cwd: string, text: string): PlanningChosen | null {
+	if (text === "root") {
+		return { status: "chosen", dir: resolve(cwd, ".planning"), name: "root" };
+	}
+	const fromPath = text.match(/(?:^|\/)\.planning\/([^/\s]+)/);
+	const candidate = fromPath ? fromPath[1] : !/[\s/\\]/.test(text) ? text : null;
+	if (!candidate) return null;
+	const dir = planningChildDir(cwd, candidate);
+	if (!dir) return null;
+	return { status: "chosen", dir, name: candidate };
+}
+
+function pathLike(text: string): boolean {
+	return text.includes("/") || text.includes("\\") || text.includes("..") || text.startsWith(".");
+}
+
+/**
+ * /checkpoint: an unknown name is missing, so nothing is written.
+ * A path that is not a direct child of `.planning/` is missing, including `..`.
+ */
+export function resolveCheckpointArg(cwd: string, raw?: string): PlanningArgResult {
+	const text = raw?.trim();
+	if (!text) return resolvePlanningProject(cwd);
+	const named = namedProject(cwd, text);
+	if (named) return named;
+	if (pathLike(text) || !/[\s/\\]/.test(text)) {
+		const label = text.split(/[/\\]/).filter(Boolean).pop() || text;
+		return { status: "missing", name: label };
+	}
+	return { status: "framing" };
+}
+
+/**
+ * /shoshin: a known project directory (or a path under it) selects that handoff.
+ * Any other argument, including a one-word topic, is framing — not a missing project.
+ */
+export function resolveShoshinArg(cwd: string, raw?: string): PlanningArgResult {
+	const text = raw?.trim();
+	if (!text) return resolvePlanningProject(cwd);
+	const named = namedProject(cwd, text);
+	if (named) return named;
+	if (pathLike(text)) {
+		const label = text.split(/[/\\]/).filter(Boolean).pop() || text;
+		return { status: "missing", name: label };
+	}
+	return { status: "framing" };
+}
+
+/** Empty branch (detached HEAD) must not shift hash and subject left by one field. */
+export function parseGitResume(stdout: string): { branch: string; hash: string; subject: string } {
+	const parts = stdout.split("\0");
+	const branch = (parts[0] ?? "").trim() || "detached";
+	const hash = (parts[1] ?? "").trim() || "unknown";
+	const subject = parts.slice(2).join("\0").trim() || "no subject";
+	return { branch, hash, subject };
 }
 
 /** Comparison line both save paths must record. ISO time is UTC. */
@@ -96,11 +191,12 @@ export function checkpointUserMessage(opts: {
 	gitState: string;
 	commitSubject: string;
 	stackState: string;
+	skillPath: string;
 }): string {
 	return (
 		`Write a Zanshin checkpoint to \`${opts.cpFile}\` ` +
 		`(append -- don't replace existing content). ` +
-		`Follow \`skills/checkpoint/SKILL.md\` for the rest of the save.\n\n` +
+		`Follow \`${opts.skillPath}\` for the rest of the save.\n\n` +
 		`Comparison fields are mandatory. Copy this Git state line exactly:\n\n` +
 		`**Git state:** \`${opts.gitState}\` — ${opts.commitSubject}\n\n` +
 		`Format:\n\n` +
