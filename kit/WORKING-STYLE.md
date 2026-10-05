@@ -281,7 +281,7 @@ Write to `.planning/<project>/whats-next.md`. `/checkpoint <project>` names it. 
 **Just completed:** [1-3 bullets]
 **Next step:** [one sentence — what would happen next if the session continued]
 **Key decision:** [one sentence — what would be re-litigated without knowing it was settled]
-**Git state:** `[branch @ short-hash]` — [last commit] · recorded [ISO time]
+**Git state:** `[branch @ short-hash] · recorded [ISO time]` — [last commit]
 **Open threads:** [stack items or "none"]
 ```
 
@@ -298,7 +298,7 @@ Record enough to **compare on resume** (branch, hash, time). The save command do
 - Updated login handler to write refresh token (b9e4d2a)
 **Next step:** Wire refresh endpoint, then update the client to retry on 401
 **Key decision:** Refresh tokens in httpOnly cookies, not localStorage — XSS tradeoff settled
-**Git state:** `feature/auth-refresh @ b9e4d2a` — auth: update login handler for refresh token support · recorded 2026-04-20T15:02:00Z
+**Git state:** `feature/auth-refresh @ b9e4d2a · recorded 2026-04-20T15:02:00Z` — auth: update login handler for refresh token support
 **Open threads:** none
 ```
 #### Quick capture (fallback)

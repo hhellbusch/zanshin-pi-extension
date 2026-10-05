@@ -11,6 +11,7 @@ import { test } from "node:test";
 import {
 	checkpointUserMessage,
 	formatResumeGitState,
+	resolvePlanningArg,
 	resolvePlanningProject,
 	resumeDrift,
 } from "../lib/planning-project.ts";
@@ -69,6 +70,32 @@ test("checkpoint prompt records branch, hash, and ISO time", () => {
 	assert.match(message, /append -- don't replace/);
 	assert.match(message, /skills\/checkpoint\/SKILL.md/);
 	assert.equal(message.includes("mtime"), false);
+});
+
+test("checkpoint and shoshin accept a directory that has no brief", () => {
+	const root = mkdtempSync(join(tmpdir(), "zanshin-plan-"));
+	brief(root, "beta", 9_000);
+	mkdirSync(join(root, ".planning", "alpha"));
+	const chosen = resolvePlanningArg(root, "alpha");
+	assert.equal(chosen.status, "chosen");
+	if (chosen.status !== "chosen") return;
+	assert.equal(chosen.name, "alpha");
+});
+
+test("a whats-next path selects that project, not the newer brief", () => {
+	const root = mkdtempSync(join(tmpdir(), "zanshin-plan-"));
+	brief(root, "alpha", 1_000);
+	brief(root, "beta", 9_000);
+	const chosen = resolvePlanningArg(root, ".planning/alpha/whats-next.md");
+	assert.equal(chosen.status, "chosen");
+	if (chosen.status !== "chosen") return;
+	assert.equal(chosen.name, "alpha");
+});
+
+test("prose is framing, not a project name", () => {
+	const root = mkdtempSync(join(tmpdir(), "zanshin-plan-"));
+	brief(root, "alpha", 1_000);
+	assert.deepEqual(resolvePlanningArg(root, "the auth plan"), { status: "framing" });
 });
 
 test("later shoshin compares recorded fields and reports drift before mutate", () => {

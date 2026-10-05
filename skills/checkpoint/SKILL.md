@@ -108,7 +108,7 @@ After writing, report:
 Checkpoint saved to whats-next.md (project-scoped)
 In progress: [brief]
 Next step: [brief]
-Git state: [hash]
+Git state: [branch @ short-hash] · recorded [YYYY-MM-DDTHH:MM:SSZ]
 ```
 
 Do NOT commit the checkpoint file automatically. The user can commit it alongside their next commit, or leave it uncommitted so it stays current.
@@ -117,7 +117,7 @@ Do NOT commit the checkpoint file automatically. The user can commit it alongsid
 
 <success_criteria>
 - `whats-next.md (project-scoped)` updated with current timestamp
-- In progress, next step, and git state captured accurately
+- In progress, next step, and git state captured: branch, short hash, and UTC ISO time
 - Written in under 30 seconds of agent time
 - New session could read the checkpoint and orient in under 60 seconds
 </success_criteria>

@@ -24,6 +24,10 @@ export type PlanningMissing = {
 
 export type PlanningResolution = PlanningChosen | PlanningAmbiguous | PlanningMissing;
 
+export type PlanningFraming = { status: "framing" };
+
+export type PlanningArgResult = PlanningResolution | PlanningFraming;
+
 export function listPlanningProjects(cwd: string): string[] {
 	const root = join(cwd, ".planning");
 	if (!existsSync(root)) return [];
@@ -73,6 +77,22 @@ export function resolvePlanningProject(cwd: string, explicit?: string): Planning
 	}
 	if (projects.length > 1) return { status: "ambiguous", projects };
 	return { status: "chosen", dir: join(cwd, ".planning"), name: "root" };
+}
+
+/**
+ * Shared by /checkpoint and /shoshin.
+ * A directory under .planning/ is a project even when its BRIEF.md is absent or older.
+ * A path containing `.planning/<name>/` names that project. Prose is framing, not a project.
+ */
+export function resolvePlanningArg(cwd: string, raw?: string): PlanningArgResult {
+	const text = raw?.trim();
+	if (!text) return resolvePlanningProject(cwd);
+	if (text === "root") return resolvePlanningProject(cwd, "root");
+	if (existsSync(join(cwd, ".planning", text))) return resolvePlanningProject(cwd, text);
+	const fromPath = text.match(/(?:^|\/)\.planning\/([^/\s]+)/);
+	if (fromPath) return resolvePlanningProject(cwd, fromPath[1]);
+	if (!/[\s/]/.test(text)) return resolvePlanningProject(cwd, text);
+	return { status: "framing" };
 }
 
 /** Comparison line both save paths must record. ISO time is UTC. */

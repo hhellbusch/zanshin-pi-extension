@@ -18,9 +18,3 @@ These markdown files ship with **zanshin-pi-extension** for Pi and for git check
 | [`evals/`](evals/) | Surface checks vs LLM evals; manual use-test cards |
 
 **How behavior loads:** Install the plugin (or `/skills add` this repo's `skills/`). Put ambient posture in the consumer's always-on context (`AGENTS.md`, Pi L0, etc.). Invoked depth is `skills/*/SKILL.md`. There is no separate paste-prompt file.
-
----
-
-## Field Notes (gemini-workspace)
-
-This directory is wired as a **git submodule** at `zanshin-pi-extension/`. After `git clone`, run `git submodule update --init --recursive`. Edits to kit content should be committed **inside** this submodule and pushed to [zanshin-pi-extension](https://github.com/hhellbusch/zanshin-pi-extension); the parent repo then records the new submodule SHA.
