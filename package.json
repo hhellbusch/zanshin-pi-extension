@@ -32,11 +32,13 @@
   },
   "scripts": {
     "check": "tsc --noEmit",
+    "surface": "node scripts/check-kit-surface.mjs",
     "validate": "node scripts/validate-extensions.mjs",
-    "test": "npm run check && npm run validate"
+    "test": "npm run check && npm run surface && npm run validate",
+    "test:offline": "npm run check && npm run surface"
   },
   "devDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^6.0.3"
   },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*"
@@ -45,8 +47,5 @@
     "extensions": [
       "./extensions"
     ]
-  },
-  "devDependencies": {
-    "typescript": "^6.0.3"
   }
 }

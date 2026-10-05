@@ -98,7 +98,7 @@ These are **lenses**. Apply the one that illuminates the problem. When lenses co
 
 **Ambient posture:** JBGE default; TAGRI before expanding docs; travel light; document what proved true.
 
-**Invoked depth:** Run `skills/craft/SKILL.md` with the JBGE / TAGRI lens on a draft or plan. Framing reset (wrong problem / wrong organizing question) is `/shoshin`, not artifact economics.
+**Invoked depth:** Run `skills/craft/SKILL.md` with the JBGE / TAGRI lens on a draft or plan. Framing reset (wrong problem / wrong organizing question) is `/shoshin`, not artifact economics. A term-ownership audit is `/domain-language` — report evidence; do not expand a glossary in the same pass (TAGRI). A surprise note is `kit/LAB-JOURNAL.md` — one entry, not a new doc type every session (JBGE).
 
 ---
 
