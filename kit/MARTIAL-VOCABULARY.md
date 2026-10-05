@@ -155,8 +155,12 @@ Before anything here becomes a skill or WORKING-STYLE section:
 
 ---
 
+## Partially promoted (2026-10-05)
+
+- **Shu-ha-ri** — short section in `WORKING-STYLE.md` (“How to use this kit over time”). Still not a skill.
+- **Heijōshin + ukemi** — ambient paragraph in Field Notes `AGENTS.md` (ops / incident posture). Try on a real bridge call / risky change before any `/heijoshin` or `/ukemi` skill.
+
 ## Open threads
 
-- Shu-ha-ri: write as kit adoption guidance, or Field Notes essay first?
-- Heijōshin: try as a one-session experiment on a real bridge call (ambient instructions only) before designing a skill
-- Ukemi: try “name the mat” aloud before one real risky change or lab trial; overlap-test against kaeshi/yomi — promote only if the five-line pre-flight keeps getting skipped
+- Shu-ha-ri essay in Field Notes philosophy track? Only if the WORKING-STYLE paragraph isn’t enough.
+- Heijōshin / ukemi: after a few real uses, keep ambient, drop, or promote a skill — don’t add ceremony from aesthetic fit alone.

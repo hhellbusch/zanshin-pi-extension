@@ -1,6 +1,6 @@
 # Working Style — Zanshin (Reference)
 
-> Version: 2026-10-04
+> Version: 2026-10-05
 >
 > Full reference for the kit and Pi extension. Rationale, examples, edge cases,
 > and extension behavior. Invoked depth lives in `skills/*/SKILL.md`. Ambient
@@ -18,6 +18,18 @@ Three things break AI-assisted work across sessions:
 3. **Fluent-but-wrong output** — confident prose covering unverified claims
 
 These practices defend against those three failure modes specifically — not general productivity habits.
+
+---
+
+## How to use this kit over time (shu-ha-ri)
+
+The kit is scaffolding, not identity. Over time with a form (守破離):
+
+1. **Shu** — follow the practices as written (spar structure, checkpoint format, skill processes).
+2. **Ha** — bend them when the situation is clearer than the template (three-line checkpoint; skip a spar field that doesn't apply).
+3. **Ri** — act from the stance without clinging to the checklist — *without* dropping verification or inventing fluency as evidence.
+
+If you're cargo-culting a skill ritual on a two-line question, you've stuck in shu. If you're skipping spar/verification because "we're past needing that," that isn't ri. Seeds for related vocabulary (heijōshin, ukemi, …): `MARTIAL-VOCABULARY.md`.
 
 ---
 
