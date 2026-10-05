@@ -9,7 +9,7 @@
   "homepage": "https://github.com/hhellbusch/zanshin-pi-extension#readme",
   "repository": "https://github.com/hhellbusch/zanshin-pi-extension.git",
   "license": "MIT",
-  "keywords": ["zanshin", "working-style", "spar", "shoshin", "craft", "checkpoint"],
+  "keywords": ["zanshin", "working-style", "spar", "shoshin", "kaeshi", "yomi", "craft", "checkpoint"],
   "skills": "./skills/",
   "interface": {
     "displayName": "Zanshin",
