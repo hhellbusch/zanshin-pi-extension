@@ -42,7 +42,8 @@ Read `../../kit/ENGINEERING-PRINCIPLES.md` — use as lenses, don't recite it
   - `*.py` / `*.ts` behavior change → skim `testing.md` + `lint.md` when CI exists
   - insert-style edits → only if reviewing a suspicious replace: footnote `structured-edit.md`
   Full catalog: `/kihon <domain>` · `../../kit/kihon/README.md`
-- **Orchestration vs program / CoC / shared change scope:** when the target is CI, Ansible, Helm, a defaults/extra-vars forest, or other shared config/infra, apply those lenses in `ENGINEERING-PRINCIPLES.md` (not kihon). Stance map / borrowings: `../../kit/DESIGN-PHILOSOPHY.md` (skim; don't recite).
+- **Orchestration vs program / CoC:** when the target is CI, Ansible, Helm, or a defaults/extra-vars forest *and* that smell is present, apply those lenses in `ENGINEERING-PRINCIPLES.md` (not kihon). Selective — not every YAML touch.
+- **Shared change scope:** only when the changed surface is **shared** — many consumers inherit without a further opt-in (chart/role defaults, group policy, common CI template, base image, widely imported library config). Skip for a single-target playbook, one-off values override, or app-local CI job. Stance map: `../../kit/DESIGN-PHILOSOPHY.md` (skim; don't recite).
 - Note what phase the work is in: **make it work** / **make it right** / **make it fast** — flag mixed phases
 
 ### Step 3: Apply lenses (only what illuminates)

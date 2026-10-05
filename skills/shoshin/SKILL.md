@@ -3,8 +3,8 @@ name: shoshin
 description: >
   Surfaces load-bearing assumptions against source artifacts before building.
   Use when the user says /shoshin, "apply shoshin", "what are we assuming?",
-  "beginner's mind", checks framing or scope drift, or before /spar when the
-  problem may be mis-stated.
+  "beginner's mind", checks framing or scope drift, resumes from a handoff or
+  checkpoint, or before /spar when the problem may be mis-stated.
 argument-hint: "[file path | topic | inline content from conversation]"
 allowed-tools: Read Grep Glob Shell SemanticSearch
 ---
@@ -18,7 +18,7 @@ Curious, not adversarial. Prefer dialogue over monologue: ask before inferring w
 
 **Ambient vs invoked:** Minimal posture may live in the consumer's always-on context (e.g. `AGENTS.md`, plugin L0). This skill is **invoked depth** only.
 
-**Not this skill:** Artifact economics (TAGRI, JBGE, travel light) live in ambient artifact discipline and `/craft`. Shoshin's job is framing reset, not doc hygiene.
+**Not this skill:** Artifact economics (TAGRI, JBGE, travel light) live in ambient artifact discipline and `/craft`. Shoshin's job is framing reset, not doc hygiene. `/checkpoint` and `/whats-next` **save** handoffs — they do not revalidate; this skill (and session-start “run /shoshin”) is the resume entry point that does.
 </objective>
 
 <constraints>
@@ -41,7 +41,19 @@ Parse `$ARGUMENTS`:
 
 If ambiguous, ask one question: "What should I apply shoshin to — a specific file, this plan, or the framing we've been working in?"
 
-### 2. Read source artifacts
+### 2. Resume revalidation (handoff / checkpoint present)
+
+Run this when a project handoff exists **and** the session may mutate the repo or a live environment — including no-arg `/shoshin` after “existing project detected,” “continue from the handoff,” or similar. Skip for a pure file/plan framing ask with no mutation intent and no handoff.
+
+1. Locate `.planning/<project>/whats-next.md` (or root `.planning/whats-next.md`) — prefer the project with the newest `BRIEF.md`.
+2. Read recorded **branch**, **commit/hash**, **time**, and any noted external state (cluster, env, deploy).
+3. Compare with now: `git branch --show-current`, `git rev-parse --short HEAD`, `git status --short`, and the external facts if noted.
+4. **If drift:** say what changed; refresh assumptions that depended on the old state before proceeding to mutate.
+5. **If unchecked:** state the uncertainty explicitly — do not treat the handoff as current.
+
+Keep this to a short comparison block (see output format). Full rationale: `kit/WORKING-STYLE.md` → Progressive bookkeeping → On resume.
+
+### 3. Read source artifacts
 
 Load external ground truth — not inherited summaries:
 
@@ -51,7 +63,7 @@ Load external ground truth — not inherited summaries:
 
 Missing key artifact that would change framing → ask: "I don't see X — should I read it, or are we working without it?"
 
-### 3. Surface assumptions — collaboratively
+### 4. Surface assumptions — collaboratively
 
 Name a few assumptions grounded in artifacts. Each must be testable: *if this is wrong, then Y breaks.*
 
@@ -64,7 +76,7 @@ Optional probes (use only what illuminates — not a dump):
 - Has scope drifted from the authoritative source?
 - What would a beginner ask that an expert would skip?
 
-### 4. Name the pivotal assumption
+### 5. Name the pivotal assumption
 
 Identify the **one** assumption whose examination dissolves complexity or reframes the problem. State it as dialogue:
 
@@ -72,7 +84,7 @@ Identify the **one** assumption whose examination dissolves complexity or refram
 
 **Pause** when load-bearing. Analysis-only requests: deliver the question and stop.
 
-### 5. Frame-check (organizing docs only)
+### 6. Frame-check (organizing docs only)
 
 When the target is a plan, epic, brief, or design — and a signal appears — ask:
 
@@ -89,8 +101,9 @@ Signals (don't run routinely):
 
 Skip this step for routine decisions.
 
-### 6. Recommend next step
+### 7. Recommend next step
 
+- Handoff stale / unchecked → revalidate or update assumptions before mutating
 - Framing may be wrong → reframe or update source documents before continuing
 - Framing holds, solution untested → suggest `/spar` on the approach
 - Framing and approach clear → proceed with user confirmation
@@ -104,6 +117,11 @@ Skip this step for routine decisions.
 ```
 ## Assumptions — [target]
 
+### Resume check *(omit if step 2 skipped)*
+Recorded: `[branch @ hash]` · [time] · [external notes or "none"]
+Now: `[branch @ hash]` · [status one-liner] · [external or "n/a"]
+Verdict: current | drifted — [what changed] | unchecked — [what couldn't be verified]
+
 1. **[Assumption]** — *If wrong:* [what breaks]
    **Question:** [one sharp question]
 
@@ -113,7 +131,7 @@ Skip this step for routine decisions.
 I'm assuming **X**. If that's wrong, **[consequence]**. Does that still hold?
 
 ### Next
-reframe | spar | proceed — [one line why]
+revalidate | reframe | spar | proceed — [one line why]
 ```
 
 Omit sections that don't apply. Never pad to fill the template.
@@ -131,16 +149,18 @@ Highest-signal failure modes — update this list when new ones show up in real 
 - **Confirming the wrong frame:** Trusting documents that *are* the problem — see frame-check
 - **Checklist theater:** Running every step and probe on a trivial ask
 - **Doc-hygiene drift:** Turning shoshin into TAGRI/JBGE review — wrong skill; use `/craft` or ambient artifact discipline
+- **Stale-handoff trust:** Treating a checkpoint as current without comparing branch/hash/time (or stating unchecked)
 
 </gotchas>
 
 <success_criteria>
 
 - Assumptions grounded in artifacts the user can verify
+- When a handoff exists and mutation is likely: resume check completed (or uncertainty stated) before recommending proceed-to-mutate
 - At least one sharp question directed at the user (when anything is load-bearing)
 - One pivotal assumption stated as dialogue, not assertion
 - Load-bearing assumptions get a pause for user response
-- Clear recommendation: reframe, spar, or proceed
+- Clear recommendation: revalidate, reframe, spar, or proceed
 - Depth matched to target size — no ceremony for trivial work
 
 </success_criteria>

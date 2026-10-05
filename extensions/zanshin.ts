@@ -142,7 +142,7 @@ export default function (pi: ExtensionAPI) {
 
 			if (hasScope) {
 				ctx.ui.notify(
-					"Zanshin: existing project detected -- run /shoshin before proceeding",
+					"Zanshin: existing project detected -- run /shoshin (revalidate handoff before mutating)",
 					"info",
 				);
 			}

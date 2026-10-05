@@ -14,6 +14,7 @@ These markdown files ship with **zanshin-pi-extension** for Pi and for git check
 | [`HARNESS-DETECTION.md`](HARNESS-DETECTION.md) | How skills identify harness / model for checkpoints |
 | [`MARTIAL-VOCABULARY.md`](MARTIAL-VOCABULARY.md) | Dojo vocabulary map — active (shoshin, spar, kaeshi, …), light promotions, seeds |
 | [`kihon/`](kihon/) | Basics / fixed forms — pitfall/signal domains (`/kihon`; see `kihon/README.md`) |
+| [`evals/`](evals/) | Manual use-test cards (resume revalidation, shared-change craft, …) |
 
 **How behavior loads:** Install the plugin (or `/skills add` this repo's `skills/`). Put ambient posture in the consumer's always-on context (`AGENTS.md`, Pi L0, etc.). Invoked depth is `skills/*/SKILL.md`. There is no separate paste-prompt file.
 

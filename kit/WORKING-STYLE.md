@@ -199,7 +199,7 @@ Prefer simple over clever. One reason to change per unit. Extract duplication wh
 
 #### Invoked
 
-`/craft [target]` or "apply craft principles" → read and follow `skills/craft/SKILL.md`. Full rationale: **`kit/ENGINEERING-PRINCIPLES.md`** (stance map: **`kit/DESIGN-PHILOSOPHY.md`**). Auto-load matching **kihon** forms as form gaps. On CI/Ansible/Helm, a defaults forest, or other shared config: apply **orchestration vs program**, **convention over configuration**, and **shared change scope**.
+`/craft [target]` or "apply craft principles" → read and follow `skills/craft/SKILL.md`. Full rationale: **`kit/ENGINEERING-PRINCIPLES.md`** (stance map: **`kit/DESIGN-PHILOSOPHY.md`**). Auto-load matching **kihon** forms as form gaps. On CI/Ansible/Helm glue smells: **orchestration vs program** and/or **convention over configuration** when they illuminate. **Shared change scope** only when the surface is shared (many consumers inherit without opt-in) — not every Helm/CI edit.
 
 **Ordering:** Shoshin when scope may be wrong. Craft when implementation quality matters. Spar when the design direction needs challenge.
 
@@ -324,7 +324,7 @@ Before a later session mutates the repository or a live environment:
 2. Refresh assumptions that depended on changed state.
 3. If something cannot be checked, **say the uncertainty** — don’t silently treat the handoff as current.
 
-**Resume paths:** session start / `/shoshin` on an existing project · reading `.planning/<project>/whats-next.md` · natural language “continue from the handoff.” `/checkpoint` and `/whats-next` are primarily **save** commands; they record comparison fields, they don’t replace this check.
+**Executable entry point (skills-only and Pi):** `/shoshin` step “Resume revalidation” — Pi also notifies “run /shoshin” when an existing project is detected. This section is the full rationale. `/checkpoint` and `/whats-next` **save** comparison fields; they do not run the check.
 
 #### Recovery
 

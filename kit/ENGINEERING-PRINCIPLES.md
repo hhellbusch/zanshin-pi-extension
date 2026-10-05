@@ -127,7 +127,7 @@ When the change touches **shared** configuration or infrastructure — a chart d
 
 **Smell:** “It’s just a default” / “only our team uses this path” without naming who else resolves the same value.
 
-**Not this lens:** Ordinary app code with a single deploy target — use YAGNI / phases. Consequence *chains* of a chosen action → `/yomi`. Failure rails for a goal → `/kaeshi`. This lens is the **blast radius of a shared surface**, not a platform checklist.
+**Not this lens:** Single-target changes (one app’s CI job, one overlay’s values file, a role used by one inventory). Use YAGNI / phases. Consequence *chains* of a chosen action → `/yomi`. Failure rails for a goal → `/kaeshi`. This lens is the **blast radius of a shared surface**, not “any Helm/Ansible file.”
 
 **Rule of thumb:** If you can’t name who else will get this change without asking, you don’t understand the scope yet.
 

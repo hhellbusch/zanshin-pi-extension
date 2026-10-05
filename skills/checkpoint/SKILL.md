@@ -69,7 +69,7 @@ Overwrite `whats-next.md (project-scoped)` (project root) with the following com
 
 Keep it short. Five minutes to write, thirty seconds to read.
 
-Record **branch, hash, and time** so a later session can compare before mutating. This skill **saves** state — it does not revalidate on resume. Resume check lives in `kit/WORKING-STYLE.md` (Progressive bookkeeping → On resume) and ambient session-start / `/shoshin`.
+Record **branch, hash, and time** so a later session can compare before mutating. This skill **saves** state — it does not revalidate on resume. Resume check: `/shoshin` (step “Resume revalidation”); rationale in `kit/WORKING-STYLE.md` → On resume.
 
 ---
 
