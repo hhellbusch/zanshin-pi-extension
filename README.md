@@ -228,7 +228,7 @@ Portable markdown files that ship under `kit/`. Any AI tool can read these direc
 | [`AI-DISCLOSURE.md`](kit/AI-DISCLOSURE.md) | Review status conventions: how to interpret AI-assisted content, validation types, standard footer text |
 | [`ENGINEERING-PRINCIPLES.md`](kit/ENGINEERING-PRINCIPLES.md) | Craft lenses (DRY, KISS, SRP, YAGNI, phases) |
 | [`AGILE-ARTIFACT-DISCIPLINE.md`](kit/AGILE-ARTIFACT-DISCIPLINE.md) | JBGE, TAGRI, travel light |
-| [`MARTIAL-VOCABULARY.md`](kit/MARTIAL-VOCABULARY.md) | Seeds for later (shu-ha-ri, heijōshin, …) — not active practice |
+| [`MARTIAL-VOCABULARY.md`](kit/MARTIAL-VOCABULARY.md) | Dojo vocabulary map (active + seeds); spar ≈ kumite gloss only — no rename |
 
 **How behavior loads:** Plugin / skills install for invoked depth. Ambient posture in the consumer's `AGENTS.md` (or Pi L0). No separate paste-prompt file — that model is retired in favor of plugins + skills.
 

@@ -11,7 +11,7 @@ These markdown files ship with **zanshin-pi-extension** for Pi and for git check
 | [`ENGINEERING-PRINCIPLES.md`](ENGINEERING-PRINCIPLES.md) | Engineering judgment aids — DRY, KISS, SRP, YAGNI, broken windows, phased delivery |
 | [`AGILE-ARTIFACT-DISCIPLINE.md`](AGILE-ARTIFACT-DISCIPLINE.md) | Artifact economics — JBGE, TAGRI, travel light, document late (Ambler / AM) |
 | [`HARNESS-DETECTION.md`](HARNESS-DETECTION.md) | How skills identify harness / model for checkpoints |
-| [`MARTIAL-VOCABULARY.md`](MARTIAL-VOCABULARY.md) | Seeds for later (shu-ha-ri, heijōshin, ukemi, …) — not active practice |
+| [`MARTIAL-VOCABULARY.md`](MARTIAL-VOCABULARY.md) | Dojo vocabulary map — active (shoshin, spar, kaeshi, …), light promotions, seeds |
 
 **How behavior loads:** Install the plugin (or `/skills add` this repo's `skills/`). Put ambient posture in the consumer's always-on context (`AGENTS.md`, Pi L0, etc.). Invoked depth is `skills/*/SKILL.md`. There is no separate paste-prompt file.
 
