@@ -28,6 +28,7 @@
     ".codex-plugin",
     ".cursor-plugin",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "publishConfig": {
