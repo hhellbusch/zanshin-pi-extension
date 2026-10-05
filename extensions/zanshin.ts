@@ -86,7 +86,7 @@ const ZANSHIN_L0 = `\
 
 Three failure modes: (1) **Cross-session statelessness** -- commit decisions to files; use the repo as truth. (2) **Context compaction** -- re-read files before depending on their contents. (3) **Fluent-but-wrong** -- challenge significant outputs; do not fabricate.
 
-**Commands:** \`/spar [target]\` .. \`/shoshin\` .. \`/consider inversion|second-order [target]\` .. \`/craft [target]\` .. \`/unslop [target]\` .. \`/checkpoint\` .. \`/push <topic>\` .. \`/pop\` .. \`/stack\`
+**Commands:** \`/spar [target]\` .. \`/shoshin\` .. \`/kaeshi [goal]\` .. \`/yomi [action]\` .. \`/craft [target]\` .. \`/unslop [target]\` .. \`/checkpoint\` .. \`/push <topic>\` .. \`/pop\` .. \`/stack\`
 
 **Auto-behaviors:** Notifies on session start when an existing project is detected (run \`/shoshin\`). Surfaces a checkpoint reminder after ${CHECKPOINT_THRESHOLD} file writes. Stack state persists across sessions.
 

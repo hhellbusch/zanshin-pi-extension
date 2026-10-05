@@ -28,7 +28,7 @@ The zanshin-pi-extension provides the following auto-behaviors:
 | Behavior | Mechanism |
 |----------|-----------|
 | L0 injection | Injects a minimal practice block into every agent turn |
-| Slash commands | `/spar`, `/shoshin`, `/consider`, `/craft`, `/unslop`, `/checkpoint`, `/push`, `/pop`, `/stack` |
+| Slash commands | `/spar`, `/shoshin`, `/kaeshi`, `/yomi`, `/craft`, `/unslop`, `/checkpoint`, `/push`, `/pop`, `/stack` |
 | Session notify | Detects existing project files (`BRIEF.md`, `whats-next.md`) at session start |
 | Bookkeeping counter | Auto-tracks `write`/`edit` calls; notifies after 5 changes |
 | Stack persistence | Survives context resets via pi session state |
@@ -44,7 +44,8 @@ The zanshin-pi-extension provides the following auto-behaviors:
 |----------|-----------------|
 | **Spar** | `/spar [target]` — or "spar this" / "challenge this approach" |
 | **Shoshin** | `/shoshin` — or auto-notify on session start with existing project |
-| **Consider** | `/consider inversion\|second-order [target]` — failure modes or consequence chains |
+| **Kaeshi** | `/kaeshi [goal]` — inversion / what guarantees failure |
+| **Yomi** | `/yomi [action]` — second-order / and then what |
 | **Craft** | `/craft [target]` — or "apply craft principles" on code or design |
 | **Unslop** | `/unslop [target]` — cut AI tells from a draft |
 | **Progressive bookkeeping** | Extension auto-tracks writes; notifies after 5; `/checkpoint` resets |
@@ -134,30 +135,37 @@ Verify framing against source documents before inheriting prior context. Ask a s
 
 **Auto-notify (Pi):** Session start with existing project → notify to run `/shoshin` (notify only, not auto-run).
 
-**Ordering:** Apply shoshin before spar when the problem may be mis-stated. Apply spar after shoshin when framing holds but the solution needs challenge. Optional: `/consider` between them when the goal is clear but rails/ripples are not.
+**Ordering:** Apply shoshin before spar when the problem may be mis-stated. Apply spar after shoshin when framing holds but the solution needs challenge. Optional: `/kaeshi` (rails) or `/yomi` (ripples) between them when the goal or action is clear but failure modes or consequence chains are not.
 
 Full process, output structure, and failure modes: **`skills/shoshin/SKILL.md`**.
 
 ---
 
-### Consider — inversion and second-order
+### Kaeshi — reversal (inversion)
 
-Decision lenses that complement spar. Not adversarial review; not framing reset.
-
-| Mode | Question | Best when |
-|------|----------|-----------|
-| **inversion** | What would guarantee failure? | Goal clear; plan/rails not |
-| **second-order** | And then what? | Action clear; consequences not |
+What would guarantee failure? Builds anti-goals and rails for a **goal**. Complements spar; does not replace it.
 
 #### Trigger
 
-`/consider inversion [goal]` · `/consider second-order [action]` · "invert this" · "and then what?"
+`/kaeshi [goal]` · "invert this" · "failure modes" · "anti-goals"
+
+Full process: **`skills/kaeshi/SKILL.md`**.
+
+---
+
+### Yomi — reading ahead (second-order)
+
+And then what? Traces consequence chains for an **action**. Complements spar; does not replace it.
+
+#### Trigger
+
+`/yomi [action]` · "second-order this" · "and then what?"
 
 #### Ordering
 
-shoshin (right problem?) → consider (rails / ripples) → spar (break the written proposal).
+shoshin (right problem?) → kaeshi / yomi (rails / ripples) → spar (break the written proposal).
 
-Full process: **`skills/consider/SKILL.md`**.
+Full process: **`skills/yomi/SKILL.md`**.
 
 ---
 

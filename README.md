@@ -23,7 +23,7 @@ pi install git:https://github.com/hhellbusch/zanshin-pi-extension.git#<40-char-s
 ```
 extensions/                      ← Pi extension entry points (auto-loaded by Pi)
 kit/                             ← Portable markdown: working discipline, style guide, AI disclosure
-skills/                          ← AgentSkills standard: /spar, /shoshin, /consider, /craft, /unslop, /checkpoint, /whats-next
+skills/                          ← AgentSkills standard: /spar, /shoshin, /kaeshi, /yomi, /craft, /unslop, /checkpoint, /whats-next
 .codex-plugin/plugin.json        ← Codex skills-only plugin manifest
 .agents/plugins/marketplace.json ← Codex marketplace catalog (this repo is the plugin root)
 ```
@@ -38,7 +38,8 @@ Registered by `extensions/zanshin.ts`. Available in Pi after install.
 |---------|-------------|
 | `/spar [target]` | Steel-man adversarial review — 3–5 arguments against the current approach or named target, each with type, strength, and why it matters |
 | `/shoshin [target]` | Surface assumptions collaboratively — read `skills/shoshin/SKILL.md`, ask sharp questions before building |
-| `/consider inversion\|second-order [target]` | Failure-mode rails or consequence chains — read `skills/consider/SKILL.md` (complements spar; not a counterargument list) |
+| `/kaeshi [goal]` | Inversion — what guarantees failure? Read `skills/kaeshi/SKILL.md` |
+| `/yomi [action]` | Second-order — and then what? Read `skills/yomi/SKILL.md` |
 | `/craft [target]` | Apply engineering principles to code or design — read `skills/craft/SKILL.md` |
 | `/unslop [target]` | Cut AI tells from a draft — read `skills/unslop/SKILL.md` |
 | `/checkpoint` | Write a structured handoff to `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)` — what's in flight, what was just completed, next step, key decision, git state |
@@ -234,12 +235,13 @@ Portable markdown files that ship under `kit/`. Any AI tool can read these direc
 
 ## Skills
 
-7 skills under `skills/` following the [AgentSkills standard](https://agentskills.io/specification). Discovered natively by Pi, Copilot CLI, Claude Code, and Codex.
+8 skills under `skills/` following the [AgentSkills standard](https://agentskills.io/specification). Discovered natively by Pi, Copilot CLI, Claude Code, and Codex.
 
 | Skill | Job |
 |-------|-----|
 | `shoshin` | Reset framing — surface load-bearing assumptions before building |
-| `consider` | Inversion / second-order lenses (rails and ripples before spar) |
+| `kaeshi` | Inversion (返し) — what guarantees failure? |
+| `yomi` | Second-order (読み) — and then what? |
 | `spar` | Steel-man adversarial review |
 | `craft` | Engineering principles on code or design (KISS, SRP, DRY, YAGNI, JBGE) |
 | `unslop` | Cut AI tells from a draft |
@@ -260,7 +262,7 @@ npx skills@latest add mattpocock/skills
 
 ### Removed from this kit
 
-Older TÂCHES-imported packs (`research-*`, twelve `consider-*` stubs, `ask-me-questions`, `debug` stub, `improve-skill`) and a vendored `grill-me` were removed — discovery noise, Claude-only tool coupling, or upstream ownership. Git history retains them if needed. A single `consider` skill (inversion + second-order only) was added later as a spar complement — not a re-import of the TÂCHES pack.
+Older TÂCHES-imported packs (`research-*`, twelve `consider-*` stubs, `ask-me-questions`, `debug` stub, `improve-skill`) and a vendored `grill-me` were removed — discovery noise, Claude-only tool coupling, or upstream ownership. Git history retains them if needed. Later spar complements: `kaeshi` (inversion) and `yomi` (second-order) — not a TÂCHES re-import.
 
 ---
 
