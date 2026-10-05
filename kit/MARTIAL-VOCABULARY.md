@@ -83,11 +83,51 @@ Related active docs: `WORKING-STYLE.md`, `AGILE-ARTIFACT-DISCIPLINE.md` (JBGE / 
 
 ---
 
+## Ukemi (受身) — breakfall
+
+**Sense:** Receive the throw without injury. In the dojo you practice falling so that failing an attempt doesn’t end the session. The skill isn’t “never get thrown” — it’s “land so you can stand up.”
+
+**Why it might earn a place:** Labs, rollouts, and incident fixes are full of *attempts* that may fail. Kaeshi asks what would ruin the *goal*; yomi asks what ripples an *action* creates; ukemi asks **how this attempt fails safely** if you’re wrong.
+
+| Lens | Question | Time |
+|------|----------|------|
+| **kaeshi** | What guarantees we miss the goal? | Before the plan hardens |
+| **yomi** | And then what if we do X? | Before / while choosing X |
+| **ukemi** | If this attempt is wrong, how do we land? | Before executing a risky step |
+| **heijōshin** | Stay ordinary-minded while landing | During the call / change window |
+
+**Sketch of a posture (not yet a skill):**
+
+Before a risky change (prod patch, one-way migration, “just restart it,” customer-visible toggle):
+
+1. **Name the fall** — what’s the failure mode of *this attempt* (not the whole project)?
+2. **Name the mat** — rollback, previous ReplicaSet, backup, feature flag off, freeze further changes, known-good config path
+3. **Name the signal** — how will you know you’re on the ground in time (symptom, metric, customer report)?
+4. **Name the get-up** — first action after the fall (revert command, scale back, page who)
+5. **Refuse unpadded throws** — if there’s no mat, don’t take the fall in prod; take it in lab or don’t throw
+
+**Lab / journal angle:** A trial log entry that only records “what we tried” without “how we would undo it” is training without ukemi. Cheap falls belong in the same note as the procedure.
+
+**Incident angle (with heijōshin):** On a bridge call, ukemi is the one-line revert plan spoken *before* the speculative fix — so calm mind has a place to land if the fix is wrong.
+
+**Relation to existing practices:**
+
+- **Kaeshi** — anti-goals for the destination; ukemi is padding for the next move
+- **Yomi** — may *surface* a bad landing (“and then the CRD is stuck”); ukemi *designs* the landing
+- **Verification** — “how would I know this is wrong?” pairs with “what do I do when I know?”
+- **Branching / progressive bookkeeping** — commits and checkpoints are soft mats for agent work; ukemi for cluster work needs an operational mat
+
+**Possible shapes later:**
+
+- Pre-flight checklist paragraph in ops guides or incident AGENTS ambient
+- Invoked `/ukemi` or “ukemi this change” before risky apply — only if people keep skipping rollback design
+- Field Notes lab convention: every trial notes undo path (habit) before any skill
+
+**Tension:** Ukemi can become delay theater (“we can’t act until the perfect rollback”). Good ukemi is usually one or two concrete lines, not a DR binder. If the mat can’t be stated briefly, the throw may be too big — split the attempt (shu / thin slice), don’t write a novel.
+
+---
+
 ## Other seeds (lighter)
-
-### Ukemi — breakfall
-
-Fall without injury. Design the cheap failure: rollback path, feature flag, lab trial before prod, “what’s the worst case of this kubectl?” Distinct from kaeshi (what guarantees failure of the *goal*) — ukemi assumes you might fail the *attempt* and asks how you land. Strong candidate for lab/incident pairing with heijōshin.
 
 ### Maai — distance / timing
 
@@ -119,4 +159,4 @@ Before anything here becomes a skill or WORKING-STYLE section:
 
 - Shu-ha-ri: write as kit adoption guidance, or Field Notes essay first?
 - Heijōshin: try as a one-session experiment on a real bridge call (ambient instructions only) before designing a skill
-- Ukemi: overlap test against kaeshi + lab journal habits after both have more miles
+- Ukemi: try “name the mat” aloud before one real risky change or lab trial; overlap-test against kaeshi/yomi — promote only if the five-line pre-flight keeps getting skipped
