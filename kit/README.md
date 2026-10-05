@@ -8,7 +8,8 @@ These markdown files ship with **zanshin-pi-extension** for Pi and for git check
 | [`STYLE.md`](STYLE.md) | Writing defaults — voice, structure, docs, ADRs, cross-linking |
 | [`STYLE.template.md`](STYLE.template.md) | Blank template with `[DEFINE]` placeholders for project-owned style guides |
 | [`AI-DISCLOSURE.md`](AI-DISCLOSURE.md) | Review status conventions — how to interpret AI-assisted content |
-| [`ENGINEERING-PRINCIPLES.md`](ENGINEERING-PRINCIPLES.md) | Engineering judgment aids — DRY, KISS, SRP, YAGNI, broken windows, phased delivery |
+| [`ENGINEERING-PRINCIPLES.md`](ENGINEERING-PRINCIPLES.md) | Engineering judgment aids — DRY, KISS, SRP, YAGNI, CoC, orchestration vs program, … |
+| [`DESIGN-PHILOSOPHY.md`](DESIGN-PHILOSOPHY.md) | Plan: Rails/Unix/CI2/Laravel borrowings — CoC first; not a doctrine dump |
 | [`AGILE-ARTIFACT-DISCIPLINE.md`](AGILE-ARTIFACT-DISCIPLINE.md) | Artifact economics — JBGE, TAGRI, travel light, document late (Ambler / AM) |
 | [`HARNESS-DETECTION.md`](HARNESS-DETECTION.md) | How skills identify harness / model for checkpoints |
 | [`MARTIAL-VOCABULARY.md`](MARTIAL-VOCABULARY.md) | Dojo vocabulary map — active (shoshin, spar, kaeshi, …), light promotions, seeds |

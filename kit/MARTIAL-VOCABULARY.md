@@ -25,7 +25,7 @@ Related: `WORKING-STYLE.md`, `AGILE-ARTIFACT-DISCIPLINE.md`, `kit/kihon/README.m
 | **fudōshin** (不動心) | Immovable mind — judgment unmoved by pressure/fluency | Seed |
 | **maai** (間合い) | Distance / timing of engagement | Seed |
 | **kata / randori** | Fixed form vs free practice | Seed |
-| **mushin** (無心) | No-mind — unattached execution | Seed (do not force onto MVP) |
+| **omakase** (お任せ) | Chef’s choice — house defaults, not a 40-option menu | Seed (Rails cousin; see DESIGN-PHILOSOPHY) |
 
 **Ordering (decision work):** shoshin → kaeshi / yomi → spar.  
 **Build hygiene:** kihon (forms) · craft (judgment).  
@@ -172,6 +172,16 @@ Unshakeable mind: not moved by fear, flattery, rank, panic, or fluent certainty 
 **Relation to existing practices:** Verification and review discipline under social pressure; pairs with heijōshin on incidents (calm delivery + unmoved judgment). Not a replacement for shoshin (wrong frame) or spar (pressure-test a proposal).
 
 **Possible later shape:** One ambient line next to heijōshin in ops AGENTS (“don’t move the call for fluency or rank — move it for evidence”). Skill only if bridge-call judgment keeps getting pushed around after that.
+
+### Omakase (お任せ) — chef’s choice
+
+**English sense:** You sit down and leave the menu to the chef — the house sequence, not a 40-item options list. Rails borrowed this as “the menu is omakase”: opinionated defaults.
+
+**Kit sense:** One blessed path for glue (test, lint, deploy). Complements **convention over configuration**. Unix/Linux still owns *composable programs* on that path — omakase is not “ban flags forever”; it’s “don’t make the customer pick 40 defaults.”
+
+**Vs ukemi:** A timeboxed canary toggle can be the mat. A permanent `enable_*` matrix is not omakase.
+
+Not a slash skill. Full plan: `DESIGN-PHILOSOPHY.md`.
 
 ### Maai (間合い) — distance / timing
 

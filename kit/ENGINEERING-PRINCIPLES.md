@@ -56,6 +56,26 @@ YAGNI is the counterweight to DRY. DRY says extract when duplicated; YAGNI says 
 
 ---
 
+## Convention over configuration
+
+Pick a **default path** and make it boring. Extra knobs are unpaid configuration: every `enable_*`, extra-var, and pipeline `if:` is a dialect the next human (and the next agent) must learn.
+
+**Smell:** A role or workflow whose `defaults/` is a feature-flag matrix “so we can go slow.” Sometimes that’s **ukemi** for a canary; often the flags survive and *become* the product.
+
+| Prefer | Avoid |
+|--------|--------|
+| House convention (one way to lint, test, deploy, name tasks) | Snowflake toggles per job/customer with no end date |
+| Override the exception in one overlay/inventory | Copy-paste a parallel playbook “just in case” |
+| Timeboxed experiment flag, default = convention, then delete | Open-ended `mode:` / `strictness:` / `enable_foo` as the public API |
+
+**Agent incrementalism:** Models (e.g. Codex) often add variables while walking toward a goal so each apply has an off-ramp. That’s a reasonable **mat** for one step. Craft check: after the experiment, **collapse knobs into convention** or extract a program — don’t leave scaffolding as the interface.
+
+**Omakase:** the house menu (see `DESIGN-PHILOSOPHY.md`, `MARTIAL-VOCABULARY.md`). Complements this lens. Unix composability still owns the *programs* on the path.
+
+**Rule of thumb:** If you can’t name the convention, you don’t have one — you have configuration. If you can’t name when a toggle dies, it isn’t an experiment.
+
+---
+
 ## Three Phases — Make It Work, Make It Right, Make It Fast
 
 Three distinct phases, never mix them. Build something that works first. Then refactor it right. Then optimize if it's still too slow.
@@ -87,7 +107,7 @@ CI engines (GitHub Actions, Tekton, Jenkins, GitLab CI) and Ansible are **orches
 
 **Rails-shaped cousins** (DHH / [The Rails Doctrine](https://rubyonrails.org/doctrine) — borrow the stance, not a Rails rewrite):
 
-- **Convention over configuration** — one boring house way to test/build/deploy; snowflake YAML per job is unpaid configuration.
+- **Convention over configuration** — one boring house way; extra Ansible/CI knobs are unpaid config unless they’re a timeboxed canary (then delete). Full lens above; don’t only cite it here.
 - **The menu is omakase** — pick the defaults; don't grow six pipeline patterns "for flexibility."
 - **No one paradigm** — YAML isn't the runtime. When the shape is a program, use a language you can test (same instinct as "not everything is a helper in the view").
 - **Integrated system, thin edges** — keep the *path* in CI/GitOps; don't replace it with a maze of shared libraries. Extract one script/image, not a framework-in-YAML.
@@ -108,4 +128,5 @@ These are not a checklist. They are lenses — look through the one that illumin
 - `WORKING-STYLE.md` — dual-layer shoshin, craft, and artifact discipline
 - `skills/craft/SKILL.md` — invoked engineering-principles review (includes JBGE lens)
 - `kit/AGILE-ARTIFACT-DISCIPLINE.md` — full JBGE/TAGRI reference (Ambler)
-- `kit/kihon/` — easy-pitfall forms (shell, ansible hygiene); **orchestration vs program** is craft, not kihon
+- `kit/DESIGN-PHILOSOPHY.md` — CoC/omakase plan; Rails/Unix/CI2/Laravel map
+- `kit/kihon/` — easy-pitfall forms (shell, ansible hygiene); **orchestration vs program** and **CoC** are craft, not kihon

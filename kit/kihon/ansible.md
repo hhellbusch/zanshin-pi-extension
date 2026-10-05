@@ -10,6 +10,7 @@ Minimum form. Role design and collection strategy stay in consumer `devops/ansib
 4. **`become` intentional** — only where needed; don’t global-become for convenience.
 5. **Check mode considered** — for risky plays, note whether `--check` is meaningful or which tasks are skipped.
 6. **Inventory is data** — don’t bury environment-specific hosts in role defaults; keep env vars/inventory clear.
+7. **Defaults over flag forests** — new `enable_*` / extra-vars need a reason (experiment mat vs unpaid config). That’s craft **convention over configuration** if the role is becoming a control panel.
 
 ## Exceptions
 

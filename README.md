@@ -227,7 +227,7 @@ Portable markdown files that ship under `kit/`. Any AI tool can read these direc
 | [`STYLE.md`](kit/STYLE.md) | Writing defaults: voice, structure, docs, cross-linking |
 | [`STYLE.template.md`](kit/STYLE.template.md) | Blank template with `[DEFINE]` placeholders for project-owned style guides |
 | [`AI-DISCLOSURE.md`](kit/AI-DISCLOSURE.md) | Review status conventions: how to interpret AI-assisted content, validation types, standard footer text |
-| [`ENGINEERING-PRINCIPLES.md`](kit/ENGINEERING-PRINCIPLES.md) | Craft lenses (DRY, KISS, SRP, YAGNI, phases) |
+| [`ENGINEERING-PRINCIPLES.md`](kit/ENGINEERING-PRINCIPLES.md) | Craft lenses (DRY, KISS, SRP, YAGNI, CoC, orchestration vs program) |
 | [`AGILE-ARTIFACT-DISCIPLINE.md`](kit/AGILE-ARTIFACT-DISCIPLINE.md) | JBGE, TAGRI, travel light |
 | [`MARTIAL-VOCABULARY.md`](kit/MARTIAL-VOCABULARY.md) | Dojo vocabulary map (active + seeds); spar ≈ kumite gloss only — no rename |
 | [`kihon/`](kit/kihon/) | Basics — shell strict mode, structured-edit anchors (`/kihon`) |
