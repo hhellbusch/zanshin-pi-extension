@@ -93,6 +93,8 @@ What gets better. What gets worse. What is now constrained.
 
 **Where ADRs live:** `docs/adr/` or `docs/decisions/` — pick one and keep it consistent.
 
+An ADR records a **decision**. A lab note about what an attempt disproved is a journal entry (`kit/LAB-JOURNAL.md`), not an ADR. A term-alignment audit (`/domain-language`) does not by itself accept or supersede an ADR.
+
 Reference: [MADR](https://adr.github.io/madr/) for a more structured template.
 
 ---

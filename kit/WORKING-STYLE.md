@@ -40,7 +40,7 @@ The zanshin-pi-extension provides the following auto-behaviors:
 | Behavior | Mechanism |
 |----------|-----------|
 | L0 injection | Injects a minimal practice block into every agent turn |
-| Slash commands | `/spar`, `/shoshin`, `/kaeshi`, `/yomi`, `/craft`, `/kihon`, `/unslop`, `/checkpoint`, `/push`, `/pop`, `/stack` |
+| Slash commands | `/spar`, `/shoshin`, `/kaeshi`, `/yomi`, `/craft`, `/domain-language`, `/kihon`, `/unslop`, `/checkpoint`, `/push`, `/pop`, `/stack` |
 | Session notify | Detects existing project files (`BRIEF.md`, `whats-next.md`) at session start |
 | Bookkeeping counter | Auto-tracks `write`/`edit` calls; notifies after 5 changes |
 | Stack persistence | Survives context resets via pi session state |
@@ -59,6 +59,7 @@ The zanshin-pi-extension provides the following auto-behaviors:
 | **Kaeshi** | `/kaeshi [goal]` — inversion / what guarantees failure |
 | **Yomi** | `/yomi [action]` — second-order / and then what |
 | **Craft** | `/craft [target]` — or "apply craft principles" on code or design |
+| **Domain language** | `/domain-language [term]` — evidence audit of an established term; does not rename |
 | **Kihon** | `/kihon <domain>` — basics / fixed forms (shell, secrets, k8s, …) |
 | **Unslop** | `/unslop [target]` — cut AI tells from a draft |
 | **Progressive bookkeeping** | Extension auto-tracks writes; notifies after 5; `/checkpoint` resets |
@@ -201,7 +202,17 @@ Prefer simple over clever. One reason to change per unit. Extract duplication wh
 
 `/craft [target]` or "apply craft principles" → read and follow `skills/craft/SKILL.md`. Full rationale: **`kit/ENGINEERING-PRINCIPLES.md`** (stance map: **`kit/DESIGN-PHILOSOPHY.md`**). Auto-load matching **kihon** forms as form gaps. On CI/Ansible/Helm or a defaults forest: apply **orchestration vs program** and **convention over configuration**.
 
-**Ordering:** Shoshin when scope may be wrong. Craft when implementation quality matters. Spar when the design direction needs challenge.
+**Ordering:** Shoshin when scope may be wrong. Domain language when the same word may not mean the same thing across surfaces. Craft when implementation quality matters. Spar when the design direction needs challenge.
+
+---
+
+### Domain language — who owns this word
+
+`/domain-language [term]` → `skills/domain-language/SKILL.md`. Cite each surface. Classify intentional translation, legacy name, contradiction, or unresolved. Do not silently redefine. Not shoshin (framing), not craft (tradeoff), not an ADR (decision).
+
+### Lab journal — surprise, not status
+
+After a meaningful surprise (a hypothesis the evidence knocked down), append one entry using **`kit/LAB-JOURNAL.md`** in the repo’s existing journal. Skip on routine sessions. Not a checkpoint, ADR, troubleshooting guide, or peer handoff. No slash skill until this file is skipped in a real surprise.
 
 ---
 
@@ -316,6 +327,8 @@ When the file already has content, append with a datestamp — don't replace.
 #### Recovery
 
 If a session ends without a checkpoint, the git log is the fallback. Clean working tree + recent commits = recoverable state.
+
+A lab journal entry is not a substitute checkpoint. Session resume stays here; surprise-and-disproof notes stay in `kit/LAB-JOURNAL.md`.
 
 ---
 

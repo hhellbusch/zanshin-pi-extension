@@ -5,6 +5,7 @@ These markdown files ship with **zanshin-pi-extension** for Pi and for git check
 | File | Purpose |
 |------|---------|
 | [`WORKING-STYLE.md`](WORKING-STYLE.md) | Full reference — rationale, examples, edge cases, extension behavior |
+| [`LAB-JOURNAL.md`](LAB-JOURNAL.md) | Surprise notes — attempted / observed / disproved; not a checkpoint or ADR |
 | [`STYLE.md`](STYLE.md) | Writing defaults — voice, structure, docs, ADRs, cross-linking |
 | [`STYLE.template.md`](STYLE.template.md) | Blank template with `[DEFINE]` placeholders for project-owned style guides |
 | [`AI-DISCLOSURE.md`](AI-DISCLOSURE.md) | Review status conventions — how to interpret AI-assisted content |
