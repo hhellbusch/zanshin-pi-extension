@@ -2,7 +2,7 @@
 
 Guiding principles for making engineering tradeoffs. These are judgment aids, not rigid rules — they exist to help reason about design decisions, not to mandate specific outcomes.
 
-Part of the zanshin-pi-extension kit. For a self-contained session prompt, see `kit/STANDALONE.md`.
+Part of the zanshin-pi-extension kit. Ambient craft posture lives in the consumer's always-on context; invoked depth is `skills/craft/SKILL.md`.
 
 ---
 
@@ -78,7 +78,6 @@ These are not a checklist. They are lenses — look through the one that illumin
 
 ## Related
 
-- `STANDALONE.md` — self-contained session prompt (includes craft and artifact ambient summaries)
 - `WORKING-STYLE.md` — dual-layer shoshin, craft, and artifact discipline
 - `skills/craft/SKILL.md` — invoked engineering-principles review (includes JBGE lens)
 - `kit/AGILE-ARTIFACT-DISCIPLINE.md` — full JBGE/TAGRI reference (Ambler)
