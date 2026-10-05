@@ -195,11 +195,11 @@ Two layers — same pattern as shoshin:
 
 #### Ambient (L0)
 
-Prefer simple over clever. One reason to change per unit. Extract duplication when parts will diverge — not on first coincidence. Don't build for imagined requirements. Prefer one boring house path (convention over configuration / omakase) over a toggle forest. Respect work → right → fast phases. When CI/Ansible starts looking like a program, name the tension — craft, not a new kihon.
+Prefer simple over clever. One reason to change per unit. Extract duplication when parts will diverge — not on first coincidence. Don't build for imagined requirements. Prefer one boring house path (convention over configuration / omakase) over a toggle forest. Respect work → right → fast phases. When CI/Ansible starts looking like a program, name the tension — craft, not a new kihon. When changing shared defaults/policies/templates, name who inherits the change.
 
 #### Invoked
 
-`/craft [target]` or "apply craft principles" → read and follow `skills/craft/SKILL.md`. Full rationale: **`kit/ENGINEERING-PRINCIPLES.md`** (stance map: **`kit/DESIGN-PHILOSOPHY.md`**). Auto-load matching **kihon** forms as form gaps. On CI/Ansible/Helm or a defaults forest: apply **orchestration vs program** and **convention over configuration**.
+`/craft [target]` or "apply craft principles" → read and follow `skills/craft/SKILL.md`. Full rationale: **`kit/ENGINEERING-PRINCIPLES.md`** (stance map: **`kit/DESIGN-PHILOSOPHY.md`**). Auto-load matching **kihon** forms as form gaps. On CI/Ansible/Helm, a defaults forest, or other shared config: apply **orchestration vs program**, **convention over configuration**, and **shared change scope**.
 
 **Ordering:** Shoshin when scope may be wrong. Craft when implementation quality matters. Spar when the design direction needs challenge.
 
@@ -270,9 +270,11 @@ Write to `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.
 **Just completed:** [1-3 bullets]
 **Next step:** [one sentence — what would happen next if the session continued]
 **Key decision:** [one sentence — what would be re-litigated without knowing it was settled]
-**Git state:** [hash] — [last commit]
+**Git state:** `[branch @ short-hash]` — [last commit] · recorded [ISO time]
 **Open threads:** [stack items or "none"]
 ```
+
+Record enough to **compare on resume** (branch, hash, time). The save command does not revalidate — see [On resume](#on-resume-before-mutating).
 
 #### Example
 
@@ -285,10 +287,9 @@ Write to `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.
 - Updated login handler to write refresh token (b9e4d2a)
 **Next step:** Wire refresh endpoint, then update the client to retry on 401
 **Key decision:** Refresh tokens in httpOnly cookies, not localStorage — XSS tradeoff settled
-**Git state:** b9e4d2a — auth: update login handler for refresh token support
+**Git state:** `feature/auth-refresh @ b9e4d2a` — auth: update login handler for refresh token support · recorded 2026-04-20T15:02:00Z
 **Open threads:** none
 ```
-
 #### Quick capture (fallback)
 
 When there's no time for the full format, append two or three lines, no structure:
@@ -312,6 +313,18 @@ Check the stack for open threads — those belong in the handoff. Write a checkp
 Trigger: `/checkpoint` — or "close-out" / "write a handoff" / "I'm closing this session."
 
 When the file already has content, append with a datestamp — don't replace.
+
+#### On resume (before mutating)
+
+A checkpoint or handoff is evidence from a **past** moment — not proof of current repo or environment state.
+
+Before a later session mutates the repository or a live environment:
+
+1. Compare recorded **branch**, **commit**, **time**, and any noted external state with what exists now (`git status`, `git log`, deploy/cluster facts if relevant).
+2. Refresh assumptions that depended on changed state.
+3. If something cannot be checked, **say the uncertainty** — don’t silently treat the handoff as current.
+
+**Resume paths:** session start / `/shoshin` on an existing project · reading `.planning/<project>/whats-next.md` · natural language “continue from the handoff.” `/checkpoint` and `/whats-next` are primarily **save** commands; they record comparison fields, they don’t replace this check.
 
 #### Recovery
 

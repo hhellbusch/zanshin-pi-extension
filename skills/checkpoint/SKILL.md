@@ -20,7 +20,7 @@ Run this:
 <context>
 - Last commits: `git log --oneline -5`
 - Git state: `git status --short`
-- Last commit hash: `git rev-parse --short HEAD`
+- Branch + hash: `git branch --show-current` and `git rev-parse --short HEAD`
 - Existing handoff (if any): `whats-next.md (project-scoped)`
 - Session identity: consult `kit/HARNESS-DETECTION.md` to self-identify harness and version; note the active model from session context (e.g., `<model_information>` tag in Copilot CLI)
 </context>
@@ -54,7 +54,7 @@ Overwrite `whats-next.md (project-scoped)` (project root) with the following com
 
 **Key decision (if any):** [One sentence, or "None" — captures anything that would be re-litigated without knowing it was settled]
 
-**Git state:** `[short hash]` — [last commit message, truncated to ~60 chars]
+**Git state:** `[branch @ short-hash]` — [last commit message, truncated to ~60 chars] · recorded [ISO time]
 
 **Uncommitted work:** [None / Yes — brief description of what's staged or modified]
 
@@ -68,6 +68,8 @@ Overwrite `whats-next.md (project-scoped)` (project root) with the following com
 ```
 
 Keep it short. Five minutes to write, thirty seconds to read.
+
+Record **branch, hash, and time** so a later session can compare before mutating. This skill **saves** state — it does not revalidate on resume. Resume check lives in `kit/WORKING-STYLE.md` (Progressive bookkeeping → On resume) and ambient session-start / `/shoshin`.
 
 ---
 

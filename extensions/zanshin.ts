@@ -92,7 +92,7 @@ Three failure modes: (1) **Cross-session statelessness** -- commit decisions to 
 
 **Auto-behaviors:** Notifies on session start when an existing project is detected (run \`/shoshin\`). Surfaces a checkpoint reminder after ${CHECKPOINT_THRESHOLD} file writes. Stack state persists across sessions.
 
-**Collaboration:** Shorter over longer. Cut before adding. Ask a sharp question when context is incomplete — don't infer silently. No pleasantries. No filler. **Shoshin posture:** verify framing against source documents; run \`/shoshin\` for deliberate assumption-checking. **Craft posture:** KISS over clever; SRP; DRY on real divergence; prefer one house path over a toggle forest; name glue-vs-program tension in CI/Ansible; run \`/craft\` for deliberate principle review. **Kihon:** fixed forms for easy pitfalls (\`/kihon <domain>\`) — not craft judgment. **Artifact discipline:** JBGE default; TAGRI before expanding docs; document what proved true.`;
+**Collaboration:** Shorter over longer. Cut before adding. Ask a sharp question when context is incomplete — don't infer silently. No pleasantries. No filler. **Shoshin posture:** verify framing against source documents; run \`/shoshin\` for deliberate assumption-checking. **Craft posture:** KISS over clever; SRP; DRY on real divergence; prefer one house path over a toggle forest; name glue-vs-program tension in CI/Ansible; on shared defaults/policies name who inherits; run \`/craft\` for deliberate principle review. **Kihon:** fixed forms for easy pitfalls (\`/kihon <domain>\`) — not craft judgment. **Artifact discipline:** JBGE default; TAGRI before expanding docs; document what proved true.`;
 
 export default function (pi: ExtensionAPI) {
 	// - State -

@@ -2,8 +2,9 @@
 name: craft
 description: >
   Apply engineering principles to code or design — DRY, KISS, SRP, YAGNI,
-  convention over configuration, orchestration vs program, phased delivery.
-  Use when the user says /craft or asks to review for craft / CoC / glue-vs-program.
+  convention over configuration, orchestration vs program, shared change scope,
+  phased delivery. Use when the user says /craft or asks to review for craft /
+  CoC / glue-vs-program / shared-config blast radius.
 argument-hint: "[file path | diff | design | inline content from conversation]"
 allowed-tools: Read Grep Glob Shell SemanticSearch
 ---
@@ -41,7 +42,7 @@ Read `../../kit/ENGINEERING-PRINCIPLES.md` — use as lenses, don't recite it
   - `*.py` / `*.ts` behavior change → skim `testing.md` + `lint.md` when CI exists
   - insert-style edits → only if reviewing a suspicious replace: footnote `structured-edit.md`
   Full catalog: `/kihon <domain>` · `../../kit/kihon/README.md`
-- **Orchestration vs program / CoC:** when the target is CI, Ansible, Helm, or a defaults/extra-vars forest, apply those lenses in `ENGINEERING-PRINCIPLES.md` (not kihon). Stance map / borrowings: `../../kit/DESIGN-PHILOSOPHY.md` (skim; don't recite).
+- **Orchestration vs program / CoC / shared change scope:** when the target is CI, Ansible, Helm, a defaults/extra-vars forest, or other shared config/infra, apply those lenses in `ENGINEERING-PRINCIPLES.md` (not kihon). Stance map / borrowings: `../../kit/DESIGN-PHILOSOPHY.md` (skim; don't recite).
 - Note what phase the work is in: **make it work** / **make it right** / **make it fast** — flag mixed phases
 
 ### Step 3: Apply lenses (only what illuminates)
@@ -61,6 +62,7 @@ Evaluate through relevant principles. Skip principles that don't apply — don't
 | **Convention over config** | Extra knobs/toggles — house default, or unpaid dialect? Timeboxed canary vs public API. |
 | **Orchestration vs program** | CI/Ansible/Helm still glue — or an untested program in YAML? Extract when the logic needs a debugger. |
 | **Omakase** | One blessed path for glue? Or a 40-option menu pretending to be flexible? |
+| **Shared change scope** | Who inherits this shared default/policy/template? What’s outside the intended target? What validation covers the fan-out? |
 
 **SRP note:** This kit covers SRP from SOLID, not OCP/Liskov/ISP/DIP. Name interface-segregation or dependency concerns in plain language if they arise — don't force SOLID vocabulary.
 
@@ -113,6 +115,7 @@ Do not rewrite large sections unless the user asked for implementation. Default:
 - **Silent refactor:** Large rewrites during a review request.
 - **Kihon laundering:** Treating CoC / orchestration-vs-program as a `/kihon` domain instead of craft judgment.
 - **Toggle theater:** Praising a permanent `enable_*` matrix as “safe incrementalism” without a kill-by date (ukemi mat vs unpaid config).
+- **Local-diff myopia:** Treating a shared chart/policy/template change as single-consumer because the PR only shows one file.
 
 </failure_modes>
 
