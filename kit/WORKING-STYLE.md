@@ -1,12 +1,11 @@
 # Working Style — Zanshin (Reference)
 
-> Version: 2026-06-24
+> Version: 2026-10-04
 >
-> Full reference for the **pi** extension. Rationale, examples, edge cases, and
-> extension behavior. For a self-contained prompt version, see `kit/STANDALONE.md`.
->
-> The separation: docs explain, prompts drive. This file is reference. `STANDALONE.md`
-> is what you paste or load into a session to get behavior.
+> Full reference for the kit and Pi extension. Rationale, examples, edge cases,
+> and extension behavior. Invoked depth lives in `skills/*/SKILL.md`. Ambient
+> posture belongs in the consumer's always-on context (`AGENTS.md`, plugin L0,
+> or equivalent) — not a separate paste-prompt file.
 
 ---
 
@@ -121,7 +120,7 @@ Two layers — don't merge them:
 
 | Layer | Where | Job |
 |---|---|---|
-| **Ambient posture** | Consumer's always-on context (`AGENTS.md`, `STANDALONE.md`) | Verify framing against sources; ask when context is incomplete; flag scope shifts |
+| **Ambient posture** | Consumer's always-on context (`AGENTS.md`, plugin L0) | Verify framing against sources; ask when context is incomplete; flag scope shifts |
 | **Invoked depth** | `skills/shoshin/SKILL.md` | Deliberate assumption-surfacing through collaborative questions |
 
 #### Ambient (L0)
@@ -178,7 +177,7 @@ Derived from Scott Ambler's Agile Modeling / Agile Data. AI makes artifact produ
 | Layer | Where | Job |
 |---|---|---|
 | **Ambient posture** | Consumer's always-on context | JBGE default; TAGRI before expanding docs; travel light; document late |
-| **Invoked depth** | JBGE lens in `skills/craft/SKILL.md`; audience/purpose in `skills/shoshin/SKILL.md` | Deliberate review of drafts and plans |
+| **Invoked depth** | JBGE / TAGRI lens in `skills/craft/SKILL.md` | Deliberate review of drafts and plans (shoshin is framing reset, not artifact economics) |
 
 Full reference: **`kit/AGILE-ARTIFACT-DISCIPLINE.md`**.
 

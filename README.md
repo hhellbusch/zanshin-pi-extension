@@ -23,7 +23,7 @@ pi install git:https://github.com/hhellbusch/zanshin-pi-extension.git#<40-char-s
 ```
 extensions/                      ← Pi extension entry points (auto-loaded by Pi)
 kit/                             ← Portable markdown: working discipline, style guide, AI disclosure
-skills/                          ← AgentSkills standard: /spar, /shoshin, /craft, /unslop, /checkpoint, /grill-me, /debug, research, consider-*
+skills/                          ← AgentSkills standard: /spar, /shoshin, /craft, /unslop, /checkpoint, /whats-next
 .codex-plugin/plugin.json        ← Codex skills-only plugin manifest
 .agents/plugins/marketplace.json ← Codex marketplace catalog (this repo is the plugin root)
 ```
@@ -221,24 +221,44 @@ Portable markdown files that ship under `kit/`. Any AI tool can read these direc
 | File | Purpose |
 |------|---------|
 | [`WORKING-STYLE.md`](kit/WORKING-STYLE.md) | Full reference: rationale, examples, edge cases, extension behavior |
-| [`STANDALONE.md`](kit/STANDALONE.md) | Self-contained prompt — load this at session start in any tool |
 | [`STYLE.md`](kit/STYLE.md) | Writing defaults: voice, structure, docs, cross-linking |
 | [`STYLE.template.md`](kit/STYLE.template.md) | Blank template with `[DEFINE]` placeholders for project-owned style guides |
 | [`AI-DISCLOSURE.md`](kit/AI-DISCLOSURE.md) | Review status conventions: how to interpret AI-assisted content, validation types, standard footer text |
+| [`ENGINEERING-PRINCIPLES.md`](kit/ENGINEERING-PRINCIPLES.md) | Craft lenses (DRY, KISS, SRP, YAGNI, phases) |
+| [`AGILE-ARTIFACT-DISCIPLINE.md`](kit/AGILE-ARTIFACT-DISCIPLINE.md) | JBGE, TAGRI, travel light |
 
-**Separation of concerns:** `WORKING-STYLE.md` explains. `STANDALONE.md` drives behavior. Load the latter when you need the working discipline active; read the former when you need to understand why something works the way it does.
+**How behavior loads:** Plugin / skills install for invoked depth. Ambient posture in the consumer's `AGENTS.md` (or Pi L0). No separate paste-prompt file — that model is retired in favor of plugins + skills.
 
 ---
 
 ## Skills
 
-27 skills under `skills/` following the [AgentSkills standard](https://agentskills.io/specification). Discovered natively by Pi, Copilot CLI, and Claude Code.
+6 skills under `skills/` following the [AgentSkills standard](https://agentskills.io/specification). Discovered natively by Pi, Copilot CLI, Claude Code, and Codex.
 
-Categories:
-- **Working discipline:** `spar`, `checkpoint`, `grill-me`, `debug`, `ask-me-questions`
-- **Consider-\*:** `consider-10-10-10`, `consider-5-whys`, `consider-eisenhower-matrix`, `consider-first-principles`, `consider-inversion`, `consider-occams-razor`, `consider-one-thing`, `consider-opportunity-cost`, `consider-pareto`, `consider-second-order`, `consider-swot`, `consider-via-negativa`
-- **Research:** `research-competitive`, `research-deep-dive`, `research-feasibility`
-- **Improvement:** `improve-skill`
+| Skill | Job |
+|-------|-----|
+| `shoshin` | Reset framing — surface load-bearing assumptions before building |
+| `spar` | Steel-man adversarial review |
+| `craft` | Engineering principles on code or design (KISS, SRP, DRY, YAGNI, JBGE) |
+| `unslop` | Cut AI tells from a draft |
+| `checkpoint` | Mid-session crash-recovery snapshot |
+| `whats-next` | Full session handoff for a fresh context |
+
+### Companion skills (not bundled)
+
+Design interrogation (`/grill-me`, `/grill-with-docs`) lives upstream in [Matt Pocock's skills](https://github.com/mattpocock/skills) — install that pack separately rather than forking into this kit:
+
+```bash
+# Claude Code (full plugin, auto-updates)
+claude plugins install mattpocock-skills
+
+# Or pick skills across agents (e.g. grill-me + grilling only)
+npx skills@latest add mattpocock/skills
+```
+
+### Removed from this kit
+
+Older TÂCHES-imported packs (`research-*`, `consider-*`, `ask-me-questions`, `debug` stub, `improve-skill`) and a vendored `grill-me` were removed — discovery noise, Claude-only tool coupling, or upstream ownership. Git history retains them if needed.
 
 ---
 
@@ -249,24 +269,19 @@ Categories:
 ```bash
 # Add skills (one-time per machine or project)
 /skills add <path-to-zanshin-pi-extension>/skills/
-
-# Load the working discipline — add to ~/.copilot/copilot-instructions.md:
-## Working Style
-At the start of every session, read and apply:
-<path-to-zanshin-pi-extension>/kit/WORKING-STYLE.md
 ```
 
-The guards are Pi-only (TypeScript extensions). The skills and kit markdown work in any tool.
+Put a short ambient working-style block in `~/.copilot/copilot-instructions.md` or the project's `AGENTS.md` (see `kit/WORKING-STYLE.md` for what ambient covers). The guards are Pi-only.
 
 ### Cursor / Claude Code
 
-Load `kit/STANDALONE.md` as a project rule or system prompt. The guards don't apply — Cursor and Claude Code don't have the same extension API. The kit and skills cover the discipline layer.
+Install or `/skills add` this repo's `skills/`. Put ambient posture in the project's `AGENTS.md` (or Cursor rules). Pi TypeScript guards don't apply — skills + kit markdown are the discipline layer.
 
 ### Codex
 
 This repo is a skills-only Codex plugin. `skills/` is the canonical skill source — not a copy. Pi session hooks and TypeScript guards are not part of the Codex plugin; Codex currently rejects a `hooks` field in the plugin manifest.
 
-Installing the plugin gives invoked skills. Ambient practices (bookkeeping, stack, verification, review, branching) still need `kit/STANDALONE.md` or equivalent summaries in the consuming repo's `AGENTS.md`.
+Installing the plugin gives invoked skills. Ambient practices (bookkeeping, stack, verification, review, branching) still need a short summary in the consuming repo's `AGENTS.md`.
 
 Repo-root marketplace path `./` needs Codex 0.142 or newer ([openai/codex#17066](https://github.com/openai/codex/issues/17066), fixed in [PR 28771](https://github.com/openai/codex/pull/28771)). Older clients cannot resolve a plugin that lives at the marketplace root.
 

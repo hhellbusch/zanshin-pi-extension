@@ -1,6 +1,10 @@
 ---
 name: shoshin
-description: Surface assumptions collaboratively before proceeding — beginner's mind, invoked depth
+description: >
+  Surfaces load-bearing assumptions against source artifacts before building.
+  Use when the user says /shoshin, "apply shoshin", "what are we assuming?",
+  "beginner's mind", checks framing or scope drift, or before /spar when the
+  problem may be mis-stated.
 argument-hint: "[file path | topic | inline content from conversation]"
 allowed-tools: Read Grep Glob Shell SemanticSearch
 ---
@@ -8,101 +12,135 @@ allowed-tools: Read Grep Glob Shell SemanticSearch
 # Shoshin — Beginner's Mind (Invoked)
 
 <objective>
-Deliberately bring beginner's mind to the foreground. Surface what is being assumed — grounded in artifacts, not conversation memory — and work *with* the user through sharp questions before building on a frame that may be wrong.
+Bring beginner's mind to the foreground. Reset framing: surface what is being assumed — grounded in artifacts, not conversation memory — and work *with* the user through sharp questions before building on a frame that may be wrong.
 
-Shoshin is genuinely curious, not adversarial. Prefer dialogue over monologue: ask before inferring when a key assumption would change the approach.
+Curious, not adversarial. Prefer dialogue over monologue: ask before inferring when a key assumption would change the approach.
 
-**Ambient vs invoked:** A minimal shoshin posture may live in the consumer's always-on context (e.g. `AGENTS.md`). This skill is **invoked depth** — run when the user says `/shoshin`, "apply shoshin", "what are we assuming?", or before `/spar` when the problem may be mis-stated.
+**Ambient vs invoked:** Minimal posture may live in the consumer's always-on context (e.g. `AGENTS.md`, plugin L0). This skill is **invoked depth** only.
+
+**Not this skill:** Artifact economics (TAGRI, JBGE, travel light) live in ambient artifact discipline and `/craft`. Shoshin's job is framing reset, not doc hygiene.
 </objective>
+
+<constraints>
+- Ground every named assumption in a file or observable artifact the user can check
+- Prefer 1–3 sharp questions over long assumption lists
+- Pause on load-bearing assumptions — do not proceed to implementation, `/spar`, or large output until the user answers (unless they asked for analysis only)
+- Adapt depth to the target: a one-line decision needs less ceremony than a brief or epic
+- Do not railroad: steps below are a preferred path, not a script that must be recited
+</constraints>
 
 <process>
 
-### Step 1: Identify the target
+### 1. Identify the target
 
 Parse `$ARGUMENTS`:
 
 - **File path** → read the file and what it references
 - **Topic or inline content** → the plan, epic, design, or decision in conversation
-- **No arguments** → the current approach, most recent decision, or framing the session inherited
+- **No arguments** → current approach, most recent decision, or framing the session inherited
 
-If ambiguous, ask one sharp question: "What should I apply shoshin to — a specific file, this plan, or the framing we've been working in?"
+If ambiguous, ask one question: "What should I apply shoshin to — a specific file, this plan, or the framing we've been working in?"
 
-### Step 2: Audience and purpose (model with a purpose)
+### 2. Read source artifacts
 
-Before assumptions, for any plan, epic, doc, or design target:
+Load external ground truth — not inherited summaries:
 
-- **Who is the reader?** (Specific role — not "the team.")
-- **What decision or action does this enable?** If none, say so and ask whether to proceed.
-
-If either is unclear, ask one sharp question instead of expanding the artifact. See `kit/AGILE-ARTIFACT-DISCIPLINE.md` (TAGRI, JBGE).
-
-### Step 3: Read source artifacts
-
-Before naming assumptions, load external ground truth — not inherited summaries:
-
-- Source documents the target depends on (briefs, specs, requirements, linked docs)
-- Recent commits or git log when the target references evolving work
+- Documents the target depends on (briefs, specs, requirements, linked docs)
+- Recent commits / git log when the target references evolving work
 - Prior decisions committed to files, not conversation memory
 
-If a key artifact is missing and would change framing, **ask** rather than infer: "I don't see X — should I read it, or are we working without it?"
+Missing key artifact that would change framing → ask: "I don't see X — should I read it, or are we working without it?"
 
-### Step 4: Surface assumptions — collaboratively
+### 3. Surface assumptions — collaboratively
 
-Name 3–5 assumptions grounded in artifacts. For each, make it testable: *if this is wrong, then Y breaks*.
+Name a few assumptions grounded in artifacts. Each must be testable: *if this is wrong, then Y breaks.*
 
-**Collaborative default:** lead with questions, not a lecture.
+Lead with questions, not a lecture. Use the output shape in `<output_format>` when helpful; shorten freely for small targets.
 
-```
-## Assumptions
-
-1. **[Assumption]** — *If wrong:* [what breaks]
-   **Question:** [one sharp question to the user]
-
-2. ...
-```
-
-Guiding probes (use as needed, not as a checklist to dump):
+Optional probes (use only what illuminates — not a dump):
 
 - Is the problem stated correctly, or are we solving the wrong thing?
-- Are the constraints real, or inherited from habit or prior context?
-- Is the scope appropriate, or has it drifted?
+- Are the constraints real, or inherited from habit / prior context?
+- Has scope drifted from the authoritative source?
 - What would a beginner ask that an expert would skip?
 
-**Do not** produce a long internal reasoning essay. **Do** ask when context is incomplete.
+### 4. Name the pivotal assumption
 
-### Step 5: Find the pivotal assumption
-
-Identify the **one assumption** whose examination dissolves complexity or reframes the problem.
-
-State it plainly as dialogue:
+Identify the **one** assumption whose examination dissolves complexity or reframes the problem. State it as dialogue:
 
 > I'm assuming **X**. If that's wrong, **[consequence]**. Does that still hold?
 
-**Pause here** when the assumption is load-bearing — wait for the user's answer before proceeding to implementation, spar, or large output. If the user asked for analysis only, deliver the question and stop.
+**Pause** when load-bearing. Analysis-only requests: deliver the question and stop.
 
-### Step 6: Recommend next step
+### 5. Frame-check (organizing docs only)
 
-- Framing may be wrong → suggest reframing or updating source documents before continuing
+When the target is a plan, epic, brief, or design — and a signal appears — ask:
+
+> *Is this asking the right question — or a well-written answer to the wrong one?*
+
+Signals (don't run routinely):
+
+- External feedback shows fundamental confusion about what the document is trying to do
+- A structural choice survives review but still feels off
+- Author intent has evolved beyond what the brief can express
+- Major transition: first external review, publish, handoff to someone cold
+
+**Ceiling:** Shoshin catches drift between sessions and documents. It cannot catch a wrong frame *embedded in* the documents — that needs user pushback or explicit reframing. Name the ceiling; don't overpromise.
+
+Skip this step for routine decisions.
+
+### 6. Recommend next step
+
+- Framing may be wrong → reframe or update source documents before continuing
 - Framing holds, solution untested → suggest `/spar` on the approach
 - Framing and approach clear → proceed with user confirmation
 
+**Ordering:** shoshin before spar when the problem may be mis-stated; spar after shoshin when framing holds but the solution needs challenge.
+
 </process>
 
-<failure_modes>
+<output_format>
 
-- **Self-referential circling:** Naming assumptions invented in this turn. Ground in artifacts.
-- **False clarity:** Insightful-sounding but untestable assumptions. Require "if wrong, then Y."
-- **Monologue mode:** Long assumption lists without questions. Default to 1–3 sharp questions.
-- **Silent inference:** Proceeding on a load-bearing guess. Ask first.
+```
+## Assumptions — [target]
 
-</failure_modes>
+1. **[Assumption]** — *If wrong:* [what breaks]
+   **Question:** [one sharp question]
+
+2. ...
+
+### Pivotal
+I'm assuming **X**. If that's wrong, **[consequence]**. Does that still hold?
+
+### Next
+reframe | spar | proceed — [one line why]
+```
+
+Omit sections that don't apply. Never pad to fill the template.
+
+</output_format>
+
+<gotchas>
+
+Highest-signal failure modes — update this list when new ones show up in real use:
+
+- **Self-referential circling:** Assumptions invented this turn, not grounded in artifacts
+- **False clarity:** Insightful-sounding but untestable ("if wrong, then Y" missing)
+- **Monologue mode:** Long lists, no questions to the user
+- **Silent inference:** Proceeding on a load-bearing guess
+- **Confirming the wrong frame:** Trusting documents that *are* the problem — see frame-check
+- **Checklist theater:** Running every step and probe on a trivial ask
+- **Doc-hygiene drift:** Turning shoshin into TAGRI/JBGE review — wrong skill; use `/craft` or ambient artifact discipline
+
+</gotchas>
 
 <success_criteria>
 
 - Assumptions grounded in artifacts the user can verify
-- At least one sharp question directed at the user
+- At least one sharp question directed at the user (when anything is load-bearing)
 - One pivotal assumption stated as dialogue, not assertion
 - Load-bearing assumptions get a pause for user response
 - Clear recommendation: reframe, spar, or proceed
+- Depth matched to target size — no ceremony for trivial work
 
 </success_criteria>

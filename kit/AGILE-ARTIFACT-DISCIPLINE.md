@@ -98,7 +98,7 @@ These are **lenses**. Apply the one that illuminates the problem. When lenses co
 
 **Ambient posture:** JBGE default; TAGRI before expanding docs; travel light; document what proved true.
 
-**Invoked depth:** Run `skills/craft/SKILL.md` with the JBGE lens on a draft, or `skills/shoshin/SKILL.md` for audience/purpose before a large artifact.
+**Invoked depth:** Run `skills/craft/SKILL.md` with the JBGE / TAGRI lens on a draft or plan. Framing reset (wrong problem / wrong organizing question) is `/shoshin`, not artifact economics.
 
 ---
 

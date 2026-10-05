@@ -5,14 +5,14 @@ These markdown files ship with **zanshin-pi-extension** for Pi and for git check
 | File | Purpose |
 |------|---------|
 | [`WORKING-STYLE.md`](WORKING-STYLE.md) | Full reference — rationale, examples, edge cases, extension behavior |
-| [`STANDALONE.md`](STANDALONE.md) | Self-contained prompt — paste or load this into any session for working discipline |
 | [`STYLE.md`](STYLE.md) | Writing defaults — voice, structure, docs, ADRs, cross-linking |
 | [`STYLE.template.md`](STYLE.template.md) | Blank template with `[DEFINE]` placeholders for project-owned style guides |
 | [`AI-DISCLOSURE.md`](AI-DISCLOSURE.md) | Review status conventions — how to interpret AI-assisted content |
 | [`ENGINEERING-PRINCIPLES.md`](ENGINEERING-PRINCIPLES.md) | Engineering judgment aids — DRY, KISS, SRP, YAGNI, broken windows, phased delivery |
 | [`AGILE-ARTIFACT-DISCIPLINE.md`](AGILE-ARTIFACT-DISCIPLINE.md) | Artifact economics — JBGE, TAGRI, travel light, document late (Ambler / AM) |
+| [`HARNESS-DETECTION.md`](HARNESS-DETECTION.md) | How skills identify harness / model for checkpoints |
 
-**Separation of concerns:** `WORKING-STYLE.md` is reference documentation. `STANDALONE.md` is the prompt version — concise, self-contained, designed to be loaded at session start. The former explains; the latter drives behavior.
+**How behavior loads:** Install the plugin (or `/skills add` this repo's `skills/`). Put ambient posture in the consumer's always-on context (`AGENTS.md`, Pi L0, etc.). Invoked depth is `skills/*/SKILL.md`. There is no separate paste-prompt file.
 
 ---
 
