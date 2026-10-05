@@ -2,7 +2,9 @@
 
 Guiding principles for making engineering tradeoffs. These are judgment aids, not rigid rules — they exist to help reason about design decisions, not to mandate specific outcomes.
 
-Part of the zanshin-pi-extension kit. Ambient craft posture lives in the consumer's always-on context; invoked depth is `skills/craft/SKILL.md`.
+Part of the zanshin-pi-extension kit. Ambient craft posture lives in the consumer's always-on context; invoked depth is `skills/craft/SKILL.md`. Stance map and framework borrowings: `DESIGN-PHILOSOPHY.md`.
+
+**Lens index:** DRY · KISS · SRP · Leave it better · YAGNI · **Convention over configuration** · Phases · **Orchestration vs program** · (JBGE/TAGRI via artifact discipline)
 
 ---
 
@@ -70,7 +72,9 @@ Pick a **default path** and make it boring. Extra knobs are unpaid configuration
 
 **Agent incrementalism:** Models (e.g. Codex) often add variables while walking toward a goal so each apply has an off-ramp. That’s a reasonable **mat** for one step. Craft check: after the experiment, **collapse knobs into convention** or extract a program — don’t leave scaffolding as the interface.
 
-**Omakase:** the house menu (see `DESIGN-PHILOSOPHY.md`, `MARTIAL-VOCABULARY.md`). Complements this lens. Unix composability still owns the *programs* on the path.
+**Omakase (お任せ):** the house menu — one blessed path for glue. Complements CoC. **Omakase for the path; Unix for the programs on the path** (`MARTIAL-VOCABULARY.md`, `DESIGN-PHILOSOPHY.md`).
+
+**Collaboration happiness:** optimize for the next human on this repo (and the next agent) — short, sharp, fail loud — not a product-marketing slogan.
 
 **Rule of thumb:** If you can’t name the convention, you don’t have one — you have configuration. If you can’t name when a toggle dies, it isn’t an experiment.
 
@@ -105,13 +109,7 @@ CI engines (GitHub Actions, Tekton, Jenkins, GitLab CI) and Ansible are **orches
 
 **Extract when:** failures are *logic* bugs (wrong branch taken), onboarding is "learn our YAML dialect," or you want a unit test for the behavior. **Don't extract** on the first `when:` — that's YAGNI; one more conditional is cheaper *today*. The bar is *where the program lives*, not whether glue may be smart.
 
-**Rails-shaped cousins** (DHH / [The Rails Doctrine](https://rubyonrails.org/doctrine) — borrow the stance, not a Rails rewrite):
-
-- **Convention over configuration** — one boring house way; extra Ansible/CI knobs are unpaid config unless they’re a timeboxed canary (then delete). Full lens above; don’t only cite it here.
-- **The menu is omakase** — pick the defaults; don't grow six pipeline patterns "for flexibility."
-- **No one paradigm** — YAML isn't the runtime. When the shape is a program, use a language you can test (same instinct as "not everything is a helper in the view").
-- **Integrated system, thin edges** — keep the *path* in CI/GitOps; don't replace it with a maze of shared libraries. Extract one script/image, not a framework-in-YAML.
-- **Sharp knives** — Ansible and CI are powerful; using them as a general-purpose language cuts you.
+**Related stances** (detail in `DESIGN-PHILOSOPHY.md`): omakase defaults; no-one-paradigm (YAML isn’t the runtime); sharp knives (CI/Ansible cut you if used as a general-purpose language). Pair with **CoC** when the smell is a flag forest; with this lens when the smell is control-flow-as-YAML.
 
 **Rule of thumb:** If you need a debugger for the *logic*, it doesn't belong only in YAML. If you're only sequencing tools and passing artifacts, stay in the orchestrator.
 
@@ -119,7 +117,7 @@ CI engines (GitHub Actions, Tekton, Jenkins, GitLab CI) and Ansible are **orches
 
 ## How to Use These
 
-These are not a checklist. They are lenses — look through the one that illuminates the problem at hand. When two principles conflict (DRY vs. KISS, for instance), the conflict is the signal — the right answer usually involves accepting the tension rather than resolving it.
+These are not a checklist. They are lenses — look through the one that illuminates the problem at hand. When two principles conflict (DRY vs YAGNI, CoC vs ukemi, omakase vs Unix composability), the conflict is the signal — name it; don’t pretend one slogan wins.
 
 ---
 
@@ -128,5 +126,5 @@ These are not a checklist. They are lenses — look through the one that illumin
 - `WORKING-STYLE.md` — dual-layer shoshin, craft, and artifact discipline
 - `skills/craft/SKILL.md` — invoked engineering-principles review (includes JBGE lens)
 - `kit/AGILE-ARTIFACT-DISCIPLINE.md` — full JBGE/TAGRI reference (Ambler)
-- `kit/DESIGN-PHILOSOPHY.md` — CoC/omakase plan; Rails/Unix/CI2/Laravel map
+- `kit/DESIGN-PHILOSOPHY.md` — stance map; Rails/Unix/CI2/Laravel borrowings
 - `kit/kihon/` — easy-pitfall forms (shell, ansible hygiene); **orchestration vs program** and **CoC** are craft, not kihon

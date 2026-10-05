@@ -69,10 +69,12 @@ function kitPathBlock(): string {
 	return (
 		"**Kit (read when task needs full detail -- not every turn):**\n" +
 		`- \`${kitWorking}\` -- full working discipline\n` +
-		`- \`${kitEngineering}\` -- engineering principles (DRY, KISS, SRP, YAGNI)\n` +
+		`- \`${kitEngineering}\` -- engineering principles (DRY, KISS, SRP, YAGNI, CoC, orchestration vs program)\n` +
 		`- \`${kitArtifacts}\` -- artifact discipline (JBGE, TAGRI, document late)\n` +
 		`- \`${kitStyle}\` -- style defaults\n` +
 		`- \`${kitTemplate}\` -- blank style template\n` +
+		`- \`${join(kitDir, "DESIGN-PHILOSOPHY.md")}\` -- stance map (CoC, omakase, borrowings)\n` +
+		`- \`${join(kitDir, "kihon")}/\` -- fixed forms (\`/kihon <domain>\`)\n` +
 		`- \`${codingConventions}\` -- extension source file conventions (ASCII-safe, TypeScript style)`
 	);
 }
@@ -86,11 +88,11 @@ const ZANSHIN_L0 = `\
 
 Three failure modes: (1) **Cross-session statelessness** -- commit decisions to files; use the repo as truth. (2) **Context compaction** -- re-read files before depending on their contents. (3) **Fluent-but-wrong** -- challenge significant outputs; do not fabricate.
 
-**Commands:** \`/spar [target]\` .. \`/shoshin\` .. \`/kaeshi [goal]\` .. \`/yomi [action]\` .. \`/craft [target]\` .. \`/kihon [shell|edit]\` .. \`/unslop [target]\` .. \`/checkpoint\` .. \`/push <topic>\` .. \`/pop\` .. \`/stack\`
+**Commands:** \`/spar [target]\` .. \`/shoshin\` .. \`/kaeshi [goal]\` .. \`/yomi [action]\` .. \`/craft [target]\` .. \`/kihon <domain>\` .. \`/unslop [target]\` .. \`/checkpoint\` .. \`/push <topic>\` .. \`/pop\` .. \`/stack\`
 
 **Auto-behaviors:** Notifies on session start when an existing project is detected (run \`/shoshin\`). Surfaces a checkpoint reminder after ${CHECKPOINT_THRESHOLD} file writes. Stack state persists across sessions.
 
-**Collaboration:** Shorter over longer. Cut before adding. Ask a sharp question when context is incomplete — don't infer silently. No pleasantries. No filler. **Shoshin posture:** verify framing against source documents; run \`/shoshin\` for deliberate assumption-checking. **Craft posture:** KISS over clever; SRP; DRY on real divergence; run \`/craft\` for deliberate principle review. **Artifact discipline:** JBGE default; TAGRI before expanding docs; document what proved true.`;
+**Collaboration:** Shorter over longer. Cut before adding. Ask a sharp question when context is incomplete — don't infer silently. No pleasantries. No filler. **Shoshin posture:** verify framing against source documents; run \`/shoshin\` for deliberate assumption-checking. **Craft posture:** KISS over clever; SRP; DRY on real divergence; prefer one house path over a toggle forest; name glue-vs-program tension in CI/Ansible; run \`/craft\` for deliberate principle review. **Kihon:** fixed forms for easy pitfalls (\`/kihon <domain>\`) — not craft judgment. **Artifact discipline:** JBGE default; TAGRI before expanding docs; document what proved true.`;
 
 export default function (pi: ExtensionAPI) {
 	// - State -
@@ -244,10 +246,44 @@ export default function (pi: ExtensionAPI) {
 		},
 	});
 
+	// - /kaeshi -
+
+	pi.registerCommand("kaeshi", {
+		description: "Inversion -- what would guarantee failure?",
+		handler: async (args, ctx) => {
+			const skill = join(extensionDir, "..", "skills", "kaeshi", "SKILL.md");
+			const target = args?.trim();
+			await ctx.waitForIdle();
+			pi.sendUserMessage(
+				`Apply kaeshi (inversion). Read and follow \`${skill}\` in full.\n\n` +
+					(target
+						? `Target / goal: ${target}`
+						: "Target: the current goal, plan, or most recent decision."),
+			);
+		},
+	});
+
+	// - /yomi -
+
+	pi.registerCommand("yomi", {
+		description: "Second-order -- and then what?",
+		handler: async (args, ctx) => {
+			const skill = join(extensionDir, "..", "skills", "yomi", "SKILL.md");
+			const target = args?.trim();
+			await ctx.waitForIdle();
+			pi.sendUserMessage(
+				`Apply yomi (second-order / reading ahead). Read and follow \`${skill}\` in full.\n\n` +
+					(target
+						? `Action / change: ${target}`
+						: "Target: the action or change under discussion."),
+			);
+		},
+	});
+
 	// - /craft -
 
 	pi.registerCommand("craft", {
-		description: "Apply engineering principles to code or design",
+		description: "Apply engineering principles (incl. CoC, orchestration vs program)",
 		handler: async (args, ctx) => {
 			const craftSkill = join(extensionDir, "..", "skills", "craft", "SKILL.md");
 			const target = args?.trim();
@@ -257,6 +293,23 @@ export default function (pi: ExtensionAPI) {
 					(target
 						? `Target: ${target}`
 						: "Target: pending git diff, or the code/design under discussion."),
+			);
+		},
+	});
+
+	// - /kihon -
+
+	pi.registerCommand("kihon", {
+		description: "Basics / fixed forms -- easy pitfalls and quality signals",
+		handler: async (args, ctx) => {
+			const skill = join(extensionDir, "..", "skills", "kihon", "SKILL.md");
+			const target = args?.trim();
+			await ctx.waitForIdle();
+			pi.sendUserMessage(
+				`Apply kihon (basics / fixed forms). Read and follow \`${skill}\` in full.\n\n` +
+					(target
+						? `Arguments: ${target}`
+						: "Ask which domain if unclear (shell, secrets, git, k8s, …). See kit/kihon/README.md."),
 			);
 		},
 	});

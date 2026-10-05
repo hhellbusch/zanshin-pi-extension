@@ -72,4 +72,4 @@ Add or keep a domain only if most of these hold:
 
 **Invoke:** `/kihon <domain> [target]` · `/craft` auto-loads shell and credential-shaped secrets/vault hints.
 
-Related: `ENGINEERING-PRINCIPLES.md` (judgment), `MARTIAL-VOCABULARY.md` (kihon vocabulary).
+Related: `ENGINEERING-PRINCIPLES.md` (judgment), `DESIGN-PHILOSOPHY.md` (stances — not kihon), `MARTIAL-VOCABULARY.md` (kihon vocabulary).

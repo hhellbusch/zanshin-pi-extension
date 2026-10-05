@@ -5,7 +5,7 @@
 > Written for English readers: each entry gives a plain-language sense, then how the kit uses it.  
 > New slash skills still need a real repeated gap (see promotion checklist).
 
-Related: `WORKING-STYLE.md`, `AGILE-ARTIFACT-DISCIPLINE.md`, `kit/kihon/README.md`, `skills/*`.
+Related: `WORKING-STYLE.md`, `AGILE-ARTIFACT-DISCIPLINE.md`, `DESIGN-PHILOSOPHY.md`, `kit/kihon/README.md`, `skills/*`.
 
 ---
 
@@ -22,15 +22,17 @@ Related: `WORKING-STYLE.md`, `AGILE-ARTIFACT-DISCIPLINE.md`, `kit/kihon/README.m
 | **heijōshin** (平常心) | Everyday mind under pressure | Light (Field Notes AGENTS ambient) |
 | **ukemi** (受身) | Breakfall — cheap landing if the attempt is wrong | Light (Field Notes AGENTS ambient) |
 | **kihon** (基本) | Fundamentals — drillable basics that catch easy pitfalls | Active (`/kihon`, `kit/kihon/`) |
+| **omakase** (お任せ) | Chef’s choice — house defaults, not a 40-option menu | Light (with CoC craft lens) |
 | **fudōshin** (不動心) | Immovable mind — judgment unmoved by pressure/fluency | Seed |
 | **maai** (間合い) | Distance / timing of engagement | Seed |
 | **kata / randori** | Fixed form vs free practice | Seed |
-| **omakase** (お任せ) | Chef’s choice — house defaults, not a 40-option menu | Seed (Rails cousin; see DESIGN-PHILOSOPHY) |
+| **mushin** (無心) | No-mind — unattached execution | Seed (do not force onto MVP) |
 
 **Ordering (decision work):** shoshin → kaeshi / yomi → spar.  
-**Build hygiene:** kihon (forms) · craft (judgment).  
+**Build hygiene:** kihon (forms) · craft (judgment: CoC, orchestration vs program, …).  
 **Ops overlay:** heijōshin + ukemi on the bridge or before a risky apply.  
-**Adoption arc:** shu-ha-ri over months with the kit itself.
+**Adoption arc:** shu-ha-ri over months with the kit itself.  
+**Defaults:** omakase + convention over configuration (`DESIGN-PHILOSOPHY.md`).
 
 ---
 
@@ -153,6 +155,16 @@ Land so you can stand up. Not “never fail the attempt” — “fail this atte
 **Where:** Field Notes `AGENTS.md` (with heijōshin). Lab journals: undo path next to the procedure.  
 **Tension:** Delay theater (“perfect DR first”) isn’t ukemi — one or two concrete lines, or split the throw.
 
+### Omakase (お任せ) — chef’s choice
+
+**English sense:** You leave the menu to the chef — the house sequence, not a 40-item options list. Rails: “the menu is omakase.”
+
+**Kit sense:** One blessed path for glue (test, lint, deploy). Complements craft **convention over configuration**. **Omakase for the path; Unix for the programs on the path.**
+
+**Vs ukemi:** A timeboxed canary toggle can be the mat. A permanent `enable_*` matrix is not omakase.
+
+**Where:** `ENGINEERING-PRINCIPLES.md` (with CoC), `DESIGN-PHILOSOPHY.md`. Not a slash skill.
+
 ---
 
 ## Seeds (not promoted)
@@ -172,16 +184,6 @@ Unshakeable mind: not moved by fear, flattery, rank, panic, or fluent certainty 
 **Relation to existing practices:** Verification and review discipline under social pressure; pairs with heijōshin on incidents (calm delivery + unmoved judgment). Not a replacement for shoshin (wrong frame) or spar (pressure-test a proposal).
 
 **Possible later shape:** One ambient line next to heijōshin in ops AGENTS (“don’t move the call for fluency or rank — move it for evidence”). Skill only if bridge-call judgment keeps getting pushed around after that.
-
-### Omakase (お任せ) — chef’s choice
-
-**English sense:** You sit down and leave the menu to the chef — the house sequence, not a 40-item options list. Rails borrowed this as “the menu is omakase”: opinionated defaults.
-
-**Kit sense:** One blessed path for glue (test, lint, deploy). Complements **convention over configuration**. Unix/Linux still owns *composable programs* on that path — omakase is not “ban flags forever”; it’s “don’t make the customer pick 40 defaults.”
-
-**Vs ukemi:** A timeboxed canary toggle can be the mat. A permanent `enable_*` matrix is not omakase.
-
-Not a slash skill. Full plan: `DESIGN-PHILOSOPHY.md`.
 
 ### Maai (間合い) — distance / timing
 
@@ -226,6 +228,7 @@ Before a seed becomes a skill or grows beyond a short ambient note:
 
 - Shu-ha-ri essay in a consumer philosophy track? Only if the WORKING-STYLE paragraph isn’t enough.
 - Heijōshin / ukemi: after real uses — keep ambient, drop, or promote a skill.
-- Fudōshin: try as a one-line add-on to ops ambient (“evidence moves the call, not rank or fluency”) only if heijōshin alone isn’t enough on bridge calls.
-- Maai: promote to a WORKING-STYLE one-liner under spar only if over-sparring stays common.
+- Fudōshin: try as a one-line add-on to ops ambient only if heijōshin alone isn’t enough on bridge calls.
+- Maai: WORKING-STYLE one-liner under spar only if over-sparring stays common.
 - Mushin: leave parked.
+- Omakase / CoC: refine agent-toggle characterization after a real Codex Ansible craft pass (`DESIGN-PHILOSOPHY.md`).

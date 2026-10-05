@@ -1,123 +1,114 @@
-# Design philosophy — plan and borrowings
+# Design philosophy
 
-> Status: **plan + seeds**. CoC is the first promotion into craft.  
+> Portable **stances** borrowed from tools that earned trust — not a doctrine dump, not slash skills.  
 > Date: 2026-10-05  
-> Do not import a whole framework doctrine as slash skills.
-
-Related: `ENGINEERING-PRINCIPLES.md` (craft lenses), `MARTIAL-VOCABULARY.md` (omakase), `kihon/` (forms, not philosophy).
+> Craft lenses live in `ENGINEERING-PRINCIPLES.md`. Dojo names live in `MARTIAL-VOCABULARY.md`. Forms live in `kihon/`.
 
 ---
 
-## What we’re doing
+## North star map
 
-Lift **stances** from tools you actually liked — Rails, Unix/Linux, CodeIgniter 2, Laravel — into portable craft language. Keep product/stack depth in the consumer repo (`devops/`).
+| Stance | Steal from | Kit home | Status |
+|--------|------------|----------|--------|
+| Convention over configuration | Rails | Craft lens | **Active** |
+| Orchestration vs program | this kit + Rails “no one paradigm” | Craft lens | **Active** |
+| Omakase (お任せ) — house defaults | Rails + Japanese | Vocab + CoC companion | **Light** |
+| Collaboration happiness (next human on the repo) | Rails “programmer happiness,” narrowed | Ambient / craft one-liner | **Light** |
+| Compose programs; readable text; stable contracts | Unix / Linux | Complements extract-a-program | **Map** |
+| Skinny core, visible layout, low magic | CodeIgniter 2 | Travel-light; thin wrappers | **Map** |
+| Blessed path + escape hatch | Laravel | Omakase + sharp knives | **Map** |
 
-**North stars to try (not all as skills):**
-
-| Stance | Source | Kit home (proposed) |
-|--------|--------|---------------------|
-| Convention over configuration | Rails | **Craft lens now** |
-| Omakase (chef’s choice / opinionated defaults) | Rails + Japanese | Vocab seed → maybe craft one-liner |
-| Orchestration vs program | this kit + Rails “no one paradigm” | Craft lens (already) |
-| Human/programmer happiness | Rails | Ambient collaboration — not a product manifesto |
-| Composability / text / one job | Unix/Linux | Tension with omakase — name it, don’t pick a winner |
-| Stay out of the way / skinny core | CodeIgniter 2 | Kit travel-light; thin wrappers |
-| Batteries with an escape hatch | Laravel | Omakase + sharp knives; don’t trap people in magic |
-
-**Stay out of:** majestic-monolith vs microservices as kit doctrine. Prefer monoliths sometimes; that’s a product call, not a slash skill.
+**Stay out of the kit:** monolith vs microservices as doctrine; product-marketing “happiness”; `/omakase` / `/linux` / `/laravel` skills.
 
 ---
 
-## Observed gap (Ansible + agents)
+## Active craft stances (summary)
 
-Codex (and similar) often **adds variables/toggles** while walking a canary or experiment: extra `when:` flags, feature switches in `defaults/main.yml`, “safer” off-ramps each increment.
+Full text: `ENGINEERING-PRINCIPLES.md`.
 
-That can be **ukemi** (cheap fall for the next apply) or **unpaid configuration** (every extra knob is a convention you didn’t pick).
+### Convention over configuration
 
-**Working characterization (refine in use):**
+One boring **default path**. Extra knobs are unpaid configuration unless they are a **timeboxed canary** (then delete).
 
-| Knobs that earn their keep | Knobs that rot |
-|----------------------------|----------------|
-| Named experiment/canary, **default follows house convention**, timeboxed, removed when the path wins | Open-ended `enable_foo` / `mode` / `strictness` with no kill-by |
-| One off-ramp for a risky step (ukemi) | A matrix of flags so every customer is a unique dialect |
-| Documented in the role README as *temporary* | Agent-added “for safety” that become the public API |
+**Agent toggle / canary tension** (Ansible + Codex-class models):
 
-**Craft prompt:** “Is this toggle the experiment’s mat, or a new configuration surface?” After the canary: **collapse into convention** (CoC) or extract a program (orchestration vs program) — don’t leave the scaffolding.
+| Earns its keep | Rots |
+|----------------|------|
+| Named experiment, default = house convention, kill-by date | Open-ended `enable_*` / `mode` / `strictness` |
+| One off-ramp for a risky step (**ukemi**) | Flag matrix → every customer a dialect |
+| Documented as temporary | Agent “for safety” knobs that become the public API |
 
----
+**Craft prompt:** *Is this toggle the experiment’s mat, or a new configuration surface?* After the canary: collapse into convention or extract a program.
 
-## Convention over configuration — build plan
+### Orchestration vs program
 
-**Promote now** as a craft lens (see `ENGINEERING-PRINCIPLES.md`).
+CI / Ansible / Helm are **glue**. When the YAML is an untested program, extract a script/module/image. Don’t extract on the first `when:` (YAGNI). Bar: *where the program lives*.
 
-**Later (only if misses continue):**
+### Omakase
 
-1. One Ansible kihon bullet: *defaults over extra-vars; new `enable_*` needs a reason* — still not a 20-line Ansible style guide.
-2. Agent-facing example in craft output: flag “new toggle with no default path.”
-3. Field Notes `devops/ansible/` can show the house convention (FQCN, inventory layout) — kit stays generic.
+Chef’s choice: the house menu for glue (one way to test, lint, deploy). **Omakase for the path; Unix for the programs on the path.** Not “ban flags”; “don’t make humans pick forty defaults.”
 
----
+### Collaboration happiness
 
-## Omakase (お任せ)
-
-**English:** “I leave it to the chef” — you get the house menu, not a 40-page options list.
-
-**Kit:** Opinionated *defaults* for glue (one way to test, lint, deploy). Complements CoC. Japanese cousin of Rails “the menu is omakase.” Vocab in `MARTIAL-VOCABULARY.md`; not a skill. Tension with Linux “explicit config and many composable tools” — **omakase for the path, Unix for the programs on the path.**
+Optimize for the **next human on this repo** (including 3am you and the next agent): short answers, sharp questions, fail loud, don’t invent a YAML dialect. Distinct from product “user joy” marketing — that belongs in consumer essays if at all.
 
 ---
 
-## Happiness as north star
+## Borrowings (steal, don’t copy)
 
-Two layers — don’t mash them:
+### Rails (DHH / [The Rails Doctrine](https://rubyonrails.org/doctrine))
 
-1. **Collaboration happiness** (kit): shorter over longer, sharp questions, don’t make humans debug a YAML dialect or fluent-but-wrong RCA. Already ambient in WORKING-STYLE / AGENTS.
-2. **Product happiness** (DHH): optimize the *user of the software* for joy. Optional consumer essay; dangerous as a kit slogan (sounds like marketing). If promoted: one ambient line — “optimize for the next human on this repo, including 3am you.”
-
----
-
-## Other frameworks — what to steal (not copy)
+| Steal | Don’t steal |
+|-------|-------------|
+| CoC, omakase defaults, no-one-paradigm (YAML ≠ runtime) | Full doctrine as kit law |
+| Sharp knives (powerful tools cut you if misused) | Majestic monolith as always-right |
 
 ### Unix / Linux
 
-- **Do one thing; compose** — scripts/operators you can grep and pipe; matches “extract a program.”
-- **Text and explicitness** — logs, manifests, policies you can read without a framework runtime.
-- **Don’t break userspace** — stable contracts (APIs, CRDs, playbook interfaces) once others depend on them.
-- **Tension:** distros and Kubernetes are full of policy; “mechanism not policy” is an ideal, not OCP reality. Don’t fight the platform with kit slogans.
-
-Steal: composable programs + readable artifacts. Don’t steal: anti-convention purity that fights CoC.
+| Steal | Don’t steal |
+|-------|-------------|
+| Do one thing; compose (matches extract-a-program) | Anti-convention purity that fights CoC |
+| Text you can grep; contracts that don’t break userspace | Pretending K8s/OCP has no policy |
 
 ### CodeIgniter 2
 
-- **Skinny core, obvious folders** — convention as *layout you can see*, little magic.
-- **Stay out of the way** — you can read the framework; matches kit travel-light and thin consumer wrappers.
-- **Documentation as the product** — forms people can follow.
-
-Steal: visible convention, low magic, docs that are the form. Don’t steal: PHP-era helper sprawl.
+| Steal | Don’t steal |
+|-------|-------------|
+| Obvious folders; skinny core; docs as the form | Helper sprawl; magic for its own sake |
+| Stay out of the way (read the framework) | |
 
 ### Laravel
 
-- **Batteries included** with a known happy path (Artisan, Eloquent, migrations) — omakase.
-- **Escape hatches** — you can drop to SQL / plain PHP when the magic lies.
-- **Closer to Rails than CI2** — more magic, more happiness *if* you stay on the path.
-
-Steal: one blessed path + an escape hatch (orchestration vs program). Don’t steal: facade/magic as a goal for Ansible YAML.
+| Steal | Don’t steal |
+|-------|-------------|
+| Batteries + known happy path; escape hatch when magic lies | Facades/magic as a goal for Ansible YAML |
 
 ---
 
-## Build sequence
+## Named tensions (don’t resolve in the abstract)
 
-| Step | What | When |
-|------|------|------|
-| 1 | CoC craft lens + this file | now |
-| 2 | Omakase vocab; optional one-liner next to CoC | with CoC |
-| 3 | Use CoC on a real Codex Ansible PR — refine the toggle/ukemi characterization | next real miss |
-| 4 | Happiness: collaboration line only if AGENTS isn’t already enough | if needed |
-| 5 | Linux/CI2/Laravel: keep as this map unless a lens fires twice | parked |
+| Tension | Hold both |
+|---------|-----------|
+| **Omakase vs Unix** | House path for glue; composable programs on the path |
+| **CoC vs ukemi** | Defaults win; temporary mats for canaries, then delete |
+| **CoC vs YAGNI extract** | Don’t add knobs “for later”; don’t extract a framework on first miss |
+| **Orchestration vs program** | Glue stays YAML; logic you debug belongs in a language you can test |
+| **Happiness vs rigor** | Kind to humans ≠ skip verification or spar |
 
-**Reject:** `/omakase`, `/linux`, `/laravel` skills. **Reject:** kit taking a monolith side.
+---
+
+## What is not kihon
+
+Philosophy and judgment stay here / in craft. Kihon is only **easy pitfalls + quality signals** (`kihon/README.md`). A fat design essay is never a `/kihon` domain.
 
 ---
 
 ## Promotion checklist
 
-Same as martial vocab: repeated gap, existing lens insufficient, prefer a paragraph over a skill, don’t duplicate kihon.
+1. Repeated gap in real sessions (not aesthetic fit)  
+2. Existing lens insufficient  
+3. Prefer a craft paragraph over a new skill  
+4. Prefer consumer essay for product philosophy  
+5. Don’t duplicate martial vocab or kihon  
+
+**Next use-test:** run `/craft` on a Codex-grown Ansible defaults forest; refine the toggle/ukemi table from evidence.

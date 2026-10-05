@@ -190,16 +190,16 @@ Two layers — same pattern as shoshin:
 
 | Layer | Where | Job |
 |---|---|---|
-| **Ambient posture** | Consumer's always-on context | KISS, SRP, DRY-on-divergence, YAGNI, phased delivery — lenses not checklist |
+| **Ambient posture** | Consumer's always-on context | KISS, SRP, DRY-on-divergence, YAGNI, CoC, phased delivery — lenses not checklist |
 | **Invoked depth** | `skills/craft/SKILL.md` | Deliberate review of a file, diff, or design |
 
 #### Ambient (L0)
 
-Prefer simple over clever. One reason to change per unit. Extract duplication when parts will diverge — not on first coincidence. Don't build for imagined requirements. Respect work → right → fast phases.
+Prefer simple over clever. One reason to change per unit. Extract duplication when parts will diverge — not on first coincidence. Don't build for imagined requirements. Prefer one boring house path (convention over configuration / omakase) over a toggle forest. Respect work → right → fast phases. When CI/Ansible starts looking like a program, name the tension — craft, not a new kihon.
 
 #### Invoked
 
-`/craft [target]` or "apply craft principles" → read and follow `skills/craft/SKILL.md`. Full rationale: **`kit/ENGINEERING-PRINCIPLES.md`**. When the target is shell/CI, craft also loads **kihon** shell form. When the target is a pipeline or Ansible/Helm glue that looks like a program, apply **orchestration vs program**.
+`/craft [target]` or "apply craft principles" → read and follow `skills/craft/SKILL.md`. Full rationale: **`kit/ENGINEERING-PRINCIPLES.md`** (stance map: **`kit/DESIGN-PHILOSOPHY.md`**). Auto-load matching **kihon** forms as form gaps. On CI/Ansible/Helm or a defaults forest: apply **orchestration vs program** and **convention over configuration**.
 
 **Ordering:** Shoshin when scope may be wrong. Craft when implementation quality matters. Spar when the design direction needs challenge.
 
