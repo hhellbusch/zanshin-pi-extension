@@ -70,6 +70,33 @@ Mixing phases is where bugs hide — optimizing before the baseline works, then 
 
 ---
 
+## Orchestration vs program
+
+CI engines (GitHub Actions, Tekton, Jenkins, GitLab CI) and Ansible are **orchestrators**: sequence steps, bind environment, declare desired state. They are a bad **programming language**: deep `if`/`loop` trees, homemade libraries, domain rules that need a debugger.
+
+**Smell:** "This playbook/pipeline is starting to look like a program." That's SRP in the wrong medium — not a reason to ban automation.
+
+| Keep in CI / Ansible / Helm glue | Extract to a real program (script, module, image, operator) |
+|----------------------------------|-------------------------------------------------------------|
+| Checkout, build, test, publish, deploy | Branching, parsing, domain rules you need to unit-test |
+| Install packages, drop files, restart units | Algorithms and rich error recovery |
+| Thin caller of a tested entrypoint | Logic copied across CI *and* Ansible *and* shell |
+| Declare desired state | Compute that state |
+
+**Extract when:** failures are *logic* bugs (wrong branch taken), onboarding is "learn our YAML dialect," or you want a unit test for the behavior. **Don't extract** on the first `when:` — that's YAGNI; one more conditional is cheaper *today*. The bar is *where the program lives*, not whether glue may be smart.
+
+**Rails-shaped cousins** (DHH / [The Rails Doctrine](https://rubyonrails.org/doctrine) — borrow the stance, not a Rails rewrite):
+
+- **Convention over configuration** — one boring house way to test/build/deploy; snowflake YAML per job is unpaid configuration.
+- **The menu is omakase** — pick the defaults; don't grow six pipeline patterns "for flexibility."
+- **No one paradigm** — YAML isn't the runtime. When the shape is a program, use a language you can test (same instinct as "not everything is a helper in the view").
+- **Integrated system, thin edges** — keep the *path* in CI/GitOps; don't replace it with a maze of shared libraries. Extract one script/image, not a framework-in-YAML.
+- **Sharp knives** — Ansible and CI are powerful; using them as a general-purpose language cuts you.
+
+**Rule of thumb:** If you need a debugger for the *logic*, it doesn't belong only in YAML. If you're only sequencing tools and passing artifacts, stay in the orchestrator.
+
+---
+
 ## How to Use These
 
 These are not a checklist. They are lenses — look through the one that illuminates the problem at hand. When two principles conflict (DRY vs. KISS, for instance), the conflict is the signal — the right answer usually involves accepting the tension rather than resolving it.
@@ -81,3 +108,4 @@ These are not a checklist. They are lenses — look through the one that illumin
 - `WORKING-STYLE.md` — dual-layer shoshin, craft, and artifact discipline
 - `skills/craft/SKILL.md` — invoked engineering-principles review (includes JBGE lens)
 - `kit/AGILE-ARTIFACT-DISCIPLINE.md` — full JBGE/TAGRI reference (Ambler)
+- `kit/kihon/` — easy-pitfall forms (shell, ansible hygiene); **orchestration vs program** is craft, not kihon

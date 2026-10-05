@@ -38,6 +38,7 @@ Read `../../kit/ENGINEERING-PRINCIPLES.md` — use as lenses, don't recite it
   - `*.py` / `*.ts` behavior change → skim `testing.md` + `lint.md` when CI exists
   - insert-style edits → only if reviewing a suspicious replace: footnote `structured-edit.md`
   Full catalog: `/kihon <domain>` · `../../kit/kihon/README.md`
+- **Orchestration vs program:** when the target is CI workflows, Ansible, Helm hooks, or Tekton/Jenkins glue, apply that lens in `ENGINEERING-PRINCIPLES.md` (not kihon).
 - Note what phase the work is in: **make it work** / **make it right** / **make it fast** — flag mixed phases
 
 ### Step 3: Apply lenses (only what illuminates)
@@ -54,6 +55,7 @@ Evaluate through relevant principles. Skip principles that don't apply — don't
 | **Leave it better** | Small fix while here (≤5 min) or backlog it? |
 | **JBGE** | Sufficient for task, no more? (TAGRI: who reads it, what decision?) |
 | **Travel light** | Can sections/models be discarded after purpose served? |
+| **Orchestration vs program** | CI/Ansible/Helm still glue — or an untested program in YAML? Extract a script/module/image when logic needs tests; don't extract on the first `when:`. |
 
 **SRP note:** This kit covers SRP from SOLID, not OCP/Liskov/ISP/DIP. Name interface-segregation or dependency concerns in plain language if they arise — don't force SOLID vocabulary.
 

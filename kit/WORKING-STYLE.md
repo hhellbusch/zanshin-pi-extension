@@ -199,7 +199,7 @@ Prefer simple over clever. One reason to change per unit. Extract duplication wh
 
 #### Invoked
 
-`/craft [target]` or "apply craft principles" → read and follow `skills/craft/SKILL.md`. Full rationale: **`kit/ENGINEERING-PRINCIPLES.md`**. When the target is shell/CI, craft also loads **kihon** shell form.
+`/craft [target]` or "apply craft principles" → read and follow `skills/craft/SKILL.md`. Full rationale: **`kit/ENGINEERING-PRINCIPLES.md`**. When the target is shell/CI, craft also loads **kihon** shell form. When the target is a pipeline or Ansible/Helm glue that looks like a program, apply **orchestration vs program**.
 
 **Ordering:** Shoshin when scope may be wrong. Craft when implementation quality matters. Spar when the design direction needs challenge.
 

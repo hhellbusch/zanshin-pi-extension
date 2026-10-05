@@ -14,3 +14,5 @@ Minimum form. Role design and collection strategy stay in consumer `devops/ansib
 ## Exceptions
 
 One-shot break-glass command tasks: comment why no module, and don’t leave passwords in the task.
+
+If the playbook is growing real control flow (nested `when`/`loop`, homemade "standard library" roles that encode domain rules), that's **craft** — orchestration vs program — not a missing Ansible kihon bullet. See `ENGINEERING-PRINCIPLES.md`.
