@@ -65,7 +65,9 @@ Adapt the level of detail to the task type (coding, research, analysis, writing,
    - Any temporary changes, workarounds, or open questions
    - Current position in the workflow or process
 
-Write to `whats-next.md (project-scoped)` at the project root.
+Write to `.planning/<project>/whats-next.md` using the same project rule as `/checkpoint` and `/shoshin`: an explicit project name wins; one BRIEF is enough; several briefs and no name means ask and do not write. Do not pick the newest `BRIEF.md`.
+
+Before the narrative, record comparison fields a later `/shoshin` can check: current branch (`git branch --show-current`), short hash (`git rev-parse --short HEAD`), and UTC ISO time (`YYYY-MM-DDTHH:MM:SSZ`).
 
 ---
 
@@ -106,9 +108,16 @@ If any assumptions are worth surfacing, include an `<assumptions_carried>` secti
 
 ## Output Format
 
-Write `whats-next.md (project-scoped)` using this structure:
+Write `whats-next.md` using this structure. `<resume_compare>` is required.
 
 ```xml
+<resume_compare>
+branch: [git branch --show-current]
+commit: [short hash]
+recorded: [YYYY-MM-DDTHH:MM:SSZ]
+external: [cluster/env/deploy note, or none]
+</resume_compare>
+
 <original_task>
 [The specific task that was initially requested — be precise about scope]
 </original_task>

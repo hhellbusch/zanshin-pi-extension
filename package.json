@@ -21,9 +21,12 @@
   },
   "files": [
     "extensions",
+    "lib",
     "kit",
     "skills",
     "plugin.json",
+    ".codex-plugin",
+    ".cursor-plugin",
     "README.md",
     "LICENSE"
   ],
@@ -33,9 +36,12 @@
   "scripts": {
     "check": "tsc --noEmit",
     "surface": "node scripts/check-kit-surface.mjs",
+    "planning": "node --experimental-strip-types --test scripts/resume-contract.test.ts",
     "validate": "node scripts/validate-extensions.mjs",
-    "test": "npm run check && npm run surface && npm run validate",
-    "test:offline": "npm run check && npm run surface"
+    "test:core": "npm run surface && npm run planning",
+    "test:offline": "npm run test:core",
+    "test:pi": "npm run check && npm run validate",
+    "test": "npm run test:core && npm run test:pi"
   },
   "devDependencies": {
     "typescript": "^6.0.3"

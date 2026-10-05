@@ -85,11 +85,51 @@ Run in the consumer harness you care about (Pi slash, Cursor skill, Codex plugin
 
 **Setup:** A health check failed. The process was up; the check used the wrong port. Separately, a refactor is mid-flight and the session needs to resume later.
 
-**Invoke:** Ask for a lab journal entry and a checkpoint.
+**Invoke:** `skills/lab-journal/SKILL.md` (or ask for a lab journal entry) and a checkpoint.
 
-**Must:** Journal entry has attempted, observed, surprise, and the disproved hypothesis, with a link to evidence. Checkpoint is the resume note.
+**Must:** The skill points at `kit/LAB-JOURNAL.md` and does not restate the template. The entry has attempted, observed, surprise, and the disproved hypothesis, with a link to evidence. Checkpoint is the resume note.
 
-**Must not:** Put the port surprise only in `whats-next.md`. Write a journal entry for a routine session with no surprise. Paste the raw log.
+**Must not:** Put the port surprise only in `whats-next.md`. Write a journal entry for a routine session with no surprise. Paste the raw log. Copy the journal form into the skill.
+
+---
+
+## S8 — Stale checkpoint before mutate
+
+**Setup:** One project. `.planning/<project>/whats-next.md` records `feature/old @ abc1234 · recorded <older ISO time>`. The repo is now on another branch or a newer HEAD.
+
+**Invoke:** `/shoshin` with no args (or “continue from the handoff”), then ask to edit a file.
+
+**Must:** Resume check compares recorded branch/hash/time to now; surfaces drift (or unchecked) **before** recommending mutate/proceed.
+
+**Must not:** Treat the checkpoint as current. Put the revalidation only inside `/checkpoint` (save).
+
+---
+
+## S9 — Shared default vs single-target craft
+
+**Setup A (shared):** Change a chart/role `defaults/` or common CI template used by many consumers.
+
+**Invoke:** `/craft` on that file.
+
+**Must:** Apply **shared change scope** (who inherits / outside target / validation fan-out).
+
+**Setup B (single-target):** Change one overlay `values-prod.yaml` or one app-local workflow.
+
+**Invoke:** `/craft` on that file.
+
+**Must not:** Force shared-change-scope. May still use CoC or orchestration-vs-program if those smells apply.
+
+---
+
+## S10 — Older brief is the active project
+
+**Setup:** `.planning/alpha/BRIEF.md` is older than `.planning/beta/BRIEF.md`. The session is resuming alpha. Alpha's handoff records `feature/alpha @ aaaaaaa · recorded <ISO time>`.
+
+**Invoke:** `/checkpoint alpha`, then later `/shoshin alpha` before an edit.
+
+**Must:** Checkpoint path is `.planning/alpha/whats-next.md` and the Git state line has branch, short hash, and UTC ISO time. Shoshin compares alpha's handoff, not beta's.
+
+**Must not:** Select beta because its brief was touched more recently. On no-arg `/shoshin` or `/checkpoint` with both briefs present, declare either handoff current.
 
 ---
 
@@ -97,4 +137,8 @@ Run in the consumer harness you care about (Pi slash, Cursor skill, Codex plugin
 
 | Date | Card | Harness | Pass? | Note |
 |------|------|---------|-------|------|
-| | | | | |
+| 2026-10-05 | S6 | skills-only text | pass | Documented `accountId`/`user_id` boundary is intentional translation. `retired` lifecycle vs identity is a contradiction. No rename. |
+| 2026-10-05 | S7 | skills-only text | pass | Wrong port is a journal entry. Mid-flight refactor is a checkpoint. Routine session writes nothing. |
+| 2026-10-05 | S8 | Pi prompt + skill | pass | `resumeDrift` blocks proceed. Checkpoint prompt records `branch @ hash · recorded ISO`. Save does not revalidate. |
+| 2026-10-05 | S9 | skills-only text | pass | Shared change scope only when many consumers inherit. A single values file does not force it. |
+| 2026-10-05 | S10 | node:test + Pi prompt | pass | Explicit older `alpha` wins. No-arg with two briefs stays ambiguous. |

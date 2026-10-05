@@ -20,7 +20,7 @@ Run this:
 <context>
 - Last commits: `git log --oneline -5`
 - Git state: `git status --short`
-- Last commit hash: `git rev-parse --short HEAD`
+- Branch + hash: `git branch --show-current` and `git rev-parse --short HEAD`
 - Existing handoff (if any): `whats-next.md (project-scoped)`
 - Session identity: consult `kit/HARNESS-DETECTION.md` to self-identify harness and version; note the active model from session context (e.g., `<model_information>` tag in Copilot CLI)
 </context>
@@ -37,9 +37,13 @@ From the context above, identify:
 
 If there is no in-progress work and nothing was just completed, the checkpoint is trivial — note that clearly ("No active work — clean state") and write the file anyway so the timestamp is current.
 
-### Step 2: Write the checkpoint
+### Step 2: Choose the project, then append
 
-Overwrite `whats-next.md (project-scoped)` (project root) with the following compact format:
+Same rule as `/shoshin`. `/checkpoint <project>` writes `.planning/<project>/whats-next.md` even when another `BRIEF.md` is newer. One brief: use it. Several briefs and no project argument: ask, and do not write. Do not pick the newest brief.
+
+Append to that file with a datestamp — do not overwrite existing entries.
+
+Use this compact format:
 
 ```markdown
 # Checkpoint — [YYYY-MM-DD HH:MM]
@@ -54,7 +58,7 @@ Overwrite `whats-next.md (project-scoped)` (project root) with the following com
 
 **Key decision (if any):** [One sentence, or "None" — captures anything that would be re-litigated without knowing it was settled]
 
-**Git state:** `[short hash]` — [last commit message, truncated to ~60 chars]
+**Git state:** `[branch @ short-hash] · recorded [YYYY-MM-DDTHH:MM:SSZ]` — [last commit message, truncated to ~60 chars]
 
 **Uncommitted work:** [None / Yes — brief description of what's staged or modified]
 
@@ -68,6 +72,8 @@ Overwrite `whats-next.md (project-scoped)` (project root) with the following com
 ```
 
 Keep it short. Five minutes to write, thirty seconds to read.
+
+Record **branch, hash, and time** so a later session can compare before mutating. This skill **saves** state — it does not revalidate on resume. Resume check: `/shoshin` (step “Resume revalidation”); rationale in `kit/WORKING-STYLE.md` → On resume.
 
 ---
 

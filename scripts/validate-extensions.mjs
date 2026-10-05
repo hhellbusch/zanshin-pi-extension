@@ -31,12 +31,22 @@ const extensionsDir = join(repoRoot, "extensions");
 
 // ── Locate jiti (same version Pi uses) ───────────────────────────────────────
 
-const PI_MODULE = "/usr/local/lib/node_modules/@earendil-works/pi-coding-agent";
-const JITI_PATH = join(PI_MODULE, "node_modules/jiti/lib/jiti.cjs");
+const PI_CANDIDATES = [
+  process.env.PI_MODULE,
+  "/usr/local/lib/node_modules/@earendil-works/pi-coding-agent",
+  join(repoRoot, "node_modules/@earendil-works/pi-coding-agent"),
+].filter(Boolean);
+const PI_MODULE = PI_CANDIDATES.find((dir) =>
+  existsSync(join(dir, "node_modules/jiti/lib/jiti.cjs")),
+);
+const JITI_PATH = PI_MODULE
+  ? join(PI_MODULE, "node_modules/jiti/lib/jiti.cjs")
+  : "";
 
-if (!existsSync(JITI_PATH)) {
-  console.error(`\n  ⚠️  Pi not found at ${PI_MODULE}`);
-  console.error("     Run this script inside a Pi container or install Pi globally.\n");
+if (!PI_MODULE) {
+  console.error(`\n  ⚠️  Pi not found. Looked in:`);
+  for (const dir of PI_CANDIDATES) console.error(`     ${dir}`);
+  console.error("     Install @earendil-works/pi-coding-agent or set PI_MODULE.\n");
   process.exit(1);
 }
 

@@ -1,38 +1,72 @@
-# zanshin-pi-extension
+# Zanshin
 
-Working discipline for [Pi](https://github.com/earendil-works/pi): session lifecycle hooks, slash commands, a pre-commit quality pipeline, and a minimal L0 system prompt. Full kit markdown ships under `kit/` for use in any AI tool.
+Portable working-discipline skills for Codex and Cursor. One `skills/` tree is the behavior. `kit/` is shared reference material, linked from skills, not copied. [Pi](https://github.com/earendil-works/pi) is an optional adapter: slash commands, session hooks, and guards.
 
 ---
 
 ## Install
 
+### Codex
+
+This repo is a skills-only Codex plugin. `skills/` is the only skill tree. Pi hooks are not in the Codex manifest.
+
+Repo-root marketplace path `./` needs Codex 0.142 or newer ([openai/codex#17066](https://github.com/openai/codex/issues/17066), fixed in [PR 28771](https://github.com/openai/codex/pull/28771)).
+
+```bash
+codex plugin marketplace add https://github.com/hhellbusch/zanshin-pi-extension.git
+codex plugin list
+codex plugin add zanshin@zanshin-kit
+```
+
+Local checkout:
+
+```bash
+codex plugin marketplace add /path/to/zanshin-pi-extension
+codex plugin add zanshin@zanshin-kit
+```
+
+Ambient practices (bookkeeping, verification, branching) still need a short block in the consuming repo's `AGENTS.md`. See `kit/WORKING-STYLE.md`.
+
+### Cursor
+
+`.cursor-plugin/plugin.json` points at the same `./skills/`. Do not copy the skill tree.
+
+Place this repo at `~/.cursor/plugins/local/zanshin` (or load it from Customize) and reload the window. Skills are discovered from `skills/*/SKILL.md`.
+
+### Skill contract
+
+- Invoked behavior lives in `skills/<name>/SKILL.md` (frontmatter `name` matches the directory).
+- Shared rationale lives in `kit/` and is linked. Do not paste a second copy of a procedure into a skill.
+- Lab journal: `skills/lab-journal/SKILL.md` is the trigger. The procedure is only `kit/LAB-JOURNAL.md`.
+- A skill does not need a Pi slash command. `whats-next` and `lab-journal` are skills-only.
+
+### Pi adapter
+
 ```bash
 pi install git:https://github.com/hhellbusch/zanshin-pi-extension.git
-```
-
-Pin a commit (recommended — supply chain hygiene):
-
-```bash
 pi install git:https://github.com/hhellbusch/zanshin-pi-extension.git#<40-char-sha>
 ```
+
+Pin a commit when you can. The sections **Pi adapter — commands**, **Auto-behaviors**, and **Guard extensions** apply only after a Pi install.
 
 ---
 
 ## What's in the package
 
 ```
-extensions/                      ← Pi extension entry points (auto-loaded by Pi)
-kit/                             ← Portable markdown: working discipline, style guide, AI disclosure
-skills/                          ← AgentSkills standard: /spar, /shoshin, /kaeshi, /yomi, /craft, /kihon, /unslop, /checkpoint, /whats-next
-.codex-plugin/plugin.json        ← Codex skills-only plugin manifest
+skills/                          ← canonical behavior (Codex, Cursor, Claude, Copilot, Pi)
+kit/                             ← shared references (working style, lab journal, kihon, style)
+.codex-plugin/plugin.json        ← Codex manifest; skills path ./skills/
+.cursor-plugin/plugin.json       ← Cursor manifest; same skills path
 .agents/plugins/marketplace.json ← Codex marketplace catalog (this repo is the plugin root)
+extensions/                      ← Pi adapter only
 ```
 
 ---
 
-## Commands
+## Pi adapter — commands
 
-Registered by `extensions/zanshin.ts`. Available in Pi after install.
+Registered by `extensions/zanshin.ts`. Not required for Codex or Cursor.
 
 | Command | What it does |
 |---------|-------------|
@@ -44,7 +78,7 @@ Registered by `extensions/zanshin.ts`. Available in Pi after install.
 | `/domain-language [term]` | Audit an established term across surfaces — evidence only; read `skills/domain-language/SKILL.md` |
 | `/kihon <domain>` | Basics / fixed forms — read `skills/kihon/SKILL.md` + `kit/kihon/` |
 | `/unslop [target]` | Cut AI tells from a draft — read `skills/unslop/SKILL.md` |
-| `/checkpoint` | Write a structured handoff to `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)` — what's in flight, what was just completed, next step, key decision, git state |
+| `/checkpoint [project]` | Append a handoff to `.planning/<project>/whats-next.md` (named project, else the only BRIEF; ask when several exist) — in flight, just completed, next step, key decision, `branch @ hash · recorded <ISO time>` |
 | `/push <topic>` | Push a topic onto the session stack |
 | `/pop` | Resolve current topic, return to parent |
 | `/stack` | Show the current stack |
@@ -57,9 +91,9 @@ Registered by `extensions/zanshin.ts`. Fire without any command.
 
 | Behavior | When | What happens |
 |----------|------|-------------|
-| **Session notify** | Session starts with an existing project (`BRIEF.md`, `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)`) | Notification: "existing project detected — run /shoshin" |
+| **Session notify** | Session starts with an existing project (`BRIEF.md` or `.planning/<project>/whats-next.md`) | Notification: "existing project detected — run /shoshin" |
 | **Bookkeeping counter** | After every 5 successful `write` or `edit` tool calls | Notification: "N changes since last checkpoint — run /checkpoint" |
-| **Shutdown warning** | Session closes with uncommitted changes and no `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)` | Warning: work is in flight with no handoff |
+| **Shutdown warning** | Session closes with uncommitted changes and no `.planning/<project>/whats-next.md` | Warning: work is in flight with no handoff |
 | **Stack persistence** | Always | Stack state survives context resets and session restarts via `pi.appendEntry()` |
 
 ---
@@ -242,7 +276,7 @@ Portable markdown files that ship under `kit/`. Any AI tool can read these direc
 
 ## Skills
 
-10 skills under `skills/` following the [AgentSkills standard](https://agentskills.io/specification). Discovered natively by Pi, Copilot CLI, Claude Code, and Codex.
+11 skills under `skills/` following the [AgentSkills standard](https://agentskills.io/specification). Discovered by Codex, Cursor, Claude Code, Copilot CLI, and Pi.
 
 | Skill | Job |
 |-------|-----|
@@ -256,6 +290,7 @@ Portable markdown files that ship under `kit/`. Any AI tool can read these direc
 | `unslop` | Cut AI tells from a draft |
 | `checkpoint` | Mid-session crash-recovery snapshot |
 | `whats-next` | Full session handoff for a fresh context |
+| `lab-journal` | Trigger only — procedure is `kit/LAB-JOURNAL.md` |
 
 ### Companion skills (not bundled)
 
@@ -288,31 +323,7 @@ Put a short ambient working-style block in `~/.copilot/copilot-instructions.md` 
 
 ### Cursor / Claude Code
 
-Install or `/skills add` this repo's `skills/`. Put ambient posture in the project's `AGENTS.md` (or Cursor rules). Pi TypeScript guards don't apply — skills + kit markdown are the discipline layer.
-
-### Codex
-
-This repo is a skills-only Codex plugin. `skills/` is the canonical skill source — not a copy. Pi session hooks and TypeScript guards are not part of the Codex plugin; Codex currently rejects a `hooks` field in the plugin manifest.
-
-Installing the plugin gives invoked skills. Ambient practices (bookkeeping, stack, verification, review, branching) still need a short summary in the consuming repo's `AGENTS.md`.
-
-Repo-root marketplace path `./` needs Codex 0.142 or newer ([openai/codex#17066](https://github.com/openai/codex/issues/17066), fixed in [PR 28771](https://github.com/openai/codex/pull/28771)). Older clients cannot resolve a plugin that lives at the marketplace root.
-
-Git marketplace:
-
-```bash
-codex plugin marketplace add https://github.com/hhellbusch/zanshin-pi-extension.git
-codex plugin list
-codex plugin add zanshin@zanshin-kit
-```
-
-Local checkout (this tree is the marketplace root):
-
-```bash
-codex plugin marketplace add /path/to/zanshin-pi-extension
-codex plugin list
-codex plugin add zanshin@zanshin-kit
-```
+Cursor install is at the top of this file. Claude Code: `/skills add` this repo's `skills/`. Ambient posture goes in the project's `AGENTS.md`. Pi guards do not apply.
 
 ---
 

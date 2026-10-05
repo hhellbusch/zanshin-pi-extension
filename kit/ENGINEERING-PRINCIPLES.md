@@ -4,7 +4,7 @@ Guiding principles for making engineering tradeoffs. These are judgment aids, no
 
 Part of the zanshin-pi-extension kit. Ambient craft posture lives in the consumer's always-on context; invoked depth is `skills/craft/SKILL.md`. Stance map and framework borrowings: `DESIGN-PHILOSOPHY.md`.
 
-**Lens index:** DRY · KISS · SRP · Leave it better · YAGNI · **Convention over configuration** · Phases · **Orchestration vs program** · (JBGE/TAGRI via artifact discipline)
+**Lens index:** DRY · KISS · SRP · Leave it better · YAGNI · **Convention over configuration** · Phases · **Orchestration vs program** · **Shared change scope** · (JBGE/TAGRI via artifact discipline)
 
 ---
 
@@ -115,9 +115,27 @@ CI engines (GitHub Actions, Tekton, Jenkins, GitLab CI) and Ansible are **orches
 
 ---
 
+## Shared change scope
+
+When the change touches **shared** configuration or infrastructure — a chart default, group policy, common CI template, base image, library used by many callers — ask who inherits it before treating the diff as local.
+
+| Ask | Why |
+|-----|-----|
+| **Who inherits?** | Name the consumers (clusters, teams, pipelines, charts) that pick this up without a further opt-in |
+| **What’s outside the intended target?** | Sibling environments, older release trains, forks that still pull the default |
+| **What validation covers the affected set?** | One happy-path apply is not coverage of the fan-out |
+
+**Smell:** “It’s just a default” / “only our team uses this path” without naming who else resolves the same value.
+
+**Not this lens:** Single-target changes (one app’s CI job, one overlay’s values file, a role used by one inventory). Use YAGNI / phases. Consequence *chains* of a chosen action → `/yomi`. Failure rails for a goal → `/kaeshi`. This lens is the **blast radius of a shared surface**, not “any Helm/Ansible file.”
+
+**Rule of thumb:** If you can’t name who else will get this change without asking, you don’t understand the scope yet.
+
+---
+
 ## How to Use These
 
-These are not a checklist. They are lenses — look through the one that illuminates the problem at hand. When two principles conflict (DRY vs YAGNI, CoC vs ukemi, omakase vs Unix composability), the conflict is the signal — name it; don’t pretend one slogan wins.
+These are not a checklist. They are lenses — look through the one that illuminates the problem at hand. When two principles conflict (DRY vs YAGNI, CoC vs ukemi, omakase vs Unix composability, shared-scope caution vs ship-the-default), the conflict is the signal — name it; don’t pretend one slogan wins.
 
 ---
 

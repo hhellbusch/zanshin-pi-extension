@@ -196,11 +196,11 @@ Two layers — same pattern as shoshin:
 
 #### Ambient (L0)
 
-Prefer simple over clever. One reason to change per unit. Extract duplication when parts will diverge — not on first coincidence. Don't build for imagined requirements. Prefer one boring house path (convention over configuration / omakase) over a toggle forest. Respect work → right → fast phases. When CI/Ansible starts looking like a program, name the tension — craft, not a new kihon.
+Prefer simple over clever. One reason to change per unit. Extract duplication when parts will diverge — not on first coincidence. Don't build for imagined requirements. Prefer one boring house path (convention over configuration / omakase) over a toggle forest. Respect work → right → fast phases. When CI/Ansible starts looking like a program, name the tension — craft, not a new kihon. When changing shared defaults/policies/templates, name who inherits the change.
 
 #### Invoked
 
-`/craft [target]` or "apply craft principles" → read and follow `skills/craft/SKILL.md`. Full rationale: **`kit/ENGINEERING-PRINCIPLES.md`** (stance map: **`kit/DESIGN-PHILOSOPHY.md`**). Auto-load matching **kihon** forms as form gaps. On CI/Ansible/Helm or a defaults forest: apply **orchestration vs program** and **convention over configuration**.
+`/craft [target]` or "apply craft principles" → read and follow `skills/craft/SKILL.md`. Full rationale: **`kit/ENGINEERING-PRINCIPLES.md`** (stance map: **`kit/DESIGN-PHILOSOPHY.md`**). Auto-load matching **kihon** forms as form gaps. On CI/Ansible/Helm glue smells: **orchestration vs program** and/or **convention over configuration** when they illuminate. **Shared change scope** only when the surface is shared (many consumers inherit without opt-in) — not every Helm/CI edit.
 
 **Ordering:** Shoshin when scope may be wrong. Domain language when the same word may not mean the same thing across surfaces. Craft when implementation quality matters. Spar when the design direction needs challenge.
 
@@ -212,7 +212,7 @@ Prefer simple over clever. One reason to change per unit. Extract duplication wh
 
 ### Lab journal — surprise, not status
 
-After a meaningful surprise (a hypothesis the evidence knocked down), append one entry using **`kit/LAB-JOURNAL.md`** in the repo’s existing journal. Skip on routine sessions. Not a checkpoint, ADR, troubleshooting guide, or peer handoff. No slash skill until this file is skipped in a real surprise.
+After a meaningful surprise, `skills/lab-journal/SKILL.md` is the trigger. The procedure is only **`kit/LAB-JOURNAL.md`**: append one entry in the repo’s existing journal, or skip. Not a checkpoint, ADR, or troubleshooting guide. No Pi command.
 
 ---
 
@@ -272,7 +272,7 @@ Five is a flat counter. Some file changes are heavy (one big refactor) and some 
 
 #### Checkpoint format
 
-Write to `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)` — create the directory if it doesn't exist.
+Write to `.planning/<project>/whats-next.md`. `/checkpoint <project>` names it. With one `BRIEF.md`, use that project. With several and no name, ask — do not pick the newest brief. Create the directory if it doesn't exist.
 
 ```
 # Checkpoint — YYYY-MM-DD
@@ -281,9 +281,11 @@ Write to `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.
 **Just completed:** [1-3 bullets]
 **Next step:** [one sentence — what would happen next if the session continued]
 **Key decision:** [one sentence — what would be re-litigated without knowing it was settled]
-**Git state:** [hash] — [last commit]
+**Git state:** `[branch @ short-hash]` — [last commit] · recorded [ISO time]
 **Open threads:** [stack items or "none"]
 ```
+
+Record enough to **compare on resume** (branch, hash, time). The save command does not revalidate — see [On resume](#on-resume-before-mutating).
 
 #### Example
 
@@ -296,10 +298,9 @@ Write to `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.
 - Updated login handler to write refresh token (b9e4d2a)
 **Next step:** Wire refresh endpoint, then update the client to retry on 401
 **Key decision:** Refresh tokens in httpOnly cookies, not localStorage — XSS tradeoff settled
-**Git state:** b9e4d2a — auth: update login handler for refresh token support
+**Git state:** `feature/auth-refresh @ b9e4d2a` — auth: update login handler for refresh token support · recorded 2026-04-20T15:02:00Z
 **Open threads:** none
 ```
-
 #### Quick capture (fallback)
 
 When there's no time for the full format, append two or three lines, no structure:
@@ -323,6 +324,18 @@ Check the stack for open threads — those belong in the handoff. Write a checkp
 Trigger: `/checkpoint` — or "close-out" / "write a handoff" / "I'm closing this session."
 
 When the file already has content, append with a datestamp — don't replace.
+
+#### On resume (before mutating)
+
+A checkpoint or handoff is evidence from a **past** moment — not proof of current repo or environment state.
+
+Before a later session mutates the repository or a live environment:
+
+1. Compare recorded **branch**, **commit**, **time**, and any noted external state with what exists now (`git status`, `git log`, deploy/cluster facts if relevant).
+2. Refresh assumptions that depended on changed state.
+3. If something cannot be checked, **say the uncertainty** — don’t silently treat the handoff as current.
+
+**Executable entry point (skills-only and Pi):** `/shoshin` step “Resume revalidation” — Pi also notifies “run /shoshin” when an existing project is detected. This section is the full rationale. `/checkpoint` and `/whats-next` **save** comparison fields (branch, short hash, UTC ISO time); they do not run the check. Name the project when more than one `BRIEF.md` exists — the newest brief is not the active project. Pi’s `/checkpoint` prompt includes the comparison line; skills-only reads `skills/checkpoint/SKILL.md` and `skills/whats-next/SKILL.md`.
 
 #### Recovery
 
@@ -535,7 +548,7 @@ Full rules and checklist: `docs/CODING-CONVENTIONS.md`.
 
 ### Where things go
 
-- Checkpoints and handoffs → `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)`
+- Checkpoints and handoffs → `.planning/<project>/whats-next.md` (named project, else the only BRIEF; ask when several exist)
 - If no `BACKLOG.md` exists: create one with `## In Progress`, `## Up Next`, `## Ideas`
 - Commits → local repository
 

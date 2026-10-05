@@ -31,10 +31,10 @@ Promotion bar for a hosted eval stack: the scenarios have been run *manually* at
 ## House path
 
 ```bash
-cd submodules/zanshin-pi-extension && npm run surface   # no Pi required
-cd submodules/zanshin-pi-extension && npm test          # tsc + surface + Pi jiti validate
+cd submodules/zanshin-pi-extension && npm run test:offline   # surface + planning; no Pi
+cd submodules/zanshin-pi-extension && npm test               # test:offline + tsc + Pi jiti validate
 ```
 
-Use-tests: pick a card in `scenarios.md`, run it, note pass/fail in the session checkpoint — don’t grow a results database until cards repeat.
+Use-tests: pick a card in `scenarios.md`, run it, note pass/fail in the log table there. Don’t add a hosted eval runner until a card fails twice and surface checks cannot catch it.
 
 Related: `DESIGN-PHILOSOPHY.md` (next craft use-test), `MARTIAL-VOCABULARY.md` (don’t promote from aesthetic fit).

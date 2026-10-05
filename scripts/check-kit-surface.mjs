@@ -1,8 +1,13 @@
 /**
  * check-kit-surface.mjs
  *
- * Deterministic kit-surface audit. Catches the class of miss where L0/README
- * advertise a command that Pi never registered (kaeshi/yomi/kihon, 2026-10-05).
+ * Deterministic surface audit.
+ *
+ * Core (Codex / Cursor / any skills host): skill frontmatter, kit links,
+ * plugin manifests, README skill index.
+ *
+ * Pi adapter (subset): L0, registerCommand, and the Pi command tables match
+ * each other. A skill with no Pi command is legal. push/pop/stack are Pi-only.
  *
  * Not an LLM eval — see kit/evals/README.md.
  *
@@ -18,8 +23,11 @@ const root = resolve(__dirname, "..");
 
 /** Pi runtime only — no SKILL.md */
 const PI_ONLY = new Set(["push", "pop", "stack"]);
-/** Skill pack only — not a Pi slash command / not in L0 */
-const SKILL_ONLY = new Set(["whats-next"]);
+const PLUGIN_MANIFESTS = [
+  "plugin.json",
+  ".codex-plugin/plugin.json",
+  ".cursor-plugin/plugin.json",
+];
 
 const errors = [];
 
@@ -56,6 +64,9 @@ function parseFrontmatterName(md, skill) {
   if (!name) {
     fail(`skills/${skill}/SKILL.md: no name: in frontmatter`);
     return null;
+  }
+  if (!/^description:\s*/m.test(m[1])) {
+    fail(`skills/${skill}/SKILL.md: no description: in frontmatter`);
   }
   return name[1].trim();
 }
@@ -153,9 +164,6 @@ for (const skill of skills) {
     fail(`skills/${skill}: frontmatter name "${name}" != directory`);
   }
   kitRefsInSkill(md, skill);
-  if (!SKILL_ONLY.has(skill) && !registered.includes(skill)) {
-    fail(`skill "${skill}" has no pi.registerCommand`);
-  }
 }
 
 for (const cmd of registered) {
@@ -165,12 +173,13 @@ for (const cmd of registered) {
   }
 }
 
-setEq(registered, l0, "registerCommand", "L0 Commands");
-setEq(registered, ws, "registerCommand", "WORKING-STYLE slash-commands row");
-setEq(registered, readmeCmds, "registerCommand", "README Commands table");
 setEq(skills, readmeSkills, "skills/", "README Skills table");
 
-for (const f of ["plugin.json", ".codex-plugin/plugin.json"]) {
+setEq(registered, l0, "Pi registerCommand", "Pi L0 Commands");
+setEq(registered, ws, "Pi registerCommand", "WORKING-STYLE slash-commands row");
+setEq(registered, readmeCmds, "Pi registerCommand", "README Pi command table");
+
+for (const f of PLUGIN_MANIFESTS) {
   const raw = read(f);
   if (!raw) continue;
   let json;
@@ -194,12 +203,14 @@ if (/Plan:\s*Rails/.test(kitIndex)) {
   fail("kit/README.md still calls DESIGN-PHILOSOPHY a plan");
 }
 
+const skillsWithoutPi = skills.filter((name) => !registered.includes(name));
+
 console.log("Kit surface");
 console.log(`  skills:          ${skills.join(", ")}`);
-console.log(`  registerCommand: ${registered.join(", ")}`);
+console.log(`  no Pi command:   ${skillsWithoutPi.join(", ") || "(none)"}`);
+console.log(`  Pi commands:     ${registered.join(", ")}`);
 console.log(`  L0:              ${l0.join(", ")}`);
 console.log(`  PI_ONLY:         ${[...PI_ONLY].join(", ")}`);
-console.log(`  SKILL_ONLY:      ${[...SKILL_ONLY].join(", ")}`);
 
 if (errors.length) {
   console.error(`\n${errors.length} error(s):`);

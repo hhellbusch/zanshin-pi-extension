@@ -14,7 +14,7 @@
   "interface": {
     "displayName": "Zanshin",
     "shortDescription": "Portable working-discipline skills for AI-assisted sessions",
-    "longDescription": "Skills-only packaging of the Zanshin kit: shoshin, kaeshi, yomi, spar, craft, domain-language, kihon, unslop, checkpoint, whats-next. Lab journal is kit/LAB-JOURNAL.md (no slash skill). Ambient practices go in the consuming repo's AGENTS.md (or Pi L0). Pi runtime guards are not included. Design grilling: install Matt Pocock's skills separately.",
+    "longDescription": "Skills-only packaging of the Zanshin kit: shoshin, kaeshi, yomi, spar, craft, domain-language, kihon, unslop, checkpoint, whats-next, lab-journal. Lab journal procedure is kit/LAB-JOURNAL.md only. Ambient practices go in the consuming repo's AGENTS.md. Pi runtime guards are not included. Design grilling: install Matt Pocock's skills separately.",
     "developerName": "Henry Hellbusch",
     "category": "Productivity",
     "capabilities": ["Interactive", "Write"],
