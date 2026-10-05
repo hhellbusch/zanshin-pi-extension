@@ -40,7 +40,7 @@ The zanshin-pi-extension provides the following auto-behaviors:
 | Behavior | Mechanism |
 |----------|-----------|
 | L0 injection | Injects a minimal practice block into every agent turn |
-| Slash commands | `/spar`, `/shoshin`, `/kaeshi`, `/yomi`, `/craft`, `/unslop`, `/checkpoint`, `/push`, `/pop`, `/stack` |
+| Slash commands | `/spar`, `/shoshin`, `/kaeshi`, `/yomi`, `/craft`, `/kihon`, `/unslop`, `/checkpoint`, `/push`, `/pop`, `/stack` |
 | Session notify | Detects existing project files (`BRIEF.md`, `whats-next.md`) at session start |
 | Bookkeeping counter | Auto-tracks `write`/`edit` calls; notifies after 5 changes |
 | Stack persistence | Survives context resets via pi session state |
@@ -59,6 +59,7 @@ The zanshin-pi-extension provides the following auto-behaviors:
 | **Kaeshi** | `/kaeshi [goal]` — inversion / what guarantees failure |
 | **Yomi** | `/yomi [action]` — second-order / and then what |
 | **Craft** | `/craft [target]` — or "apply craft principles" on code or design |
+| **Kihon** | `/kihon <domain>` — basics / fixed forms (shell, secrets, k8s, …) |
 | **Unslop** | `/unslop [target]` — cut AI tells from a draft |
 | **Progressive bookkeeping** | Extension auto-tracks writes; notifies after 5; `/checkpoint` resets |
 | **Stack tracking** | `/push` / `/pop` / `/stack` — state persists across sessions |
@@ -189,18 +190,31 @@ Two layers — same pattern as shoshin:
 
 | Layer | Where | Job |
 |---|---|---|
-| **Ambient posture** | Consumer's always-on context | KISS, SRP, DRY-on-divergence, YAGNI, phased delivery — lenses not checklist |
+| **Ambient posture** | Consumer's always-on context | KISS, SRP, DRY-on-divergence, YAGNI, CoC, phased delivery — lenses not checklist |
 | **Invoked depth** | `skills/craft/SKILL.md` | Deliberate review of a file, diff, or design |
 
 #### Ambient (L0)
 
-Prefer simple over clever. One reason to change per unit. Extract duplication when parts will diverge — not on first coincidence. Don't build for imagined requirements. Respect work → right → fast phases.
+Prefer simple over clever. One reason to change per unit. Extract duplication when parts will diverge — not on first coincidence. Don't build for imagined requirements. Prefer one boring house path (convention over configuration / omakase) over a toggle forest. Respect work → right → fast phases. When CI/Ansible starts looking like a program, name the tension — craft, not a new kihon.
 
 #### Invoked
 
-`/craft [target]` or "apply craft principles" → read and follow `skills/craft/SKILL.md`. Full rationale: **`kit/ENGINEERING-PRINCIPLES.md`**.
+`/craft [target]` or "apply craft principles" → read and follow `skills/craft/SKILL.md`. Full rationale: **`kit/ENGINEERING-PRINCIPLES.md`** (stance map: **`kit/DESIGN-PHILOSOPHY.md`**). Auto-load matching **kihon** forms as form gaps. On CI/Ansible/Helm or a defaults forest: apply **orchestration vs program** and **convention over configuration**.
 
 **Ordering:** Shoshin when scope may be wrong. Craft when implementation quality matters. Spar when the design direction needs challenge.
+
+---
+
+### Kihon — basics (fixed forms)
+
+Execute the form — not a tradeoff review. Easy pitfalls + quality signals (`kit/kihon/README.md` for what qualifies).
+
+#### Trigger
+
+`/kihon <domain>` · "strict mode" · "secret hygiene" · "anchor rule"  
+Domains: `kit/kihon/README.md`.
+
+Full process: **`skills/kihon/SKILL.md`**.
 
 ---
 

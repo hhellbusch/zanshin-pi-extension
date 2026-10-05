@@ -23,7 +23,7 @@ pi install git:https://github.com/hhellbusch/zanshin-pi-extension.git#<40-char-s
 ```
 extensions/                      ← Pi extension entry points (auto-loaded by Pi)
 kit/                             ← Portable markdown: working discipline, style guide, AI disclosure
-skills/                          ← AgentSkills standard: /spar, /shoshin, /kaeshi, /yomi, /craft, /unslop, /checkpoint, /whats-next
+skills/                          ← AgentSkills standard: /spar, /shoshin, /kaeshi, /yomi, /craft, /kihon, /unslop, /checkpoint, /whats-next
 .codex-plugin/plugin.json        ← Codex skills-only plugin manifest
 .agents/plugins/marketplace.json ← Codex marketplace catalog (this repo is the plugin root)
 ```
@@ -41,6 +41,7 @@ Registered by `extensions/zanshin.ts`. Available in Pi after install.
 | `/kaeshi [goal]` | Inversion — what guarantees failure? Read `skills/kaeshi/SKILL.md` |
 | `/yomi [action]` | Second-order — and then what? Read `skills/yomi/SKILL.md` |
 | `/craft [target]` | Apply engineering principles to code or design — read `skills/craft/SKILL.md` |
+| `/kihon <domain>` | Basics / fixed forms — read `skills/kihon/SKILL.md` + `kit/kihon/` |
 | `/unslop [target]` | Cut AI tells from a draft — read `skills/unslop/SKILL.md` |
 | `/checkpoint` | Write a structured handoff to `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)` — what's in flight, what was just completed, next step, key decision, git state |
 | `/push <topic>` | Push a topic onto the session stack |
@@ -226,9 +227,11 @@ Portable markdown files that ship under `kit/`. Any AI tool can read these direc
 | [`STYLE.md`](kit/STYLE.md) | Writing defaults: voice, structure, docs, cross-linking |
 | [`STYLE.template.md`](kit/STYLE.template.md) | Blank template with `[DEFINE]` placeholders for project-owned style guides |
 | [`AI-DISCLOSURE.md`](kit/AI-DISCLOSURE.md) | Review status conventions: how to interpret AI-assisted content, validation types, standard footer text |
-| [`ENGINEERING-PRINCIPLES.md`](kit/ENGINEERING-PRINCIPLES.md) | Craft lenses (DRY, KISS, SRP, YAGNI, phases) |
+| [`ENGINEERING-PRINCIPLES.md`](kit/ENGINEERING-PRINCIPLES.md) | Craft lenses (DRY, KISS, SRP, YAGNI, CoC, orchestration vs program) |
+| [`DESIGN-PHILOSOPHY.md`](kit/DESIGN-PHILOSOPHY.md) | Stance map — CoC, omakase, Unix/CI2/Laravel borrowings |
 | [`AGILE-ARTIFACT-DISCIPLINE.md`](kit/AGILE-ARTIFACT-DISCIPLINE.md) | JBGE, TAGRI, travel light |
 | [`MARTIAL-VOCABULARY.md`](kit/MARTIAL-VOCABULARY.md) | Dojo vocabulary map (active + seeds); spar ≈ kumite gloss only — no rename |
+| [`kihon/`](kit/kihon/) | Basics — pitfall/signal domains (`/kihon`; see `kit/kihon/README.md`) |
 
 **How behavior loads:** Plugin / skills install for invoked depth. Ambient posture in the consumer's `AGENTS.md` (or Pi L0). No separate paste-prompt file — that model is retired in favor of plugins + skills.
 
@@ -236,7 +239,7 @@ Portable markdown files that ship under `kit/`. Any AI tool can read these direc
 
 ## Skills
 
-8 skills under `skills/` following the [AgentSkills standard](https://agentskills.io/specification). Discovered natively by Pi, Copilot CLI, Claude Code, and Codex.
+9 skills under `skills/` following the [AgentSkills standard](https://agentskills.io/specification). Discovered natively by Pi, Copilot CLI, Claude Code, and Codex.
 
 | Skill | Job |
 |-------|-----|
@@ -244,7 +247,8 @@ Portable markdown files that ship under `kit/`. Any AI tool can read these direc
 | `kaeshi` | Inversion (返し) — what guarantees failure? |
 | `yomi` | Second-order (読み) — and then what? |
 | `spar` | Steel-man adversarial review |
-| `craft` | Engineering principles on code or design (KISS, SRP, DRY, YAGNI, JBGE) |
+| `craft` | Engineering principles on code or design (KISS, SRP, DRY, YAGNI, CoC, orchestration vs program, JBGE) |
+| `kihon` | Basics / fixed forms — shell, secrets, git, k8s, testing, lint, thin verticals |
 | `unslop` | Cut AI tells from a draft |
 | `checkpoint` | Mid-session crash-recovery snapshot |
 | `whats-next` | Full session handoff for a fresh context |

@@ -2,9 +2,10 @@
 
 > Date: 2026-10-05  
 > Map of dojo-related names in (or near) the kit — **active**, **lightly promoted**, and **seeds**.  
+> Written for English readers: each entry gives a plain-language sense, then how the kit uses it.  
 > New slash skills still need a real repeated gap (see promotion checklist).
 
-Related: `WORKING-STYLE.md`, `AGILE-ARTIFACT-DISCIPLINE.md`, `skills/*`.
+Related: `WORKING-STYLE.md`, `AGILE-ARTIFACT-DISCIPLINE.md`, `DESIGN-PHILOSOPHY.md`, `kit/kihon/README.md`, `skills/*`.
 
 ---
 
@@ -20,14 +21,18 @@ Related: `WORKING-STYLE.md`, `AGILE-ARTIFACT-DISCIPLINE.md`, `skills/*`.
 | **shu-ha-ri** (守破離) | Follow → break → leave the form | Light (WORKING-STYLE section) |
 | **heijōshin** (平常心) | Everyday mind under pressure | Light (Field Notes AGENTS ambient) |
 | **ukemi** (受身) | Breakfall — cheap landing if the attempt is wrong | Light (Field Notes AGENTS ambient) |
+| **kihon** (基本) | Fundamentals — drillable basics that catch easy pitfalls | Active (`/kihon`, `kit/kihon/`) |
+| **omakase** (お任せ) | Chef’s choice — house defaults, not a 40-option menu | Light (with CoC craft lens) |
 | **fudōshin** (不動心) | Immovable mind — judgment unmoved by pressure/fluency | Seed |
 | **maai** (間合い) | Distance / timing of engagement | Seed |
 | **kata / randori** | Fixed form vs free practice | Seed |
 | **mushin** (無心) | No-mind — unattached execution | Seed (do not force onto MVP) |
 
 **Ordering (decision work):** shoshin → kaeshi / yomi → spar.  
+**Build hygiene:** kihon (forms) · craft (judgment: CoC, orchestration vs program, …).  
 **Ops overlay:** heijōshin + ukemi on the bridge or before a risky apply.  
-**Adoption arc:** shu-ha-ri over months with the kit itself.
+**Adoption arc:** shu-ha-ri over months with the kit itself.  
+**Defaults:** omakase + convention over configuration (`DESIGN-PHILOSOPHY.md`).
 
 ---
 
@@ -70,6 +75,28 @@ Second-order thinking: and then what? Follow consequence chains until the go/no-
 - **Skill:** `skills/yomi/SKILL.md` · `/yomi`
 - **When:** Action/choice clear; downstream effects not
 - **Not:** Anti-goals for a naked goal (kaeshi); steel-man critique (spar)
+
+### Kihon (基本) — fundamentals / basics
+
+**English sense:** *Kihon* means the fundamental techniques you repeat until they’re automatic — stances, strikes, blocks — before fancy combinations. In a dojo, nobody debates whether to chamber a fist during kihon practice; you drill the form so that under pressure the body still does the safe thing.
+
+**Kit sense:** Short, always-on hygiene forms that **avoid easy pitfalls** and act as **quality signal generators** (fail loud, block silent lies). Example: `set -euo pipefail` so a failed CI step can’t look green; no secrets in git; a test when behavior changes. You **execute the form**, you don’t weigh tradeoffs.
+
+| Nearby idea | Relationship |
+|-------------|--------------|
+| **Kata** | A fixed sequence / ritual. Kihon is the *building-block* form; kata is often a longer composed form (a full skill process, a checkpoint template). |
+| **Shu-ha-ri** | Shu = follow kihon exactly; ha = bend with a commented exception; ri = the stance is loaded and you don’t need the checklist every time. |
+| **Craft** | Judgment lenses (DRY vs YAGNI). If you’re debating, it’s craft — not kihon. |
+| **Randori** | Free practice. Skipping kihon and jumping straight to randori is how pipelines and clusters get hurt. |
+
+**What belongs in kihon** (see `kit/kihon/README.md` for the full bar): easy pitfall + visible signal + one-screen form + portable + mostly always-on. Headline examples: shell, secrets, git, k8s-change, testing, lint. Thin verticals (ansible, helm, …) are minimum bars only — product depth stays in the consumer’s `devops/` guides. Footnotes (e.g. structured-edit) are real but narrow.
+
+- **Skill:** `skills/kihon/SKILL.md` · `/kihon <domain>`
+- **Docs:** `kit/kihon/` (catalog + qualification tests)
+- **When:** Before/during implementation when hygiene or stack basics apply
+- **Not:** Architecture debates (craft); “is this the right problem?” (shoshin); full OCP/Helm guides (consumer repo)
+
+`/craft` auto-loads a subset (shell, credential-shaped secrets/vault, light test/lint) as form gaps.
 
 ### Also covered without dojo names
 
@@ -128,6 +155,16 @@ Land so you can stand up. Not “never fail the attempt” — “fail this atte
 **Where:** Field Notes `AGENTS.md` (with heijōshin). Lab journals: undo path next to the procedure.  
 **Tension:** Delay theater (“perfect DR first”) isn’t ukemi — one or two concrete lines, or split the throw.
 
+### Omakase (お任せ) — chef’s choice
+
+**English sense:** You leave the menu to the chef — the house sequence, not a 40-item options list. Rails: “the menu is omakase.”
+
+**Kit sense:** One blessed path for glue (test, lint, deploy). Complements craft **convention over configuration**. **Omakase for the path; Unix for the programs on the path.**
+
+**Vs ukemi:** A timeboxed canary toggle can be the mat. A permanent `enable_*` matrix is not omakase.
+
+**Where:** `ENGINEERING-PRINCIPLES.md` (with CoC), `DESIGN-PHILOSOPHY.md`. Not a slash skill.
+
 ---
 
 ## Seeds (not promoted)
@@ -158,10 +195,13 @@ The space and timing of engagement: when to close (spar, dig, patch) vs stay out
 
 ### Kata ↔ randori — form vs free practice
 
-- **Kata** — fixed form: skill XML, checkpoint template, branching defaults.
-- **Randori** — free practice: exploratory debugging, messy incident channels, first contact with an unknown failure.
+**English sense:** *Kata* are prearranged forms you practice as a whole sequence. *Randori* is free practice — live, unscripted engagement.
 
-**Kit tension:** Full kata on a two-line question (shu stuck); pure randori with no form when a checklist would have caught a miss. Shu-ha-ri is the maturity arc across both. Useful teaching vocab; unlikely to need its own skill.
+- **Kata** — fixed composed form: skill XML, checkpoint template, branching defaults.
+- **Kihon** — the smaller fundamentals those forms are built from (see above).
+- **Randori** — exploratory debugging, messy incident channels, first contact with an unknown failure.
+
+**Kit tension:** Full kata on a two-line question (stuck in shu); pure randori with no kihon when a checklist would have caught a miss. Shu-ha-ri is the maturity arc across both. Useful teaching vocab; unlikely to need its own skill.
 
 ### Mushin (無心) — no-mind
 
@@ -188,6 +228,7 @@ Before a seed becomes a skill or grows beyond a short ambient note:
 
 - Shu-ha-ri essay in a consumer philosophy track? Only if the WORKING-STYLE paragraph isn’t enough.
 - Heijōshin / ukemi: after real uses — keep ambient, drop, or promote a skill.
-- Fudōshin: try as a one-line add-on to ops ambient (“evidence moves the call, not rank or fluency”) only if heijōshin alone isn’t enough on bridge calls.
-- Maai: promote to a WORKING-STYLE one-liner under spar only if over-sparring stays common.
+- Fudōshin: try as a one-line add-on to ops ambient only if heijōshin alone isn’t enough on bridge calls.
+- Maai: WORKING-STYLE one-liner under spar only if over-sparring stays common.
 - Mushin: leave parked.
+- Omakase / CoC: refine agent-toggle characterization after a real Codex Ansible craft pass (`DESIGN-PHILOSOPHY.md`).

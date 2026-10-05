@@ -2,7 +2,9 @@
 
 Guiding principles for making engineering tradeoffs. These are judgment aids, not rigid rules — they exist to help reason about design decisions, not to mandate specific outcomes.
 
-Part of the zanshin-pi-extension kit. Ambient craft posture lives in the consumer's always-on context; invoked depth is `skills/craft/SKILL.md`.
+Part of the zanshin-pi-extension kit. Ambient craft posture lives in the consumer's always-on context; invoked depth is `skills/craft/SKILL.md`. Stance map and framework borrowings: `DESIGN-PHILOSOPHY.md`.
+
+**Lens index:** DRY · KISS · SRP · Leave it better · YAGNI · **Convention over configuration** · Phases · **Orchestration vs program** · (JBGE/TAGRI via artifact discipline)
 
 ---
 
@@ -56,6 +58,28 @@ YAGNI is the counterweight to DRY. DRY says extract when duplicated; YAGNI says 
 
 ---
 
+## Convention over configuration
+
+Pick a **default path** and make it boring. Extra knobs are unpaid configuration: every `enable_*`, extra-var, and pipeline `if:` is a dialect the next human (and the next agent) must learn.
+
+**Smell:** A role or workflow whose `defaults/` is a feature-flag matrix “so we can go slow.” Sometimes that’s **ukemi** for a canary; often the flags survive and *become* the product.
+
+| Prefer | Avoid |
+|--------|--------|
+| House convention (one way to lint, test, deploy, name tasks) | Snowflake toggles per job/customer with no end date |
+| Override the exception in one overlay/inventory | Copy-paste a parallel playbook “just in case” |
+| Timeboxed experiment flag, default = convention, then delete | Open-ended `mode:` / `strictness:` / `enable_foo` as the public API |
+
+**Agent incrementalism:** Models (e.g. Codex) often add variables while walking toward a goal so each apply has an off-ramp. That’s a reasonable **mat** for one step. Craft check: after the experiment, **collapse knobs into convention** or extract a program — don’t leave scaffolding as the interface.
+
+**Omakase (お任せ):** the house menu — one blessed path for glue. Complements CoC. **Omakase for the path; Unix for the programs on the path** (`MARTIAL-VOCABULARY.md`, `DESIGN-PHILOSOPHY.md`).
+
+**Collaboration happiness:** optimize for the next human on this repo (and the next agent) — short, sharp, fail loud — not a product-marketing slogan.
+
+**Rule of thumb:** If you can’t name the convention, you don’t have one — you have configuration. If you can’t name when a toggle dies, it isn’t an experiment.
+
+---
+
 ## Three Phases — Make It Work, Make It Right, Make It Fast
 
 Three distinct phases, never mix them. Build something that works first. Then refactor it right. Then optimize if it's still too slow.
@@ -70,9 +94,30 @@ Mixing phases is where bugs hide — optimizing before the baseline works, then 
 
 ---
 
+## Orchestration vs program
+
+CI engines (GitHub Actions, Tekton, Jenkins, GitLab CI) and Ansible are **orchestrators**: sequence steps, bind environment, declare desired state. They are a bad **programming language**: deep `if`/`loop` trees, homemade libraries, domain rules that need a debugger.
+
+**Smell:** "This playbook/pipeline is starting to look like a program." That's SRP in the wrong medium — not a reason to ban automation.
+
+| Keep in CI / Ansible / Helm glue | Extract to a real program (script, module, image, operator) |
+|----------------------------------|-------------------------------------------------------------|
+| Checkout, build, test, publish, deploy | Branching, parsing, domain rules you need to unit-test |
+| Install packages, drop files, restart units | Algorithms and rich error recovery |
+| Thin caller of a tested entrypoint | Logic copied across CI *and* Ansible *and* shell |
+| Declare desired state | Compute that state |
+
+**Extract when:** failures are *logic* bugs (wrong branch taken), onboarding is "learn our YAML dialect," or you want a unit test for the behavior. **Don't extract** on the first `when:` — that's YAGNI; one more conditional is cheaper *today*. The bar is *where the program lives*, not whether glue may be smart.
+
+**Related stances** (detail in `DESIGN-PHILOSOPHY.md`): omakase defaults; no-one-paradigm (YAML isn’t the runtime); sharp knives (CI/Ansible cut you if used as a general-purpose language). Pair with **CoC** when the smell is a flag forest; with this lens when the smell is control-flow-as-YAML.
+
+**Rule of thumb:** If you need a debugger for the *logic*, it doesn't belong only in YAML. If you're only sequencing tools and passing artifacts, stay in the orchestrator.
+
+---
+
 ## How to Use These
 
-These are not a checklist. They are lenses — look through the one that illuminates the problem at hand. When two principles conflict (DRY vs. KISS, for instance), the conflict is the signal — the right answer usually involves accepting the tension rather than resolving it.
+These are not a checklist. They are lenses — look through the one that illuminates the problem at hand. When two principles conflict (DRY vs YAGNI, CoC vs ukemi, omakase vs Unix composability), the conflict is the signal — name it; don’t pretend one slogan wins.
 
 ---
 
@@ -81,3 +126,5 @@ These are not a checklist. They are lenses — look through the one that illumin
 - `WORKING-STYLE.md` — dual-layer shoshin, craft, and artifact discipline
 - `skills/craft/SKILL.md` — invoked engineering-principles review (includes JBGE lens)
 - `kit/AGILE-ARTIFACT-DISCIPLINE.md` — full JBGE/TAGRI reference (Ambler)
+- `kit/DESIGN-PHILOSOPHY.md` — stance map; Rails/Unix/CI2/Laravel borrowings
+- `kit/kihon/` — easy-pitfall forms (shell, ansible hygiene); **orchestration vs program** and **CoC** are craft, not kihon
