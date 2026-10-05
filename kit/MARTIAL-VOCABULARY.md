@@ -76,12 +76,12 @@ Second-order thinking: and then what? Follow consequence chains until the go/no-
 
 Fixed forms you drill until automatic — execute the form, don’t debate it. Distinct from **craft** (judgment lenses / tradeoffs).
 
-- **Skill:** `skills/kihon/SKILL.md` · `/kihon [shell|edit]`
-- **Docs:** `kit/kihon/` (shell strict mode, structured-edit anchors)
-- **When:** Writing or reviewing shell/CI scripts; insert edits via tool anchors
-- **Not:** DRY/KISS tradeoffs (craft); framing (shoshin)
+- **Skill:** `skills/kihon/SKILL.md` · `/kihon <domain>`
+- **Docs:** `kit/kihon/` — axes (shell, secrets, vault, sql, git, k8s-change, testing, lint, structured-edit) and thin verticals (ansible, helm, kustomize, python, typescript)
+- **When:** Stack or hygiene basics before/during implementation
+- **Not:** Product deep-dives (consumer `devops/`); DRY/KISS tradeoffs (craft); framing (shoshin)
 
-`/craft` loads matching kihon docs when the target is shell/CI or an insert edit.
+`/craft` auto-loads a subset (shell, secrets/vault hints, edit anchors, light test/lint).
 
 ### Also covered without dojo names
 

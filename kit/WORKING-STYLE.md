@@ -59,7 +59,7 @@ The zanshin-pi-extension provides the following auto-behaviors:
 | **Kaeshi** | `/kaeshi [goal]` — inversion / what guarantees failure |
 | **Yomi** | `/yomi [action]` — second-order / and then what |
 | **Craft** | `/craft [target]` — or "apply craft principles" on code or design |
-| **Kihon** | `/kihon [shell\|edit]` — basics / fixed forms (not craft judgment) |
+| **Kihon** | `/kihon <domain>` — basics / fixed forms (shell, secrets, k8s, …) |
 | **Unslop** | `/unslop [target]` — cut AI tells from a draft |
 | **Progressive bookkeeping** | Extension auto-tracks writes; notifies after 5; `/checkpoint` resets |
 | **Stack tracking** | `/push` / `/pop` / `/stack` — state persists across sessions |
@@ -211,7 +211,8 @@ Execute the form — not a tradeoff review. Domains: shell strict mode, structur
 
 #### Trigger
 
-`/kihon [shell|edit]` · "strict mode" · "anchor rule"
+`/kihon <domain>` · "strict mode" · "secret hygiene" · "anchor rule"  
+Domains: `kit/kihon/README.md`.
 
 Full process: **`skills/kihon/SKILL.md`**.
 
