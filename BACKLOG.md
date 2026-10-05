@@ -32,7 +32,7 @@ _none_
 
 **What:** When Gate 3 blocks a commit (first block of a diff hash), append a one-liner to the active `whats-next.md` checkpoint file: `blocked commit: "<message>", diff hash <N>, <timestamp>`. This gives the model a persistent anchor that survives compaction -- when it reads the checkpoint next turn, it knows it was mid-commit, not mid-implementation.
 
-**Where:** `extensions/commit-guard.ts`, Gate 3 first-block path. Resolve the checkpoint file path the same way zanshin does (find BRIEF.md by mtime, derive `.planning/<project>/whats-next.md`).
+**Where:** `extensions/commit-guard.ts`, Gate 3 first-block path. Resolve the checkpoint file the same way zanshin does (explicit project, else the only BRIEF; never the newest mtime).
 
 **Dependency:** Shares path-resolution logic with zanshin.ts. May want to extract that into `lib/` before implementing.
 

@@ -43,7 +43,7 @@ Registered by `extensions/zanshin.ts`. Available in Pi after install.
 | `/craft [target]` | Apply engineering principles to code or design — read `skills/craft/SKILL.md` |
 | `/kihon <domain>` | Basics / fixed forms — read `skills/kihon/SKILL.md` + `kit/kihon/` |
 | `/unslop [target]` | Cut AI tells from a draft — read `skills/unslop/SKILL.md` |
-| `/checkpoint` | Write a structured handoff to `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)` — what's in flight, what was just completed, next step, key decision, git state |
+| `/checkpoint [project]` | Append a handoff to `.planning/<project>/whats-next.md` (named project, else the only BRIEF; ask when several exist) — in flight, just completed, next step, key decision, `branch @ hash · recorded <ISO time>` |
 | `/push <topic>` | Push a topic onto the session stack |
 | `/pop` | Resolve current topic, return to parent |
 | `/stack` | Show the current stack |
@@ -56,9 +56,9 @@ Registered by `extensions/zanshin.ts`. Fire without any command.
 
 | Behavior | When | What happens |
 |----------|------|-------------|
-| **Session notify** | Session starts with an existing project (`BRIEF.md`, `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)`) | Notification: "existing project detected — run /shoshin" |
+| **Session notify** | Session starts with an existing project (`BRIEF.md` or `.planning/<project>/whats-next.md`) | Notification: "existing project detected — run /shoshin" |
 | **Bookkeeping counter** | After every 5 successful `write` or `edit` tool calls | Notification: "N changes since last checkpoint — run /checkpoint" |
-| **Shutdown warning** | Session closes with uncommitted changes and no `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)` | Warning: work is in flight with no handoff |
+| **Shutdown warning** | Session closes with uncommitted changes and no `.planning/<project>/whats-next.md` | Warning: work is in flight with no handoff |
 | **Stack persistence** | Always | Stack state survives context resets and session restarts via `pi.appendEntry()` |
 
 ---

@@ -261,7 +261,7 @@ Five is a flat counter. Some file changes are heavy (one big refactor) and some 
 
 #### Checkpoint format
 
-Write to `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)` — create the directory if it doesn't exist.
+Write to `.planning/<project>/whats-next.md`. `/checkpoint <project>` names it. With one `BRIEF.md`, use that project. With several and no name, ask — do not pick the newest brief. Create the directory if it doesn't exist.
 
 ```
 # Checkpoint — YYYY-MM-DD
@@ -324,7 +324,7 @@ Before a later session mutates the repository or a live environment:
 2. Refresh assumptions that depended on changed state.
 3. If something cannot be checked, **say the uncertainty** — don’t silently treat the handoff as current.
 
-**Executable entry point (skills-only and Pi):** `/shoshin` step “Resume revalidation” — Pi also notifies “run /shoshin” when an existing project is detected. This section is the full rationale. `/checkpoint` and `/whats-next` **save** comparison fields; they do not run the check.
+**Executable entry point (skills-only and Pi):** `/shoshin` step “Resume revalidation” — Pi also notifies “run /shoshin” when an existing project is detected. This section is the full rationale. `/checkpoint` and `/whats-next` **save** comparison fields (branch, short hash, UTC ISO time); they do not run the check. Name the project when more than one `BRIEF.md` exists — the newest brief is not the active project. Pi’s `/checkpoint` prompt includes the comparison line; skills-only reads `skills/checkpoint/SKILL.md` and `skills/whats-next/SKILL.md`.
 
 #### Recovery
 
@@ -535,7 +535,7 @@ Full rules and checklist: `docs/CODING-CONVENTIONS.md`.
 
 ### Where things go
 
-- Checkpoints and handoffs → `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)`
+- Checkpoints and handoffs → `.planning/<project>/whats-next.md` (named project, else the only BRIEF; ask when several exist)
 - If no `BACKLOG.md` exists: create one with `## In Progress`, `## Up Next`, `## Ideas`
 - Commits → local repository
 

@@ -13,9 +13,17 @@
  * under ../kit/ (WORKING-STYLE.md, STYLE.md, STYLE.template.md).
  */
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { existsSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+	anyProjectWhatsNext,
+	checkpointUserMessage,
+	formatResumeGitState,
+	hasPlanningScope,
+	listPlanningProjects,
+	resolvePlanningProject,
+} from "../lib/planning-project.js";
 
 const extensionDir = dirname(fileURLToPath(import.meta.url));
 const kitDir = join(extensionDir, "..", "kit");
@@ -29,34 +37,8 @@ const codingConventions = join(docsDir, "CODING-CONVENTIONS.md");
 
 const CHECKPOINT_THRESHOLD = 5;
 
-// Find the checkpoint directory: project-scoped, falls back to root.
-// Prefers the most recently modified BRIEF.md to handle multi-project work.
-function resolveCheckpointDir(cwd: string): string {
-	try {
-		const entries = readdirSync(join(cwd, ".planning"));
-		let best: string | null = null;
-		let bestTime = 0;
-		for (const dir of entries) {
-			const briefPath = join(cwd, ".planning", dir, "BRIEF.md");
-			if (existsSync(briefPath)) {
-				try {
-					const time = statSync(briefPath).mtimeMs;
-					if (time > bestTime) {
-						bestTime = time;
-						best = join(cwd, ".planning", dir);
-					}
-				} catch {
-					// skip unreadable
-				}
-			}
-		}
-		if (best) return best;
-	} catch {
-		// .planning doesn't exist yet -- fall through
-	}
-
-	// Fallback: root .planning (backward compat)
-	return join(cwd, ".planning");
+function isoUtcNow(): string {
+	return new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
 }
 
 function kitPathBlock(): string {
@@ -134,13 +116,7 @@ export default function (pi: ExtensionAPI) {
 		}
 
 		if (event.reason === "startup") {
-			const cpDir = resolveCheckpointDir(ctx.cwd);
-			const hasScope =
-				existsSync(join(ctx.cwd, ".planning", "BRIEF.md")) ||
-				existsSync(join(cpDir, "whats-next.md")) ||
-				existsSync(join(ctx.cwd, "BRIEF.md"));
-
-			if (hasScope) {
+			if (hasPlanningScope(ctx.cwd)) {
 				ctx.ui.notify(
 					"Zanshin: existing project detected -- run /shoshin (revalidate handoff before mutating)",
 					"info",
@@ -174,10 +150,9 @@ export default function (pi: ExtensionAPI) {
 				"warning",
 			);
 
-			// Also check whether a project BRIEF exists for active work.
-			// If not, surface a nudge alongside the checkpoint reminder.
-			const cpDir = resolveCheckpointDir(ctx.cwd);
-			const hasBrief = existsSync(join(cpDir, "BRIEF.md"));
+			const projects = listPlanningProjects(ctx.cwd);
+			const hasBrief =
+				projects.length > 0 || existsSync(join(ctx.cwd, ".planning", "BRIEF.md"));
 			if (!hasBrief) {
 				ctx.ui.notify(
 					"Zanshin: no project brief found -- run /brief to create one",
@@ -193,9 +168,7 @@ export default function (pi: ExtensionAPI) {
 		if (event.reason !== "quit") return;
 		if (changesSinceCheckpoint === 0) return;
 
-		const cpDir = resolveCheckpointDir(ctx.cwd);
-		const hasCheckpoint = existsSync(join(cpDir, "whats-next.md"));
-		if (!hasCheckpoint) {
+		if (!anyProjectWhatsNext(ctx.cwd)) {
 			ctx.ui.notify(
 				"Zanshin: uncommitted changes with no checkpoint -- run /checkpoint next session",
 				"warning",
@@ -237,11 +210,29 @@ export default function (pi: ExtensionAPI) {
 			const shoshinSkill = join(extensionDir, "..", "skills", "shoshin", "SKILL.md");
 			const target = args?.trim();
 			await ctx.waitForIdle();
+			const projects = listPlanningProjects(ctx.cwd);
+			const named = target && (target === "root" || projects.includes(target)) ? target : undefined;
+			const resolved = resolvePlanningProject(ctx.cwd, named);
+			let projectNote: string;
+			if (target && !named) {
+				projectNote =
+					`Target: ${target}\n\n` +
+					"If this is a pure framing ask, skip resume revalidation. " +
+					"If the session may mutate, name the project (`/shoshin <project>`) before treating a handoff as current.";
+			} else if (resolved.status === "ambiguous") {
+				projectNote =
+					`No project argument. Briefs exist for: ${resolved.projects.join(", ")}. ` +
+					"Do not revalidate a handoff. Do not prefer the newest BRIEF.md. " +
+					"Ask which project before declaring any handoff current.";
+			} else if (resolved.status === "missing") {
+				projectNote = `Project "${resolved.name}" is not a directory under .planning/. Ask for a project name.`;
+			} else {
+				projectNote =
+					`Project: ${resolved.name}. Revalidate \`${join(resolved.dir, "whats-next.md")}\` before mutating. ` +
+					"A named project stays selected when another brief is newer.";
+			}
 			pi.sendUserMessage(
-				`Apply shoshin. Read and follow \`${shoshinSkill}\` in full.\n\n` +
-					(target
-						? `Target: ${target}`
-						: "Target: the current approach, inherited framing, or most recent decision."),
+				`Apply shoshin. Read and follow \`${shoshinSkill}\` in full.\n\n${projectNote}`,
 			);
 		},
 	});
@@ -338,23 +329,39 @@ export default function (pi: ExtensionAPI) {
 		handler: async (args, ctx) => {
 			await ctx.waitForIdle();
 
-			const cpDir = resolveCheckpointDir(ctx.cwd);
-			const cpFile = join(cpDir, "whats-next.md");
-			const projectName = cpDir === join(ctx.cwd, ".planning")
-				? "root"
-				: cpDir.split("/").pop() || "root";
+			const explicit = args?.trim();
+			const resolved = resolvePlanningProject(ctx.cwd, explicit || undefined);
+			if (resolved.status === "ambiguous") {
+				pi.sendUserMessage(
+					`More than one project has a BRIEF.md (${resolved.projects.join(", ")}). ` +
+						"Pass `/checkpoint <project>`. Do not write a handoff, and do not pick the newest brief.",
+				);
+				return;
+			}
+			if (resolved.status === "missing") {
+				pi.sendUserMessage(
+					`No .planning/${resolved.name}/. Name a project directory under .planning/.`,
+				);
+				return;
+			}
 
-			// Capture HEAD now -- don't ask the agent to re-query git.
-			let gitHead = "unknown";
+			const cpFile = join(resolved.dir, "whats-next.md");
+			let branch = "unknown";
+			let hash = "unknown";
+			let subject = "no git repo";
 			try {
 				const { stdout } = await pi.exec("bash", [
 					"-c",
-					"git log -1 --format='%h %s' 2>/dev/null || echo 'no commits yet'",
+					"git branch --show-current && git rev-parse --short HEAD && git log -1 --format=%s",
 				]);
-				gitHead = stdout.trim();
+				const lines = stdout.trim().split("\n");
+				branch = lines[0] || branch;
+				hash = lines[1] || hash;
+				subject = lines.slice(2).join(" ") || subject;
 			} catch {
-				gitHead = "no git repo";
+				subject = "no git repo";
 			}
+			const gitState = formatResumeGitState(branch, hash, isoUtcNow());
 
 			const stackState =
 				stack.length > 0
@@ -367,23 +374,18 @@ export default function (pi: ExtensionAPI) {
 							.join("\n")
 					: "none";
 
-			// Reset the counter immediately so the reminder stops firing.
 			changesSinceCheckpoint = 0;
 			checkpointNotified = false;
 			pi.appendEntry("zanshin-changes", { count: 0 });
 
 			pi.sendUserMessage(
-				`Write a Zanshin checkpoint to \`${cpFile}\` ` +
-					`(append -- don't replace existing content).\n\n` +
-					`Format:\n\n` +
-					`# Checkpoint -- <today's date>\n\n` +
-					`**Project:** ${projectName}\n` +
-					`**In progress:** [mid-flight item -- or "none"]\n` +
-					`**Just completed:** [1--3 bullets -- or "nothing"]\n` +
-					`**Next step:** [or "nothing"]\n` +
-					`**Key decision:** [anything re-litigable -- or "none"]\n` +
-					`**Git:** \`${gitHead}\`\n` +
-					`**Stack:** ${stackState}`,
+				checkpointUserMessage({
+					cpFile,
+					projectName: resolved.name,
+					gitState,
+					commitSubject: subject,
+					stackState,
+				}),
 			);
 		},
 	});

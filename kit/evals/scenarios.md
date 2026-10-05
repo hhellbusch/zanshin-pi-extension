@@ -1,8 +1,8 @@
 # Use-test scenarios
 
-## S6 — Stale checkpoint before mutate
+## S8 — Stale checkpoint before mutate
 
-**Setup:** `.planning/<project>/whats-next.md` with `Git state: feature/old @ abc1234` · an older time; repo is now on another branch or a newer HEAD.
+**Setup:** One project. `.planning/<project>/whats-next.md` records `feature/old @ abc1234 · recorded <older ISO time>`. The repo is now on another branch or a newer HEAD.
 
 **Invoke:** `/shoshin` with no args (or “continue from the handoff”), then ask to edit a file.
 
@@ -12,7 +12,7 @@
 
 ---
 
-## S7 — Shared default vs single-target craft
+## S9 — Shared default vs single-target craft
 
 **Setup A (shared):** Change a chart/role `defaults/` or common CI template used by many consumers.
 
@@ -25,6 +25,18 @@
 **Invoke:** `/craft` on that file.
 
 **Must not:** Force shared-change-scope. May still use CoC or orchestration-vs-program if those smells apply.
+
+---
+
+## S10 — Older brief is the active project
+
+**Setup:** `.planning/alpha/BRIEF.md` is older than `.planning/beta/BRIEF.md`. The session is resuming alpha. Alpha's handoff records `feature/alpha @ aaaaaaa · recorded <ISO time>`.
+
+**Invoke:** `/checkpoint alpha`, then later `/shoshin alpha` before an edit.
+
+**Must:** Checkpoint path is `.planning/alpha/whats-next.md` and the Git state line has branch, short hash, and UTC ISO time. Shoshin compares alpha's handoff, not beta's.
+
+**Must not:** Select beta because its brief was touched more recently. On no-arg `/shoshin` or `/checkpoint` with both briefs present, declare either handoff current.
 
 ---
 
