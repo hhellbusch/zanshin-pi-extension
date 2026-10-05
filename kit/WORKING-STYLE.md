@@ -40,7 +40,7 @@ The zanshin-pi-extension provides the following auto-behaviors:
 | Behavior | Mechanism |
 |----------|-----------|
 | L0 injection | Injects a minimal practice block into every agent turn |
-| Slash commands | `/spar`, `/shoshin`, `/kaeshi`, `/yomi`, `/craft`, `/unslop`, `/checkpoint`, `/push`, `/pop`, `/stack` |
+| Slash commands | `/spar`, `/shoshin`, `/kaeshi`, `/yomi`, `/craft`, `/kihon`, `/unslop`, `/checkpoint`, `/push`, `/pop`, `/stack` |
 | Session notify | Detects existing project files (`BRIEF.md`, `whats-next.md`) at session start |
 | Bookkeeping counter | Auto-tracks `write`/`edit` calls; notifies after 5 changes |
 | Stack persistence | Survives context resets via pi session state |
@@ -59,6 +59,7 @@ The zanshin-pi-extension provides the following auto-behaviors:
 | **Kaeshi** | `/kaeshi [goal]` — inversion / what guarantees failure |
 | **Yomi** | `/yomi [action]` — second-order / and then what |
 | **Craft** | `/craft [target]` — or "apply craft principles" on code or design |
+| **Kihon** | `/kihon [shell\|edit]` — basics / fixed forms (not craft judgment) |
 | **Unslop** | `/unslop [target]` — cut AI tells from a draft |
 | **Progressive bookkeeping** | Extension auto-tracks writes; notifies after 5; `/checkpoint` resets |
 | **Stack tracking** | `/push` / `/pop` / `/stack` — state persists across sessions |
@@ -198,9 +199,21 @@ Prefer simple over clever. One reason to change per unit. Extract duplication wh
 
 #### Invoked
 
-`/craft [target]` or "apply craft principles" → read and follow `skills/craft/SKILL.md`. Full rationale: **`kit/ENGINEERING-PRINCIPLES.md`**.
+`/craft [target]` or "apply craft principles" → read and follow `skills/craft/SKILL.md`. Full rationale: **`kit/ENGINEERING-PRINCIPLES.md`**. When the target is shell/CI, craft also loads **kihon** shell form.
 
 **Ordering:** Shoshin when scope may be wrong. Craft when implementation quality matters. Spar when the design direction needs challenge.
+
+---
+
+### Kihon — basics (fixed forms)
+
+Execute the form — not a tradeoff review. Domains: shell strict mode, structured-edit anchors (`kit/kihon/`).
+
+#### Trigger
+
+`/kihon [shell|edit]` · "strict mode" · "anchor rule"
+
+Full process: **`skills/kihon/SKILL.md`**.
 
 ---
 

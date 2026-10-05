@@ -20,6 +20,7 @@ Related: `WORKING-STYLE.md`, `AGILE-ARTIFACT-DISCIPLINE.md`, `skills/*`.
 | **shu-ha-ri** (守破離) | Follow → break → leave the form | Light (WORKING-STYLE section) |
 | **heijōshin** (平常心) | Everyday mind under pressure | Light (Field Notes AGENTS ambient) |
 | **ukemi** (受身) | Breakfall — cheap landing if the attempt is wrong | Light (Field Notes AGENTS ambient) |
+| **kihon** (基本) | Basics — fixed forms (shell, edit anchors, …) | Active (`/kihon`, `kit/kihon/`) |
 | **fudōshin** (不動心) | Immovable mind — judgment unmoved by pressure/fluency | Seed |
 | **maai** (間合い) | Distance / timing of engagement | Seed |
 | **kata / randori** | Fixed form vs free practice | Seed |
@@ -70,6 +71,17 @@ Second-order thinking: and then what? Follow consequence chains until the go/no-
 - **Skill:** `skills/yomi/SKILL.md` · `/yomi`
 - **When:** Action/choice clear; downstream effects not
 - **Not:** Anti-goals for a naked goal (kaeshi); steel-man critique (spar)
+
+### Kihon (基本) — basics
+
+Fixed forms you drill until automatic — execute the form, don’t debate it. Distinct from **craft** (judgment lenses / tradeoffs).
+
+- **Skill:** `skills/kihon/SKILL.md` · `/kihon [shell|edit]`
+- **Docs:** `kit/kihon/` (shell strict mode, structured-edit anchors)
+- **When:** Writing or reviewing shell/CI scripts; insert edits via tool anchors
+- **Not:** DRY/KISS tradeoffs (craft); framing (shoshin)
+
+`/craft` loads matching kihon docs when the target is shell/CI or an insert edit.
 
 ### Also covered without dojo names
 

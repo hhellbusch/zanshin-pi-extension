@@ -23,7 +23,7 @@ pi install git:https://github.com/hhellbusch/zanshin-pi-extension.git#<40-char-s
 ```
 extensions/                      ← Pi extension entry points (auto-loaded by Pi)
 kit/                             ← Portable markdown: working discipline, style guide, AI disclosure
-skills/                          ← AgentSkills standard: /spar, /shoshin, /kaeshi, /yomi, /craft, /unslop, /checkpoint, /whats-next
+skills/                          ← AgentSkills standard: /spar, /shoshin, /kaeshi, /yomi, /craft, /kihon, /unslop, /checkpoint, /whats-next
 .codex-plugin/plugin.json        ← Codex skills-only plugin manifest
 .agents/plugins/marketplace.json ← Codex marketplace catalog (this repo is the plugin root)
 ```
@@ -41,6 +41,7 @@ Registered by `extensions/zanshin.ts`. Available in Pi after install.
 | `/kaeshi [goal]` | Inversion — what guarantees failure? Read `skills/kaeshi/SKILL.md` |
 | `/yomi [action]` | Second-order — and then what? Read `skills/yomi/SKILL.md` |
 | `/craft [target]` | Apply engineering principles to code or design — read `skills/craft/SKILL.md` |
+| `/kihon [shell\|edit]` | Basics / fixed forms — read `skills/kihon/SKILL.md` + `kit/kihon/` |
 | `/unslop [target]` | Cut AI tells from a draft — read `skills/unslop/SKILL.md` |
 | `/checkpoint` | Write a structured handoff to `.planning/<project>/whats-next.md (project-scoped; resolved via BRIEF.md mtime)` — what's in flight, what was just completed, next step, key decision, git state |
 | `/push <topic>` | Push a topic onto the session stack |
@@ -229,6 +230,7 @@ Portable markdown files that ship under `kit/`. Any AI tool can read these direc
 | [`ENGINEERING-PRINCIPLES.md`](kit/ENGINEERING-PRINCIPLES.md) | Craft lenses (DRY, KISS, SRP, YAGNI, phases) |
 | [`AGILE-ARTIFACT-DISCIPLINE.md`](kit/AGILE-ARTIFACT-DISCIPLINE.md) | JBGE, TAGRI, travel light |
 | [`MARTIAL-VOCABULARY.md`](kit/MARTIAL-VOCABULARY.md) | Dojo vocabulary map (active + seeds); spar ≈ kumite gloss only — no rename |
+| [`kihon/`](kit/kihon/) | Basics — shell strict mode, structured-edit anchors (`/kihon`) |
 
 **How behavior loads:** Plugin / skills install for invoked depth. Ambient posture in the consumer's `AGENTS.md` (or Pi L0). No separate paste-prompt file — that model is retired in favor of plugins + skills.
 
@@ -236,7 +238,7 @@ Portable markdown files that ship under `kit/`. Any AI tool can read these direc
 
 ## Skills
 
-8 skills under `skills/` following the [AgentSkills standard](https://agentskills.io/specification). Discovered natively by Pi, Copilot CLI, Claude Code, and Codex.
+9 skills under `skills/` following the [AgentSkills standard](https://agentskills.io/specification). Discovered natively by Pi, Copilot CLI, Claude Code, and Codex.
 
 | Skill | Job |
 |-------|-----|
@@ -245,6 +247,7 @@ Portable markdown files that ship under `kit/`. Any AI tool can read these direc
 | `yomi` | Second-order (読み) — and then what? |
 | `spar` | Steel-man adversarial review |
 | `craft` | Engineering principles on code or design (KISS, SRP, DRY, YAGNI, JBGE) |
+| `kihon` | Basics / fixed forms — shell strict mode, structured-edit anchors |
 | `unslop` | Cut AI tells from a draft |
 | `checkpoint` | Mid-session crash-recovery snapshot |
 | `whats-next` | Full session handoff for a fresh context |
