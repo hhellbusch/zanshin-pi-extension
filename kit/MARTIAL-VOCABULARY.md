@@ -44,14 +44,15 @@ Empty the cup. Surface load-bearing assumptions against source artifacts before 
 - **When:** Plan feels settled, scope drifted, or “obvious” premises haven’t been checked
 - **Not:** TAGRI/JBGE doc hygiene (that’s craft / artifact discipline); not spar
 
-### Spar — adversarial review (≈ kumite)
+### Spar — adversarial review
 
 Steel-man objections against a written thesis, design, or plan. Attack strongest claims; self-audit for pattern-matching devil’s advocate.
 
 - **Skill:** `skills/spar/SKILL.md` · `/spar`
-- **Japanese gloss:** **kumite** (組手) — sparring / engaging hands. Fair synonym; **do not rename** the skill. “Spar” is already martial English, and the name is load-bearing in consumer essays and case studies. This gloss is vocabulary only.
 - **When:** A proposal exists and needs pressure before you commit
 - **Not:** Framing reset (shoshin); failure rails (kaeshi); consequence chains (yomi)
+
+**Kumite note:** In Japanese martial arts, **kumite** (組手) is sparring — engaging hands with a partner under pressure. That is the same job as `/spar`. We keep the English name: “spar” is already martial, and it is load-bearing in consumer essays and case studies. Say kumite when the gloss helps; invoke `/spar` in the kit.
 
 ### Kaeshi (返し) — reversal
 

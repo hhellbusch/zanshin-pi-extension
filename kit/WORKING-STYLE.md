@@ -72,6 +72,8 @@ The zanshin-pi-extension provides the following auto-behaviors:
 
 Use before committing to an approach, design, plan, or significant decision.
 
+*(Dojo gloss: spar ≈ **kumite** (組手) — engaging hands. Vocabulary only; the command stays `/spar`. See `MARTIAL-VOCABULARY.md`.)*
+
 #### Trigger
 
 `/spar [target]` or natural language "spar this" / "challenge this approach".
