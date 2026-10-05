@@ -9,18 +9,20 @@
   "homepage": "https://github.com/hhellbusch/zanshin-pi-extension#readme",
   "repository": "https://github.com/hhellbusch/zanshin-pi-extension.git",
   "license": "MIT",
-  "keywords": ["zanshin", "working-style", "spar", "shoshin", "craft", "checkpoint"],
+  "keywords": ["zanshin", "working-style", "spar", "shoshin", "kaeshi", "yomi", "craft", "checkpoint"],
   "skills": "./skills/",
   "interface": {
     "displayName": "Zanshin",
     "shortDescription": "Portable working-discipline skills for AI-assisted sessions",
-    "longDescription": "Skills-only packaging of the Zanshin kit: shoshin, spar, craft, unslop, checkpoint, whats-next. Ambient practices go in the consuming repo's AGENTS.md (or Pi L0). Pi runtime guards are not included. Design grilling: install Matt Pocock's skills separately.",
+    "longDescription": "Skills-only packaging of the Zanshin kit: shoshin, kaeshi, yomi, spar, craft, unslop, checkpoint, whats-next. Ambient practices go in the consuming repo's AGENTS.md (or Pi L0). Pi runtime guards are not included. Design grilling: install Matt Pocock's skills separately.",
     "developerName": "Henry Hellbusch",
     "category": "Productivity",
     "capabilities": ["Interactive", "Write"],
     "websiteURL": "https://github.com/hhellbusch/zanshin-pi-extension",
     "defaultPrompt": [
       "Spar this approach before we commit",
+      "Kaeshi this goal — what guarantees failure?",
+      "Yomi this action — and then what?",
       "Write a checkpoint for this session",
       "Apply shoshin to this plan"
     ]
