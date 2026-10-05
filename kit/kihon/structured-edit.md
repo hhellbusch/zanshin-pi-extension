@@ -1,17 +1,16 @@
-# Kihon — structured edit (anchor rule)
+# Kihon — structured edit (footnote)
 
-Applies when the goal is **inserting** code before or after an existing block — not replacing the whole file.
+**Status:** Footnote — real failure mode, narrow to agent edit tools. Not a peer to secrets/shell.
+
+**Pitfall:** Insert via search-and-replace drops “context” lines from `new_str` and silently deletes them.  
+**Signal:** Diff review / AST hooks — the edit API itself reports success.
 
 ## The anchor rule
 
-When using `old_str` (or any edit anchor) to locate an insertion point:
+When using `old_str` (or any edit anchor) to locate an **insertion**:
 
-- Every line in `old_str` that should survive the edit **must appear verbatim in `new_str`**.
-- If a line is in `old_str` but absent from `new_str`, that is a **deletion** — verify it is intentional before proceeding.
-- "Context lines" used only to locate the anchor are not context if they disappear. They are casualties.
+- Every line in `old_str` that should survive **must appear verbatim in `new_str`**.
+- If a line is in `old_str` but absent from `new_str`, that is a **deletion** — confirm intent.
+- “Context lines” that disappear are casualties, not context.
 
-## Why this is kihon
-
-Agent edit tools match bytes exactly. Dropping an anchor line looks like a successful insert and silently deletes code. Drill the form: surviving lines must appear on both sides of the edit.
-
-Consumer repos may add language-specific safety nets (e.g. post-edit AST checks). Those are local; this rule is portable.
+Consumer repos may add safety nets (e.g. post-edit AST checks on Python). Those are local; this rule is the portable explanation.

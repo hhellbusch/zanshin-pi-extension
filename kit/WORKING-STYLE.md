@@ -207,7 +207,7 @@ Prefer simple over clever. One reason to change per unit. Extract duplication wh
 
 ### Kihon — basics (fixed forms)
 
-Execute the form — not a tradeoff review. Domains: shell strict mode, structured-edit anchors (`kit/kihon/`).
+Execute the form — not a tradeoff review. Easy pitfalls + quality signals (`kit/kihon/README.md` for what qualifies).
 
 #### Trigger
 

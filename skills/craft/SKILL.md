@@ -32,11 +32,11 @@ If ambiguous, ask: "What should I apply craft to — pending diff, a specific fi
 - Read the target in full (or the diff with enough surrounding context)
 Read `../../kit/ENGINEERING-PRINCIPLES.md` — use as lenses, don't recite it
 - Read `../../kit/AGILE-ARTIFACT-DISCIPLINE.md` when target is a doc, plan, epic, or design artifact
-- **Kihon (basics):** auto-load matching forms as **form gaps** (not craft tradeoffs):
+- **Kihon (basics):** auto-load matching forms as **form gaps** (not craft tradeoffs). Qualifying bar: `../../kit/kihon/README.md` (“What qualifies as kihon”).
   - shell/CI/Makefile → `../../kit/kihon/shell.md`
-  - insert-style edits → `../../kit/kihon/structured-edit.md`
   - paths/names suggesting credentials, vault, `.env`, kubeconfig → `../../kit/kihon/secrets.md` (and `vault.md` if Vault-specific)
   - `*.py` / `*.ts` behavior change → skim `testing.md` + `lint.md` when CI exists
+  - insert-style edits → only if reviewing a suspicious replace: footnote `structured-edit.md`
   Full catalog: `/kihon <domain>` · `../../kit/kihon/README.md`
 - Note what phase the work is in: **make it work** / **make it right** / **make it fast** — flag mixed phases
 
