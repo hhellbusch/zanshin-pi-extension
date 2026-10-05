@@ -20,6 +20,7 @@ Related: `WORKING-STYLE.md`, `AGILE-ARTIFACT-DISCIPLINE.md`, `skills/*`.
 | **shu-ha-ri** (守破離) | Follow → break → leave the form | Light (WORKING-STYLE section) |
 | **heijōshin** (平常心) | Everyday mind under pressure | Light (Field Notes AGENTS ambient) |
 | **ukemi** (受身) | Breakfall — cheap landing if the attempt is wrong | Light (Field Notes AGENTS ambient) |
+| **fudōshin** (不動心) | Immovable mind — judgment unmoved by pressure/fluency | Seed |
 | **maai** (間合い) | Distance / timing of engagement | Seed |
 | **kata / randori** | Fixed form vs free practice | Seed |
 | **mushin** (無心) | No-mind — unattached execution | Seed (do not force onto MVP) |
@@ -109,7 +110,8 @@ Calm ordinary mind in extraordinary conditions — clarity without panic, ego, o
 | After | Short note while memory is fresh |
 
 **Where:** Field Notes `AGENTS.md` (ops / incident posture). Try on a real bridge call before any `/heijoshin` skill.  
-**Vs mushin:** Heijōshin is steady ordinary mind; mushin is unattached execution. On a customer call, heijōshin first — mushin without verification is recklessness.
+**Vs mushin:** Heijōshin is steady ordinary mind; mushin is unattached execution. On a customer call, heijōshin first — mushin without verification is recklessness.  
+**Vs fudōshin:** Heijōshin is calm *tempo* and presence; fudōshin is unmoved *judgment* (see seeds).
 
 ### Ukemi (受身) — breakfall
 
@@ -129,6 +131,22 @@ Land so you can stand up. Not “never fail the attempt” — “fail this atte
 ---
 
 ## Seeds (not promoted)
+
+### Fudōshin (不動心) — immovable mind
+
+Unshakeable mind: not moved by fear, flattery, rank, panic, or fluent certainty — including the model’s. The stance holds until evidence moves it.
+
+**Vs heijōshin:** Heijōshin is everyday calm under pressure (how you speak and pace on the bridge). Fudōshin is refusing to let social or rhetorical force change the call (“the VP is sure it’s DNS” / “the model stated it confidently” without a check).
+
+**Kit tensions it names:**
+
+- Sycophancy and audience-capture (customer or exec on the line)
+- Fluent-but-wrong accepted because it sounded final
+- Abandoning a verified RCA because a louder story arrived
+
+**Relation to existing practices:** Verification and review discipline under social pressure; pairs with heijōshin on incidents (calm delivery + unmoved judgment). Not a replacement for shoshin (wrong frame) or spar (pressure-test a proposal).
+
+**Possible later shape:** One ambient line next to heijōshin in ops AGENTS (“don’t move the call for fluency or rank — move it for evidence”). Skill only if bridge-call judgment keeps getting pushed around after that.
 
 ### Maai (間合い) — distance / timing
 
@@ -170,5 +188,6 @@ Before a seed becomes a skill or grows beyond a short ambient note:
 
 - Shu-ha-ri essay in a consumer philosophy track? Only if the WORKING-STYLE paragraph isn’t enough.
 - Heijōshin / ukemi: after real uses — keep ambient, drop, or promote a skill.
+- Fudōshin: try as a one-line add-on to ops ambient (“evidence moves the call, not rank or fluency”) only if heijōshin alone isn’t enough on bridge calls.
 - Maai: promote to a WORKING-STYLE one-liner under spar only if over-sparring stays common.
 - Mushin: leave parked.
