@@ -23,7 +23,7 @@ pi install git:https://github.com/hhellbusch/zanshin-pi-extension.git#<40-char-s
 ```
 extensions/                      ← Pi extension entry points (auto-loaded by Pi)
 kit/                             ← Portable markdown: working discipline, style guide, AI disclosure
-skills/                          ← AgentSkills standard: /spar, /shoshin, /craft, /unslop, /checkpoint, /whats-next
+skills/                          ← AgentSkills standard: /spar, /shoshin, /consider, /craft, /unslop, /checkpoint, /whats-next
 .codex-plugin/plugin.json        ← Codex skills-only plugin manifest
 .agents/plugins/marketplace.json ← Codex marketplace catalog (this repo is the plugin root)
 ```
@@ -233,11 +233,12 @@ Portable markdown files that ship under `kit/`. Any AI tool can read these direc
 
 ## Skills
 
-6 skills under `skills/` following the [AgentSkills standard](https://agentskills.io/specification). Discovered natively by Pi, Copilot CLI, Claude Code, and Codex.
+7 skills under `skills/` following the [AgentSkills standard](https://agentskills.io/specification). Discovered natively by Pi, Copilot CLI, Claude Code, and Codex.
 
 | Skill | Job |
 |-------|-----|
 | `shoshin` | Reset framing — surface load-bearing assumptions before building |
+| `consider` | Inversion / second-order lenses (rails and ripples before spar) |
 | `spar` | Steel-man adversarial review |
 | `craft` | Engineering principles on code or design (KISS, SRP, DRY, YAGNI, JBGE) |
 | `unslop` | Cut AI tells from a draft |
@@ -258,7 +259,7 @@ npx skills@latest add mattpocock/skills
 
 ### Removed from this kit
 
-Older TÂCHES-imported packs (`research-*`, `consider-*`, `ask-me-questions`, `debug` stub, `improve-skill`) and a vendored `grill-me` were removed — discovery noise, Claude-only tool coupling, or upstream ownership. Git history retains them if needed.
+Older TÂCHES-imported packs (`research-*`, twelve `consider-*` stubs, `ask-me-questions`, `debug` stub, `improve-skill`) and a vendored `grill-me` were removed — discovery noise, Claude-only tool coupling, or upstream ownership. Git history retains them if needed. A single `consider` skill (inversion + second-order only) was added later as a spar complement — not a re-import of the TÂCHES pack.
 
 ---
 
