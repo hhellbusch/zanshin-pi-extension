@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-10-29
+
 ### Changed
 
 - Continuation contract: `/checkpoint` and `/whats-next` share compact-by-default fields (outcome, boundaries, binding decisions, owner, evidence pointers, checks/limits, gate, next action). Link durable detail; expand on request or for safety — not “zero information loss.”
@@ -14,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Trivial clean-state `/checkpoint` reports verbally and does not append unless the user asked to stamp.
 - Resume guidance: prefer the latest entry in `whats-next.md`; load older appends only when needed.
 - `kit/AI-DISCLOSURE.md`: missing review status means unreviewed / not recorded. Permission, direction, AI review, tests/CI, and human review stay separate facts.
+- Package and plugin manifests read `0.3.1`.
 
 ## [0.3.0] - 2026-10-05
 
@@ -60,6 +63,7 @@ First tagged release.
 
 - Helm kihon: values are for what varies, not a control panel.
 
-[Unreleased]: https://github.com/hhellbusch/zanshin-pi-extension/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/hhellbusch/zanshin-pi-extension/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/hhellbusch/zanshin-pi-extension/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/hhellbusch/zanshin-pi-extension/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/hhellbusch/zanshin-pi-extension/releases/tag/v0.2.0
