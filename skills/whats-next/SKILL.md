@@ -7,11 +7,13 @@ allowed-tools: Read Write Shell WebSearch WebFetch
 
 # Whats-Next — Session Handoff
 
-Create a comprehensive, detailed handoff document that captures all context from the current conversation. This allows continuing the work in a fresh context with complete precision.
+Create a **compact** handoff so a fresh session can continue safely. Same file and project rules as `/checkpoint`; close-out may add framing assumptions and open threads. Not a full session transcript.
+
+Canonical fields: `kit/WORKING-STYLE.md` → Progressive bookkeeping → Continuation contract.
 
 ## Instructions
 
-**PRIORITY: Comprehensive detail and precision over brevity.** The goal is to enable someone (or a fresh AI session) to pick up exactly where you left off with zero information loss.
+**PRIORITY: Continuation over completeness.** Preserve the contract fields. Link durable detail. Expand only when the user asks or when safety / continuation requires it.
 
 ### Step 0: Evaluate whether a handoff is needed
 
@@ -26,46 +28,21 @@ Before creating anything, check whether the session's work is already fully pers
 
 ---
 
-### Step 1: Capture session context
+### Step 1: Capture continuation state
 
-Adapt the level of detail to the task type (coding, research, analysis, writing, configuration, etc.) but maintain comprehensive coverage:
+Record only what the next session needs:
 
-1. **Original Task**: Identify what was initially requested (not new scope or side tasks)
+1. **Outcome** — what is true now (deliverable status; committed vs draft)
+2. **Next action** — the immediate next step, with precise targets (paths, URLs) when known
+3. **Decisions that bind** — trade-offs that would be re-litigated without knowing they were settled
+4. **Boundaries** — constraints, authorization, safety limits
+5. **Evidence pointers** — artifact paths + revisions, commits, dated observations; link rather than paste
+6. **Checks and limits** — what was verified and what those checks do *not* prove
+7. **Unresolved gate** — pending decision or blocker, if any
+8. **Retry-relevant failures** — approaches that failed and would otherwise be retried; omit dead ends that are already obvious from git/docs
+9. **Owner** — who holds the thread (default: this session’s human, unless delegated)
 
-2. **Work Completed**: Document everything accomplished in detail
-   - All artifacts created, modified, or analyzed (files, documents, research findings, etc.)
-   - Specific changes made (code with line numbers, content written, data analyzed, etc.)
-   - Actions taken (commands run, APIs called, searches performed, tools used, etc.)
-   - Findings discovered (insights, patterns, answers, data points, etc.)
-   - Decisions made and the reasoning behind them
-
-3. **Work Remaining**: Specify exactly what still needs to be done
-   - Break down remaining work into specific, actionable steps
-   - Include precise locations, references, or targets (file paths, URLs, data sources, etc.)
-   - Note dependencies, prerequisites, or ordering requirements
-   - Specify validation or verification steps needed
-
-4. **Attempted Approaches**: Capture everything tried, including failures
-   - Approaches that didn't work and why they failed
-   - Errors encountered, blockers hit, or limitations discovered
-   - Dead ends to avoid repeating
-   - Alternative approaches considered but not pursued
-
-5. **Critical Context**: Preserve all essential knowledge
-   - Key decisions and trade-offs considered
-   - Constraints, requirements, or boundaries
-   - Important discoveries, gotchas, edge cases, or non-obvious behaviors
-   - Relevant environment, configuration, or setup details
-   - Assumptions made that need validation
-   - References to documentation, sources, or resources consulted
-
-6. **Current State**: Document the exact current state
-   - Status of deliverables (complete, in-progress, not started)
-   - What's committed, saved, or finalized vs. what's temporary or draft
-   - Any temporary changes, workarounds, or open questions
-   - Current position in the workflow or process
-
-Write to `.planning/<project>/whats-next.md` using the same project rule as `/checkpoint` and `/shoshin`: an explicit project name wins; one BRIEF is enough; several briefs and no name means ask and do not write. Do not pick the newest `BRIEF.md`.
+Write to `.planning/<project>/whats-next.md` using the same project rule as `/checkpoint` and `/shoshin`: an explicit project name wins; one BRIEF is enough; several briefs and no name means ask and do not write. Do not pick the newest `BRIEF.md`. Append with a datestamp when the file already has content — do not replace.
 
 Before the narrative, record comparison fields a later `/shoshin` can check: current branch (`git branch --show-current`), short hash (`git rev-parse --short HEAD`), and UTC ISO time (`YYYY-MM-DDTHH:MM:SSZ`).
 
@@ -108,7 +85,7 @@ If any assumptions are worth surfacing, include an `<assumptions_carried>` secti
 
 ## Output Format
 
-Write `whats-next.md` using this structure. `<resume_compare>` is required.
+Write `whats-next.md` using this structure. `<resume_compare>` is required. Keep sections short; omit empty optional blocks.
 
 ```xml
 <resume_compare>
@@ -119,66 +96,38 @@ external: [cluster/env/deploy note, or none]
 </resume_compare>
 
 <original_task>
-[The specific task that was initially requested — be precise about scope]
+[Initial request — precise scope, one short paragraph]
 </original_task>
 
-<work_completed>
-[Comprehensive detail of everything accomplished:
-- Artifacts created/modified/analyzed (with specific references)
-- Specific changes, additions, or findings (with details and locations)
-- Actions taken (commands, searches, API calls, tool usage, etc.)
-- Key discoveries or insights
-- Decisions made and reasoning
-- Side tasks completed]
-</work_completed>
-
-<work_remaining>
-[Detailed breakdown of what needs to be done:
-- Specific tasks with precise locations or references
-- Exact targets to create, modify, or analyze
-- Dependencies and ordering
-- Validation or verification steps needed]
-</work_remaining>
-
-<attempted_approaches>
-[Everything tried, including failures:
-- Approaches that didn't work and why
-- Errors, blockers, or limitations encountered
-- Dead ends to avoid
-- Alternative approaches considered but not pursued]
-</attempted_approaches>
-
-<critical_context>
-[All essential knowledge for continuing:
-- Key decisions and trade-offs
-- Constraints, requirements, or boundaries
-- Important discoveries, gotchas, or edge cases
-- Environment, configuration, or setup details
-- Assumptions requiring validation
-- References to documentation, sources, or resources]
-</critical_context>
-
 <current_state>
-[Exact state of the work:
-- Status of deliverables (complete/in-progress/not started)
-- What's finalized vs. what's temporary or draft
-- Temporary changes or workarounds in place
-- Current position in workflow or process
-- Any open questions or pending decisions]
+[Outcome now: deliverable status; committed vs draft; owner]
 </current_state>
 
+<next_action>
+[Immediate next step with precise targets; unresolved gate if any]
+</next_action>
+
+<decisions_and_boundaries>
+[Binding decisions; authorization/safety constraints; checks run and their limits]
+</decisions_and_boundaries>
+
+<evidence>
+[Links/paths + revisions or dated observations — not pasted dumps]
+</evidence>
+
+<retry_avoid>
+[Optional — failed approaches only if they would otherwise be retried]
+</retry_avoid>
+
 <assumptions_carried>
-[Optional — only include if this session made framing decisions or carried assumptions
-that the next session should question rather than inherit.]
+[Optional — framing decisions a fresh session should question]
 </assumptions_carried>
 
 <open_threads>
-[Optional — only include if the session left multiple threads open in a depth-first stack.
+[Optional — only if multiple stack threads remain.
 
 Format:
 - `[bottom]` Parent topic — status
-  - `[open]` Subtopic — what's waiting
-
-The next session should return to each thread in reverse order (innermost first).]
+  - `[open]` Subtopic — what's waiting]
 </open_threads>
 ```

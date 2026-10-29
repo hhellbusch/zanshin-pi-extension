@@ -108,6 +108,7 @@ These are **lenses**. Apply the one that illuminates the problem. When lenses co
 |---|---|
 | Comprehensive epic nobody owns | TAGRI + model with a purpose |
 | README/handoff sprawl | Travel light + JBGE |
+| Handoff “zero information loss” / full-session dump | Continuation contract in `WORKING-STYLE.md` (compact default; link durable detail) |
 | Spec before spike | Document late, envision early |
 | Polished wrong frame | Shoshin before expanding |
 | Enterprise template fill | JBGE + YAGNI (see ENGINEERING-PRINCIPLES) |

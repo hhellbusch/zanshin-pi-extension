@@ -258,6 +258,31 @@ Full reference: **`kit/AGILE-ARTIFACT-DISCIPLINE.md`**.
 
 Session-end bookkeeping is not enough. Crashes, resets, and interruptions happen. The goal: at any point in a session, the current state is recoverable.
 
+#### Continuation contract
+
+Canonical fields for the **current** checkpoint or handoff entry. Mid-session (`/checkpoint`) and close-out (`/whats-next`) share this contract; invocation and depth differ. Executable procedures: `skills/checkpoint/SKILL.md`, `skills/whats-next/SKILL.md`.
+
+**Must preserve:**
+
+- Current outcome (what is true now)
+- Authorization / safety boundaries
+- Decisions that change the next action
+- Owner (who holds the thread)
+- Artifact path + revision, or a dated observation
+- Checks run and their limits
+- Unresolved gate (if any)
+- Next action
+
+**Default: compact.** Link durable detail (commits, ADRs, briefs, logs, PRs). Retain failed approaches only when they would otherwise be retried. Expand when the user asks or when safety / continuation requires it — not for a comprehensive session transcript. “Zero information loss” is anti-JBGE for handoffs; see `AGILE-ARTIFACT-DISCIPLINE.md`.
+
+#### Context economy
+
+- **Read** the smallest authoritative source needed for the next decision. Prefer links and short excerpts over pasting whole files. Load branch-specific or deep history only when it resolves a dependency.
+- **Write** durable state when a consequential decision, ownership change, or gate changes. Routine status stays conversational.
+- Short prose alone does not bound repeated tool output or reasoning. Summarization also costs context — prefer not generating the volume.
+
+Skills-only consumers load this when a skill or the consumer’s `AGENTS.md` points here. Pi injects a short L0. Kit brevity in a reference file is **not** ambient by itself.
+
 #### How it works in pi
 
 - The extension tracks every successful `write` and `edit` tool call.
@@ -287,6 +312,8 @@ Write to `.planning/<project>/whats-next.md`. `/checkpoint <project>` names it. 
 
 Record enough to **compare on resume** (branch, hash, time). The save command does not revalidate — see [On resume](#on-resume-before-mutating).
 
+If there is no in-progress work and nothing was just completed, do **not** write a trivial clean-state entry unless the user asked to stamp the file. Report verbally instead.
+
 #### Example
 
 ```
@@ -313,15 +340,15 @@ Quick captures append rather than replace. A future session reads the trail. **F
 
 #### Session handoff
 
-Same file, same location, more detail — add remaining gaps, framing decisions made, context a fresh session needs. Close-out means the context window is ending, not that the work is finished.
+Same file, same location, same continuation contract — close-out may add framing assumptions and open threads a fresh session needs. Not a comprehensive dump of everything tried. Orient the next session; link durable detail. Close-out means the context window is ending, not that the work is finished.
 
 Before writing a handoff, run shoshin:
 
 > "What's in this context window that won't survive the reboot? What have I assumed is captured that isn't? What would a fresh session need to ask for again?"
 
-Check the stack for open threads — those belong in the handoff. Write a checkpoint oriented toward continuation, not just summary.
+Check the stack for open threads — those belong in the handoff. Write toward continuation, not summary.
 
-Trigger: `/checkpoint` — or "close-out" / "write a handoff" / "I'm closing this session."
+Trigger: `/checkpoint` (mid-session) — or `/whats-next` / "close-out" / "write a handoff" / "I'm closing this session."
 
 When the file already has content, append with a datestamp — don't replace.
 
@@ -331,9 +358,10 @@ A checkpoint or handoff is evidence from a **past** moment — not proof of curr
 
 Before a later session mutates the repository or a live environment:
 
-1. Compare recorded **branch**, **commit**, **time**, and any noted external state with what exists now (`git status`, `git log`, deploy/cluster facts if relevant).
-2. Refresh assumptions that depended on changed state.
-3. If something cannot be checked, **say the uncertainty** — don’t silently treat the handoff as current.
+1. Choose the project (explicit name, else the only BRIEF; ask when several — never newest BRIEF mtime).
+2. Read the **latest** checkpoint / current-state block in that project's `whats-next.md`. Load older appends only when they resolve a dependency. Compare recorded **branch**, **commit**, **time**, and any noted external state with what exists now (`git status`, `git log`, deploy/cluster facts if relevant).
+3. Refresh assumptions that depended on changed state.
+4. If something cannot be checked, **say the uncertainty** — don’t silently treat the handoff as current.
 
 **Executable entry point (skills-only and Pi):** `/shoshin` step “Resume revalidation” — Pi also notifies “run /shoshin” when an existing project is detected. This section is the full rationale. `/checkpoint` and `/whats-next` **save** comparison fields (branch, short hash, UTC ISO time); they do not run the check. Name the project when more than one `BRIEF.md` exists — the newest brief is not the active project. Pi’s `/checkpoint` prompt includes the comparison line; skills-only reads `skills/checkpoint/SKILL.md` and `skills/whats-next/SKILL.md`.
 
@@ -388,7 +416,7 @@ The AI can't apply verification discipline to its own output in real time — it
 
 ### Review discipline — AI content is unreviewed until the author says otherwise
 
-AI output is a draft. These behaviors enforce that contract.
+AI output is a draft. These behaviors enforce that contract. Missing review status means **unreviewed** / not recorded — not an implied “direction-reviewed.” Permission, direction, AI review, tests/CI, and human review are separate facts. Kit conventions: `AI-DISCLOSURE.md`.
 
 #### New files and documents
 

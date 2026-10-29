@@ -46,7 +46,7 @@ If ambiguous, ask one question: "What should I apply shoshin to — a specific f
 Run this when a project handoff exists **and** the session may mutate the repo or a live environment — including no-arg `/shoshin` after “existing project detected,” “continue from the handoff,” or similar. Skip for a pure file/plan framing ask with no mutation intent and no handoff.
 
 1. Choose the project the same way `/checkpoint` does. An explicit project (`/shoshin <project>`, or a path under `.planning/<project>/`) wins even when its `BRIEF.md` is older. If exactly one `.planning/*/BRIEF.md` exists, use it. If several exist and none was named, list them and stop — do not treat the newest brief's handoff as current.
-2. Read that project's `whats-next.md`. Read recorded **branch**, **commit/hash**, **time**, and any noted external state (cluster, env, deploy).
+2. Read that project's `whats-next.md` — prefer the **latest** checkpoint / current-state block (`<resume_compare>` or `Git state:` line). Load older appends only when they resolve a dependency. Read recorded **branch**, **commit/hash**, **time**, and any noted external state (cluster, env, deploy).
 3. Compare with now: `git branch --show-current`, `git rev-parse --short HEAD`, `git status --short`, and the external facts if noted.
 4. **If drift:** say what changed; refresh assumptions that depended on the old state before proceeding to mutate.
 5. **If unchecked or the project was ambiguous:** state the uncertainty explicitly — do not treat the handoff as current.

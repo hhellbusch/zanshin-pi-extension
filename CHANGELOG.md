@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Continuation contract: `/checkpoint` and `/whats-next` share compact-by-default fields (outcome, boundaries, binding decisions, owner, evidence pointers, checks/limits, gate, next action). Link durable detail; expand on request or for safety — not “zero information loss.”
+- Context economy under Progressive bookkeeping: smallest authoritative read; durable writes at consequential gates; kit brevity is not ambient for skills-only consumers.
+- Trivial clean-state `/checkpoint` reports verbally and does not append unless the user asked to stamp.
+- Resume guidance: prefer the latest entry in `whats-next.md`; load older appends only when needed.
+- `kit/AI-DISCLOSURE.md`: missing review status means unreviewed / not recorded. Permission, direction, AI review, tests/CI, and human review stay separate facts.
+
 ## [0.3.0] - 2026-10-05
 
 ### Added

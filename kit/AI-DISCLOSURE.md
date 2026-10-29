@@ -10,7 +10,7 @@ Files may note review status in YAML frontmatter:
 
 ```yaml
 review:
-  status: direction-reviewed    # or reviewed, or unreviewed
+  status: unreviewed    # or direction-reviewed, or reviewed
   date: YYYY-MM-DD
   type: [read, tested, voice-approved]
   ai:                           # optional — harness + model that produced this content
@@ -25,11 +25,22 @@ for the procedure AI instances use to self-identify.
 
 **Three states:**
 
-- **reviewed** — The author has read and validated the content
-- **direction-reviewed** — The author guided the creation and reviewed the approach, but not line-by-line. Typical for AI-assisted content.
+- **reviewed** — The author has read and validated the content (record reviewer, date, and scope when known)
+- **direction-reviewed** — The author guided the creation and reviewed the approach, but not line-by-line. Typical for AI-assisted content once the author has confirmed that level.
 - **unreviewed** — Generated but not revisited. Treat with extra caution.
 
-When no status is noted, assume **direction-reviewed** — the author shaped the intent but the AI wrote the words.
+When no status is noted, treat as **unreviewed** (human review not recorded). Do not infer direction-reviewed or reviewed from silence, permission to proceed, AI self-review, tests, or green CI.
+
+**Separate facts** (do not collapse):
+
+| Fact | Means |
+|------|--------|
+| Permission / direction | Author steered or allowed the work |
+| AI review | Another model or harness examined the draft |
+| Tests / CI | Automated checks passed for the path exercised |
+| Human review | Author recorded status, date, and scope |
+
+Only the last establishes review status. Aligns with `WORKING-STYLE.md` → Review discipline.
 
 ## Validation types
 
