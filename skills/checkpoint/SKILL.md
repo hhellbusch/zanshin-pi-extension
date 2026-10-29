@@ -10,6 +10,8 @@ allowed-tools: Read Write Shell
 <objective>
 Write a minimal but accurate snapshot to `whats-next.md (project-scoped)` that would let a new session recover context within 60 seconds. Faster and lighter than `/whats-next` — no lengthy sections, no full retrospective. The goal is: if the session ended right now, what would the next session need to know?
 
+Same continuation contract as `/whats-next` (`kit/WORKING-STYLE.md` → Progressive bookkeeping → Continuation contract). Resume readers use the **latest** entry; older appends load only when needed.
+
 Run this:
 - Before any risky operation (git mv, large multi-file refactor, anything that could fail mid-way)
 - After completing a significant unit of work
@@ -35,7 +37,7 @@ From the context above, identify:
 3. **What is the next intended step** — what would happen next if the session continued?
 4. **Any key decision made since last checkpoint** — anything that would be re-litigated by a new session without knowing
 
-If there is no in-progress work and nothing was just completed, the checkpoint is trivial — note that clearly ("No active work — clean state") and write the file anyway so the timestamp is current.
+If there is no in-progress work and nothing was just completed, the checkpoint is trivial — report verbally ("No active work — clean state") and **do not write** unless the user explicitly asked to stamp the file.
 
 ### Step 2: Choose the project, then append
 
@@ -71,9 +73,9 @@ Use this compact format:
 *Checkpoint — not a full session summary. See git log for full history.*
 ```
 
-Keep it short. Five minutes to write, thirty seconds to read.
+Keep it short. Five minutes to write, thirty seconds to read. Link durable detail; do not dump the session.
 
-Record **branch, hash, and time** so a later session can compare before mutating. This skill **saves** state — it does not revalidate on resume. Resume check: `/shoshin` (step “Resume revalidation”); rationale in `kit/WORKING-STYLE.md` → On resume.
+Record **branch, hash, and time** so a later session can compare before mutating. This skill **saves** state — it does not revalidate on resume. Resume check: `/shoshin` (step “Resume revalidation”); rationale in `kit/WORKING-STYLE.md` → On resume. Readers: latest entry first.
 
 ---
 
@@ -116,8 +118,8 @@ Do NOT commit the checkpoint file automatically. The user can commit it alongsid
 </process>
 
 <success_criteria>
-- `whats-next.md (project-scoped)` updated with current timestamp
-- In progress, next step, and git state captured: branch, short hash, and UTC ISO time
+- When there is real in-flight or just-completed work: `whats-next.md (project-scoped)` appended with current timestamp, in progress / next step / git state (branch, short hash, UTC ISO time)
+- When clean and trivial: no file write unless the user asked to stamp; verbal confirmation instead
 - Written in under 30 seconds of agent time
-- New session could read the checkpoint and orient in under 60 seconds
+- New session could read the **latest** entry and orient in under 60 seconds
 </success_criteria>

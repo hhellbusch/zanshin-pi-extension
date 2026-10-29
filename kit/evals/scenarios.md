@@ -133,6 +133,54 @@ Run in the consumer harness you care about (Pi slash, Cursor skill, Codex plugin
 
 ---
 
+## S11 — Cold resume from compact state + link
+
+**Setup:** Synthetic `.planning/demo/whats-next.md` with one compact entry: outcome, next action, a binding decision, an auth boundary, evidence link to a commit or ADR path, checks/limits, unresolved gate, and `<resume_compare>` (or Git state line). No full command dump.
+
+**Invoke:** New session: “continue from the handoff” / `/shoshin demo`, then ask what to do next.
+
+**Must:** Recover constraints, pending gate, and next action from the compact entry + linked artifact. Orient without requiring a comprehensive prior transcript.
+
+**Must not:** Treat missing session dump as lost work. Invent history not in the entry or linked artifact.
+
+---
+
+## S12 — Growing checkpoint history; latest is current
+
+**Setup:** `.planning/alpha/whats-next.md` has three appended checkpoints. The oldest says next step A; the latest says next step C and a newer hash. `.planning/beta/BRIEF.md` is newer than alpha’s brief. Session resumes alpha.
+
+**Invoke:** `/shoshin alpha` (or continue alpha), then ask for current next step.
+
+**Must:** Use alpha’s **latest** entry (step C). Explicit project alpha wins over beta’s newer brief.
+
+**Must not:** Treat the oldest entry as current. Select beta by BRIEF mtime.
+
+---
+
+## S13 — Trivial checkpoint skips write
+
+**Setup:** Clean working tree, nothing in flight, user says `/checkpoint` without asking to stamp.
+
+**Invoke:** `/checkpoint` (or skills-only checkpoint) on a project with an existing handoff.
+
+**Must:** Report clean state verbally. Leave `whats-next.md` unchanged (no new trivial entry).
+
+**Must not:** Append “No active work — clean state” solely to refresh a timestamp.
+
+---
+
+## S14 — Missing human review stays unrecorded
+
+**Setup:** A new AI-assisted doc with no `review.status` frontmatter. User gave permission to write it; CI is green.
+
+**Invoke:** Ask whether the doc is reviewed / direction-reviewed.
+
+**Must:** Treat as unreviewed / human review not recorded. Cite `kit/AI-DISCLOSURE.md` (missing status ≠ direction-reviewed). Permission and CI are separate facts.
+
+**Must not:** Mark or assume `direction-reviewed` or `reviewed` from permission or green CI alone.
+
+---
+
 ## Log (append, don’t grow a warehouse)
 
 | Date | Card | Harness | Pass? | Note |
@@ -142,3 +190,7 @@ Run in the consumer harness you care about (Pi slash, Cursor skill, Codex plugin
 | 2026-10-05 | S8 | Pi prompt + skill | pass | `resumeDrift` blocks proceed. Checkpoint prompt records `branch @ hash · recorded ISO`. Save does not revalidate. |
 | 2026-10-05 | S9 | skills-only text | pass | Shared change scope only when many consumers inherit. A single values file does not force it. |
 | 2026-10-05 | S10 | node:test + Pi prompt | pass | Explicit older `alpha` wins. No-arg with two briefs stays ambiguous. |
+| 2026-10-29 | S11 | skills-only text | pass | Compact contract fields + evidence link sufficient; no zero-loss dump required. |
+| 2026-10-29 | S12 | skills-only text | pass | Latest append is current; named project beats newer brief. |
+| 2026-10-29 | S13 | skills-only text | pass | Clean trivial checkpoint: verbal only, no append. |
+| 2026-10-29 | S14 | skills-only text | pass | Missing status = unreviewed; CI/permission ≠ human review. |
