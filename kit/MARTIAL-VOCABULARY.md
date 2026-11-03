@@ -23,13 +23,14 @@ Related: `WORKING-STYLE.md`, `AGILE-ARTIFACT-DISCIPLINE.md`, `DESIGN-PHILOSOPHY.
 | **ukemi** (受身) | Breakfall — cheap landing if the attempt is wrong | Light (consumer AGENTS ambient) |
 | **kihon** (基本) | Fundamentals — drillable basics that catch easy pitfalls | Active (`/kihon`, `kit/kihon/`) |
 | **omakase** (お任せ) | Chef’s choice — house defaults, not a 40-option menu | Light (with CoC craft lens) |
+| **kaizen** (改善) | Continuous small improvement — leave neighborhood better | Light (alias for craft Leave It Better) |
 | **fudōshin** (不動心) | Immovable mind — judgment unmoved by pressure/fluency | Seed |
 | **maai** (間合い) | Distance / timing of engagement | Seed |
 | **kata / randori** | Fixed form vs free practice | Seed |
 | **mushin** (無心) | No-mind — unattached execution | Seed (do not force onto MVP) |
 
 **Ordering (decision work):** shoshin → kaeshi / yomi → spar.  
-**Build hygiene:** kihon (forms) · craft (judgment: CoC, orchestration vs program, …).  
+**Build hygiene:** kihon (forms) · craft (judgment: CoC, orchestration vs program, leave-better/kaizen, …).  
 **Ops overlay:** heijōshin + ukemi on the bridge or before a risky apply.  
 **Adoption arc:** shu-ha-ri over months with the kit itself.  
 **Defaults:** omakase + convention over configuration (`DESIGN-PHILOSOPHY.md`).
@@ -103,10 +104,11 @@ Second-order thinking: and then what? Follow consequence chains until the go/no-
 | Need | Where |
 |------|--------|
 | Ship thin / don’t overbuild | craft + JBGE + YAGNI + work→right→fast |
+| Leave neighborhood better (≤5 min) | craft Leave It Better — English primary; **kaizen** is the gloss (below) |
 | Recover mid-flight | `/checkpoint`, `/whats-next` |
 | Writing defaults | `STYLE.md` |
 
-Don’t invent martial names for these unless a gap appears that plain language can’t hold.
+Don’t invent martial names for these unless a gap appears that plain language can’t hold. Near-kit Japanese that isn’t dojo (omakase, kaizen) still stays light — alias, not a new skill.
 
 ---
 
@@ -164,6 +166,15 @@ Land so you can stand up. Not “never fail the attempt” — “fail this atte
 **Vs ukemi:** A timeboxed canary toggle can be the mat. A permanent `enable_*` matrix is not omakase.
 
 **Where:** `ENGINEERING-PRINCIPLES.md` (with CoC), `DESIGN-PHILOSOPHY.md`. Not a slash skill.
+
+### Kaizen (改善) — continuous small improvement
+
+**English sense:** Lean/TPS continuous improvement — many small pads, not a big-bang rewrite. Same family as **broken windows** (don’t let small decay signal that mess is OK) and the **Boy Scout rule** (leave the campsite cleaner).
+
+**Kit sense:** Gloss for craft **Leave It Better** — fix the typo / stale comment / misnamed guard while you’re already in the file (≤5 min); else backlog. Not a separate lens and not `/kaizen`.
+
+**Where:** `ENGINEERING-PRINCIPLES.md` (Leave It Better); ambient craft; `/craft` leave-better row.  
+**Not:** Dojo vocabulary (lean manufacturing); a reason to expand scope mid-task (“while we’re here, refactor the module”).
 
 ---
 

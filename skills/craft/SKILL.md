@@ -57,7 +57,7 @@ Evaluate through relevant principles. Skip principles that don't apply — don't
 | **DRY** | Real duplication that will diverge — or coincidence? (Two = question; three = extract if divergence is real) |
 | **YAGNI** | Built for a requirement that exists, or one imagined? |
 | **Phases** | Work / right / fast mixed in one change? |
-| **Leave it better** | Small fix while here (≤5 min) or backlog it? |
+| **Leave it better** (kaizen) | Small fix while here (≤5 min) or backlog it? Broken window / Boy Scout — not a scope expand. |
 | **JBGE** | Sufficient for task, no more? (TAGRI: who reads it, what decision?) |
 | **Travel light** | Can sections/models be discarded after purpose served? |
 | **Convention over config** | Extra knobs/toggles — house default, or unpaid dialect? Timeboxed canary vs public API. |
