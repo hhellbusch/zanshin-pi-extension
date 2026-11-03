@@ -4,7 +4,7 @@ Guiding principles for making engineering tradeoffs. These are judgment aids, no
 
 Part of the zanshin-pi-extension kit. Ambient craft posture lives in the consumer's always-on context; invoked depth is `skills/craft/SKILL.md`. Stance map and framework borrowings: `DESIGN-PHILOSOPHY.md`.
 
-**Lens index:** DRY · KISS · SRP · Leave it better · YAGNI · **Convention over configuration** · Phases · **Orchestration vs program** · **Shared change scope** · (JBGE/TAGRI via artifact discipline)
+**Lens index:** DRY · KISS · SRP · Leave it better (kaizen) · YAGNI · **Convention over configuration** · Phases · **Orchestration vs program** · **Shared change scope** · (JBGE/TAGRI via artifact discipline)
 
 ---
 
@@ -40,11 +40,13 @@ This applies to guards, scripts, config files, and documentation — not just co
 
 ## Leave It Better (Broken Windows + Boy Scout Rule)
 
+**Kaizen** (改善) — continuous small improvement — is the Japanese gloss for the same stance. Keep the English name in craft and ambient text; say kaizen when the lean/dojo bridge helps.
+
 Leave things better than you found them. When you notice technical debt, a broken link, a stale comment, or a misnamed file — fix it while you're there. Small improvements accumulate. Leave your footprint smaller than when you arrived.
 
 This doesn't mean rewriting everything. If you're touching line 42, fix the typo on line 43. If you're reading this file to understand the format, add a comment for the next person. If you notice a guard that's not doing what its name implies, rename it.
 
-**Rule of thumb:** Five minutes max while you're already there. More than that, log it in the backlog and move on. You're responsible for your footprint, not everything broken in the repo.
+**Rule of thumb:** Five minutes max while you're already there. More than that, log it in the backlog and move on. You're responsible for your footprint, not everything broken in the repo. Not a slash skill — ambient craft / `/craft` leave-better lens.
 
 ---
 
